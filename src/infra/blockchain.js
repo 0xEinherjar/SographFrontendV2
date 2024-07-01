@@ -188,30 +188,31 @@ export default class Blockchain {
       return { success: false, message: "" };
     }
   }
-
   async getPost(user, cursor, size) {
-    const accountStore = useAccountStore();
-    const { account } = storeToRefs(accountStore);
-    const prepare = usePrepare();
-    if (account.value.isConnected && account.value.hasAccount) {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .getPublicationsByUserToCaller(user, cursor, size);
-      if (transaction[0].length == 0) return { data: [], cursor: 0 };
-      const data = await prepare.postToCaller(transaction[0]);
-      return { data: data, cursor: formatToNumber(transaction[1]) };
-    } else {
-      const transaction =
-        await Blockchain.sographContract.getPublicationsByUser(
-          user,
-          cursor,
-          size
-        );
-      if (transaction[0].length == 0) return { data: [], cursor: 0 };
-      const data = await prepare.post(transaction[0]);
-      return { data: data, cursor: formatToNumber(transaction[1]) };
-    }
+    try {
+      const accountStore = useAccountStore();
+      const { account } = storeToRefs(accountStore);
+      const prepare = usePrepare();
+      if (account.value.isConnected && account.value.hasAccount) {
+        const signer = await Blockchain.provider.getSigner();
+        const transaction = await Blockchain.sographContract
+          .connect(signer)
+          .getPublicationsByUserToCaller(user, cursor, size);
+        if (transaction[0].length == 0) return { data: [], cursor: 0 };
+        const data = await prepare.postToCaller(transaction[0]);
+        return { data: data, cursor: formatToNumber(transaction[1]) };
+      } else {
+        const transaction =
+          await Blockchain.sographContract.getPublicationsByUser(
+            user,
+            cursor,
+            size
+          );
+        if (transaction[0].length == 0) return { data: [], cursor: 0 };
+        const data = await prepare.post(transaction[0]);
+        return { data: data, cursor: formatToNumber(transaction[1]) };
+      }
+    } catch (error) {}
   }
 
   async getFollowers(id, cursor, size) {
@@ -365,26 +366,17 @@ export default class Blockchain {
 
   async getPostFollowings(id) {
     try {
-      const follwersId = await Blockchain.profileContract.getFollowings(id);
+      const follwersId = await Blockchain.profileContract.getFollowings(
+        id,
+        0,
+        20
+      );
       const publications = [];
-      for (const follwerId of follwersId) {
+      for (const follwerId of follwersId[0]) {
         let _id = String(follwerId).replace(/n/i, "");
-        const owner = await Blockchain.sographContract.addressByProfileId(
-          follwerId
-        );
-
-        const signer = await Blockchain.provider.getSigner();
-        const profile = await Blockchain.sographContract
-          .connect(signer)
-          .getProfileToCaller(owner);
-
-        const publicationsId = [];
-        for (const publicationId of profile[9]) {
-          publicationsId.push(Number(String(publicationId).replace(/n/i, "")));
-        }
-        const publicationsFromFollowings = await this.getPost(publicationsId);
-
-        publications.push(...publicationsFromFollowings);
+        const owner = await Blockchain.sographContract.addressByProfileId(_id);
+        const { data } = await this.getPost(owner, 0, 20);
+        publications.push(...data);
       }
       return { success: true, data: publications.reverse() };
     } catch (error) {
