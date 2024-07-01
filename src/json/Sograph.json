@@ -1,0 +1,31 @@
+{
+  "address": "0x03b29D78F8E3537e992B50977d99aBB85Bb06DF3",
+  "abi": [
+    "function addressByProfileId(uint256) view returns (address)",
+    "function assessment(address)",
+    "function ban(address)",
+    "function banned(uint256) view returns (bool)",
+    "function comment(uint256,string)",
+    "function createPost(string)",
+    "function createProfile(string)",
+    "function follow(address)",
+    "function getPublicationsByUser(address,uint256,uint256) view returns (tuple(uint256,bool,bool,string,string,string,address,uint256,uint256,uint256)[], uint256)",
+    "function getPublicationsByUserToCaller(address,uint256,uint256) view returns (tuple(uint256,bool,bool,string,string,string,address,uint256,uint256,uint256,bool)[], uint256)",
+    "function getUserByAddress(address) view returns (uint256, uint8)",
+    "function getUserByAddressToCaller(address) view returns (uint256, uint256, uint8)",
+    "function like(uint256)",
+    "function ownerOfHandle(string) view returns (address)",
+    "function reactivatePost(uint256[])",
+    "function reactivateProfile(uint256)",
+    "function redeemPost(uint256)",
+    "function redeemProfile()",
+    "function restore(address)",
+    "function setVotting(address)",
+    "function share(uint256)",
+    "function totalShared(uint256) view returns (uint256)",
+    "function unfollow(address)",
+    "function unshare(uint256)",
+    "function updateHandle(string)",
+    "function updateProfile(string)"
+  ]
+}

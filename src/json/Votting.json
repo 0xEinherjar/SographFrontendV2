@@ -1,0 +1,27 @@
+{
+  "address": "0x045568aa8410c6f27E8C8ddd89453a2DeA6872AA",
+  "abi": [
+    "function assessments(uint256) view returns (uint256, uint256, uint256, string, address, address, bool)",
+    "function counter() view returns (uint256)",
+    "function createAssessment(address,string)",
+    "function executeAssessment(uint256)",
+    "function fetchAllAssessment() view returns (tuple(uint256,uint256,uint256,string,address,address,bool,uint8)[])",
+    "function gracePeriod() view returns (uint256)",
+    "function minParticipation() view returns (uint256)",
+    "function owner() view returns (address)",
+    "function participants(address) view returns (bool, uint256, uint256, uint256, uint256)",
+    "function postVotePeriodWithdraw() view returns (uint256)",
+    "function quorum() view returns (uint256)",
+    "function reestablishedDate(address) view returns (uint256)",
+    "function setMinParticipation(uint256)",
+    "function setQuorum(uint256)",
+    "function setTime(uint256,uint256,uint256,uint256)",
+    "function stake(uint256)",
+    "function state(uint256) view returns (uint8)",
+    "function totalParticipation() view returns (uint256)",
+    "function vote(uint256,uint8)",
+    "function voteDelay() view returns (uint256)",
+    "function voteDuration() view returns (uint256)",
+    "function withdraw(uint256)"
+  ]
+}

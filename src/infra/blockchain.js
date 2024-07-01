@@ -1,0 +1,597 @@
+import { ethers, Contract, isError, Block } from "ethers";
+import { storeToRefs } from "pinia";
+import { useUtils } from "../composables/utils.js";
+import { usePrepare } from "../composables/prepare.js";
+import { useAccountStore } from "../store/account.js";
+import { useUserStore } from "../store/user.js";
+import sographAbi from "../json/Sograph.json";
+import profileAbi from "../json/ProfileNFT.json";
+import tokenAbi from "../json/Token.json";
+const { formatToNumber } = useUtils();
+
+export default class Blockchain {
+  static profileContract;
+  static sographContract;
+  static tokenContract;
+  static provider;
+  static rpc = "https://sepolia.base.org";
+  // static rpc = "https://base-sepolia.g.alchemy.com/v2/Your-API-Key";
+
+  async init(window) {
+    if (window.ethereum == null) {
+      Blockchain.provider = new ethers.JsonRpcProvider(Blockchain.rpc);
+    } else if (window.ethereum && window.ethereum.chainId != "0x14a34") {
+      console.log(window.ethereum.chainId);
+      Blockchain.provider = new ethers.JsonRpcProvider(Blockchain.rpc);
+    } else {
+      Blockchain.provider = new ethers.BrowserProvider(window.ethereum);
+    }
+    Blockchain.sographContract = new Contract(
+      sographAbi.address,
+      sographAbi.abi,
+      Blockchain.provider
+    );
+    Blockchain.profileContract = new Contract(
+      profileAbi.address,
+      profileAbi.abi,
+      Blockchain.provider
+    );
+    Blockchain.tokenContract = new Contract(
+      tokenAbi.address,
+      tokenAbi.abi,
+      Blockchain.provider
+    );
+  }
+
+  async createProfile(metadata) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .createProfile(metadata);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async update(metadata) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .updateProfile(metadata);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async like(id) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .like(id);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async share(id) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .share(id);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async unshare(id) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .unshare(id);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async getProfile(profile) {
+    const accountStore = useAccountStore();
+    const { account } = storeToRefs(accountStore);
+    const prepare = usePrepare();
+    const { isAddress, formatToNumber } = useUtils();
+    try {
+      if (!isAddress(profile)) {
+        const address = await Blockchain.sographContract.ownerOfHandle(profile);
+        if (address == "0x0000000000000000000000000000000000000000")
+          return { success: false, message: "profile address not found" };
+        profile = address;
+      }
+      if (account.value.isConnected && account.value.hasAccount) {
+        const signer = await Blockchain.provider.getSigner();
+        const transaction = await Blockchain.sographContract
+          .connect(signer)
+          .getUserByAddressToCaller(profile);
+        const transactionProfile = await Blockchain.profileContract
+          .connect(signer)
+          .getProfileByIdToCaller(
+            formatToNumber(transaction[0]),
+            formatToNumber(transaction[1])
+          );
+        const data = await prepare.profileToCaller(transactionProfile);
+        data.id = formatToNumber(transaction[1]);
+        data.role = formatToNumber(transaction[2]);
+        data.owner = profile;
+        if (!data) return { success: false, message: "" };
+        return { success: true, data };
+      } else {
+        const transaction = await Blockchain.sographContract.getUserByAddress(
+          profile
+        );
+        const transactionProfile =
+          await Blockchain.profileContract.getProfileById(
+            formatToNumber(transaction[0])
+          );
+        const data = await prepare.profile(transactionProfile);
+        if (!data) return { success: false, message: "" };
+        data.id = formatToNumber(transaction[0]);
+        data.role = formatToNumber(transaction[1]);
+        data.owner = profile;
+        return { success: true, data };
+      }
+    } catch (error) {
+      console.log(error.reason);
+      if (isError(error, "CALL_EXCEPTION")) {
+        if (error.reason == "profile banned") {
+          return {
+            success: false,
+            message: "BANNED",
+          };
+        }
+        if (error.reason == "user not found") {
+          return {
+            success: false,
+            message: "NOT_FOUND",
+          };
+        }
+        return {
+          success: false,
+          message: "",
+        };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async getPost(user, cursor, size) {
+    const accountStore = useAccountStore();
+    const { account } = storeToRefs(accountStore);
+    const prepare = usePrepare();
+    if (account.value.isConnected && account.value.hasAccount) {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .getPublicationsByUserToCaller(user, cursor, size);
+      if (transaction[0].length == 0) return { data: [], cursor: 0 };
+      const data = await prepare.postToCaller(transaction[0]);
+      return { data: data, cursor: formatToNumber(transaction[1]) };
+    } else {
+      const transaction =
+        await Blockchain.sographContract.getPublicationsByUser(
+          user,
+          cursor,
+          size
+        );
+      if (transaction[0].length == 0) return { data: [], cursor: 0 };
+      const data = await prepare.post(transaction[0]);
+      return { data: data, cursor: formatToNumber(transaction[1]) };
+    }
+  }
+
+  async getFollowers(id, cursor, size) {
+    try {
+      const accountStore = useAccountStore();
+      const userStore = useUserStore();
+      const { account } = storeToRefs(accountStore);
+      const { user } = storeToRefs(userStore);
+      const transaction = await Blockchain.profileContract.getFollowers(
+        id,
+        cursor,
+        size
+      );
+      if (!transaction[0].length) return { success: true, data: [], cursor: 0 };
+      const profiles = [];
+      if (account.value.isConnected && account.value.hasAccount) {
+        for (const follwerId of transaction[0]) {
+          let _id = formatToNumber(follwerId);
+          const profile =
+            await Blockchain.profileContract.getProfileByIdToCaller(
+              user.value.id,
+              _id
+            );
+          if (!String(profile[0]).startsWith("https://ipfs.io/ipfs/")) continue;
+          const metadata = await fetch(profile[0]).then((response) =>
+            response.json()
+          );
+          const owner = await Blockchain.sographContract.addressByProfileId(
+            _id
+          );
+
+          profiles.push({
+            avatar: metadata.avatar,
+            name: metadata.name,
+            handle: profile[1],
+            hasSubscription: profile[4],
+            owner: owner,
+            isFollowing: profile[5],
+            isFollower: profile[6],
+          });
+        }
+      } else {
+        for (const follwerId of transaction) {
+          let _id = String(follwerId).replace(/n/i, "");
+          const profile = await Blockchain.profileContract.getProfileById(_id);
+          if (!String(profile[0]).startsWith("https://ipfs.io/ipfs/")) continue;
+          const metadata = await fetch(profile[0]).then((response) =>
+            response.json()
+          );
+          const owner = await Blockchain.sographContract.addressByProfileId(
+            _id
+          );
+          profiles.push({
+            avatar: metadata.avatar,
+            name: metadata.name,
+            handle: profile[1],
+            hasSubscription: profile[4],
+            owner: owner,
+          });
+        }
+      }
+
+      return {
+        success: true,
+        data: profiles,
+        cursor: formatToNumber(transaction[1]),
+      };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async getFollowings(id, cursor, size) {
+    try {
+      const accountStore = useAccountStore();
+      const userStore = useUserStore();
+      const { account } = storeToRefs(accountStore);
+      const { user } = storeToRefs(userStore);
+      const transaction = await Blockchain.profileContract.getFollowings(
+        id,
+        cursor,
+        size
+      );
+      if (!transaction[0].length) return { success: true, data: [], cursor: 0 };
+      const profiles = [];
+      if (account.value.isConnected && account.value.hasAccount) {
+        for (const follwerId of transaction[0]) {
+          let _id = formatToNumber(follwerId);
+          const profile =
+            await Blockchain.profileContract.getProfileByIdToCaller(
+              user.value.id,
+              _id
+            );
+          if (!String(profile[0]).startsWith("https://ipfs.io/ipfs/")) continue;
+
+          const metadata = await fetch(profile[0]).then((response) =>
+            response.json()
+          );
+          const owner = await Blockchain.sographContract.addressByProfileId(
+            _id
+          );
+
+          profiles.push({
+            avatar: metadata.avatar,
+            name: metadata.name,
+            handle: profile[1],
+            hasSubscription: profile[4],
+            owner: owner,
+            isFollowing: profile[5],
+            isFollower: profile[6],
+          });
+        }
+      } else {
+        for (const follwerId of transaction) {
+          let _id = String(follwerId).replace(/n/i, "");
+          const profile = await Blockchain.profileContract.getProfileById(_id);
+          if (!String(profile[0]).startsWith("https://ipfs.io/ipfs/")) continue;
+
+          const metadata = await fetch(profile[0]).then((response) =>
+            response.json()
+          );
+
+          const owner = await Blockchain.sographContract.addressByProfileId(
+            _id
+          );
+
+          profiles.push({
+            avatar: metadata.avatar,
+            name: metadata.name,
+            handle: profile[1],
+            hasSubscription: profile[4],
+            owner: owner,
+          });
+        }
+      }
+      return {
+        success: true,
+        data: profiles,
+        cursor: formatToNumber(transaction[1]),
+      };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async getPostFollowings(id) {
+    try {
+      const follwersId = await Blockchain.profileContract.getFollowings(id);
+      const publications = [];
+      for (const follwerId of follwersId) {
+        let _id = String(follwerId).replace(/n/i, "");
+        const owner = await Blockchain.sographContract.addressByProfileId(
+          follwerId
+        );
+
+        const signer = await Blockchain.provider.getSigner();
+        const profile = await Blockchain.sographContract
+          .connect(signer)
+          .getProfileToCaller(owner);
+
+        const publicationsId = [];
+        for (const publicationId of profile[9]) {
+          publicationsId.push(Number(String(publicationId).replace(/n/i, "")));
+        }
+        const publicationsFromFollowings = await this.getPost(publicationsId);
+
+        publications.push(...publicationsFromFollowings);
+      }
+      return { success: true, data: publications.reverse() };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async createPost(metadata) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .createPost(metadata);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async follow(address) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .follow(address);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async unfollow(address) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .unfollow(address);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async redeemProfile() {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .redeemProfile();
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async redeemPost(id) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .redeemPost(id);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async approve(id) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.profileContract
+        .connect(signer)
+        .approve(sographAbi.address, id);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async reactivateProfile(id) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .reactivateProfile(id);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async approveToken(value) {
+    try {
+      const accountStore = useAccountStore();
+      const { account } = storeToRefs(accountStore);
+      const transactionAllowance = await Blockchain.tokenContract.allowance(
+        profileAbi.address,
+        account.value.wallet
+      );
+      if (formatToNumber(transactionAllowance) < value) {
+        const decimals = await Blockchain.tokenContract.decimals();
+        const signer = await Blockchain.provider.getSigner();
+        const transaction = await Blockchain.tokenContract
+          .connect(signer)
+          .approve(profileAbi.address, value * 10 ** formatToNumber(decimals));
+        await transaction.wait();
+      }
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async getPriceSubscription() {
+    const transaction = await Blockchain.profileContract.fees();
+    const transactionToken = await Blockchain.tokenContract.decimals();
+    return (
+      formatToNumber(transaction[2]) / 10 ** formatToNumber(transactionToken)
+    );
+  }
+
+  async subscription(id, period) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.profileContract
+        .connect(signer)
+        .subscription(id, period);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async updateHandle(handle) {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await Blockchain.sographContract
+        .connect(signer)
+        .updateHandle(handle);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+
+  async isHandleAvailable(handle) {
+    try {
+      const transaction = await Blockchain.sographContract.ownerOfHandle(
+        handle
+      );
+      let isAvailable;
+      if (String(transaction) == "0x0000000000000000000000000000000000000000") {
+        isAvailable = true;
+      } else {
+        isAvailable = false;
+      }
+      return { success: true, isAvailable };
+    } catch (error) {
+      if (isError(error, "CALL_EXCEPTION")) {
+        return { success: false, message: error.reason };
+      }
+      return { success: false, message: "" };
+    }
+  }
+}
