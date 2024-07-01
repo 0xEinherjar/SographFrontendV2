@@ -1,5 +1,5 @@
 export const useMetamask = () => {
-  const chainBASE = "0x14A34";
+  const chainBASE = "0x14a34";
 
   function isMetaMask() {
     const { ethereum } = window;
@@ -51,11 +51,11 @@ export const useMetamask = () => {
             params: [
               {
                 chainId: id,
-                chainName: "BNB Testnet",
-                rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+                chainName: "Base Sepolia",
+                rpcUrls: ["https://sepolia.base.org"],
                 nativeCurrency: {
-                  name: "tBNB",
-                  symbol: "tBNB",
+                  name: "ETH",
+                  symbol: "ETH",
                   decimals: 18,
                 },
               },
