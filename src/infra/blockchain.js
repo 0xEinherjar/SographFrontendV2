@@ -21,7 +21,6 @@ export default class Blockchain {
     if (window.ethereum == null) {
       Blockchain.provider = new ethers.JsonRpcProvider(Blockchain.rpc);
     } else if (window.ethereum && window.ethereum.chainId != "0x14a34") {
-      console.log(window.ethereum.chainId);
       Blockchain.provider = new ethers.JsonRpcProvider(Blockchain.rpc);
     } else {
       Blockchain.provider = new ethers.BrowserProvider(window.ethereum);
@@ -52,7 +51,6 @@ export default class Blockchain {
       await transaction.wait();
       return { success: true };
     } catch (error) {
-      console.log(error);
       if (isError(error, "CALL_EXCEPTION")) {
         return { success: false, message: error.reason };
       }
@@ -169,7 +167,6 @@ export default class Blockchain {
         return { success: true, data };
       }
     } catch (error) {
-      console.log(error.reason);
       if (isError(error, "CALL_EXCEPTION")) {
         if (error.reason == "profile banned") {
           return {
