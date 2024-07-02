@@ -8,7 +8,7 @@ import Connect from "../views/connect.vue";
 import Feed from "../views/feed.vue";
 import Faucet from "../views/faucet.vue";
 import Home from "../views/home.vue";
-import Vote from "../views/votting.vue";
+import Vote from "../views/voting.vue";
 
 const router = createRouter({
   history: createWebHashHistory(),
