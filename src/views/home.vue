@@ -52,6 +52,7 @@ import { useRouter } from "vue-router";
         <router-link class="header__nav-item" to="/vote">Vote</router-link>
         <div class="header__nav-item header__nav-item-home c-soon">Docs</div>
       </nav>
+      <button type="button" class="button-info-chain"><span class=""></span>Base Sepolia</button>
     </header>
     <div class="u-flex-line-center">
       <router-link class="home__button" to="/user/connect">Connect</router-link>
@@ -59,6 +60,25 @@ import { useRouter } from "vue-router";
   </main>
 </template>
 <style>
+.button-info-chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: #28292b;
+  height: 48px;
+  border-radius: 12px;
+  color: #f4f4f4;
+  font-size: 1.5rem;
+  font-weight: 500;
+  padding-inline: 24px;
+}
+.button-info-chain span {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: #2fc687;
+}
 .home {
   height: 100vh;
   display: grid;
