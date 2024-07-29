@@ -385,7 +385,7 @@ function scrollMeTo(refName) {
 .c-line {
   width: 100%;
   height: 1px;
-  background-color: #bdc1c6;
+  background-color: var(--bg-color-quinary);
   margin-block: 8px;
 }
 .c-redeem {
@@ -424,7 +424,7 @@ function scrollMeTo(refName) {
   font-size: 1.2rem;
   line-height: 1;
   font-weight: 500;
-  color: #bdc1c6;
+  color: var(--text-color-secondary);
   text-transform: uppercase;
   margin-bottom: 32px;
   display: flex;
@@ -452,9 +452,9 @@ function scrollMeTo(refName) {
   height: 9px;
   width: 9px;
   border-radius: 50%;
-  border: 1px solid #f4f4f4;
-  background-color: #1a1b1d;
-  box-shadow: 0 0 0 4px #1a1b1d;
+  border: 1px solid var(--bg-color-quaternary);
+  background-color: var(--bg-color-primary);
+  box-shadow: 0 0 0 4px var(--bg-color-primary);
 }
 .setting__nav-pointer:has(+ .setting__nav-text.is-active) {
   height: 15px;

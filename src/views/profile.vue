@@ -152,7 +152,7 @@ onBeforeMount(async () => {
                 <path d="M10.7499 2.45007C11.4399 1.86007 12.5699 1.86007 13.2699 2.45007L14.8499 3.81007C15.1499 4.07007 15.7099 4.28007 16.1099 4.28007H17.8099C18.8699 4.28007 19.7399 5.15007 19.7399 6.21007V7.91007C19.7399 8.30007 19.9499 8.87007 20.2099 9.17007L21.5699 10.7501C22.1599 11.4401 22.1599 12.5701 21.5699 13.2701L20.2099 14.8501C19.9499 15.1501 19.7399 15.7101 19.7399 16.1101V17.8101C19.7399 18.8701 18.8699 19.7401 17.8099 19.7401H16.1099C15.7199 19.7401 15.1499 19.9501 14.8499 20.2101L13.2699 21.5701C12.5799 22.1601 11.4499 22.1601 10.7499 21.5701L9.16988 20.2101C8.86988 19.9501 8.30988 19.7401 7.90988 19.7401H6.17988C5.11988 19.7401 4.24988 18.8701 4.24988 17.8101V16.1001C4.24988 15.7101 4.03988 15.1501 3.78988 14.8501L2.43988 13.2601C1.85988 12.5701 1.85988 11.4501 2.43988 10.7601L3.78988 9.17007C4.03988 8.87007 4.24988 8.31007 4.24988 7.92007V6.20007C4.24988 5.14007 5.11988 4.27007 6.17988 4.27007H7.90988C8.29988 4.27007 8.86988 4.06007 9.16988 3.80007L10.7499 2.45007Z" fill="#6B6BFF"/>
                 <path d="M10.7901 15.17C10.5901 15.17 10.4001 15.09 10.2601 14.95L7.84006 12.53C7.55006 12.24 7.55006 11.76 7.84006 11.47C8.13006 11.18 8.61006 11.18 8.90006 11.47L10.7901 13.36L15.0901 9.06003C15.3801 8.77003 15.8601 8.77003 16.1501 9.06003C16.4401 9.35003 16.4401 9.83003 16.1501 10.12L11.3201 14.95C11.1801 15.09 10.9901 15.17 10.7901 15.17Z" fill="#C5CEDD"/>
               </svg>
-              <svg v-if="account.hasAccount" @click="toggleFavorite" :class="{'is-active': isFavorite}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg v-if="!isMyProfile && account.hasAccount" @click="toggleFavorite" :class="{'is-active': isFavorite}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13.7299 3.51014L15.4899 7.03014C15.7299 7.52014 16.3699 7.99014 16.9099 8.08014L20.0999 8.61014C22.1399 8.95014 22.6199 10.4301 21.1499 11.8901L18.6699 14.3701C18.2499 14.7901 18.0199 15.6001 18.1499 16.1801L18.8599 19.2501C19.4199 21.6801 18.1299 22.6201 15.9799 21.3501L12.9899 19.5801C12.4499 19.2601 11.5599 19.2601 11.0099 19.5801L8.01991 21.3501C5.87991 22.6201 4.57991 21.6701 5.13991 19.2501L5.84991 16.1801C5.97991 15.6001 5.74991 14.7901 5.32991 14.3701L2.84991 11.8901C1.38991 10.4301 1.85991 8.95014 3.89991 8.61014L7.08991 8.08014C7.61991 7.99014 8.25991 7.52014 8.49991 7.03014L10.2599 3.51014C11.2199 1.60014 12.7799 1.60014 13.7299 3.51014Z" stroke="#0177FB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
@@ -224,8 +224,7 @@ onBeforeMount(async () => {
 .profile__info {
   height: 56px;
   width: 100%;
-  background-color: #28292b;
-  color: #f4f4f4;
+  background-color: var(--bg-color-secondary);
   font-size: 1.5rem;
   border-radius: 12px;
   margin-top: 40px;
@@ -240,15 +239,6 @@ onBeforeMount(async () => {
   font-weight: 500;
   height: 100%;
   line-height: 56px;
-}
-.profile__button {
-  height: 48px;
-  border-radius: 12px;
-  background-color: #4e4f51;
-  color: #f4f4f4;
-  font-size: 1.5rem;
-  font-weight: 500;
-  padding-inline: 24px;
 }
 .profile__header {
   display: flex;
@@ -268,26 +258,23 @@ onBeforeMount(async () => {
 }
 .profile__name-wrap svg {
   margin-top: 4px;
+  cursor: pointer;
 }
 .profile__name-wrap svg.is-active {
-  fill: #0177fb;
+  fill: var(--color-blue);
 }
 .profile__name {
   font-size: 4rem;
   font-weight: 600;
-  color: #f4f4f4;
   line-height: 5.4rem;
 }
 .profile__address {
   font-size: 1.4rem;
   font-weight: 500;
-  color: #bdc1c6;
+  color: var(--text-color-secondary);
   margin-top: 4px;
 }
 .profile__description {
-  font-size: 1.6rem;
-  color: #f4f4f4;
-  line-height: 150%;
   margin-top: 11px;
   width: 100%;
   max-width: 650px;
@@ -295,8 +282,7 @@ onBeforeMount(async () => {
 .profile__button {
   height: 48px;
   border-radius: 12px;
-  background-color: #4e4f51;
-  color: #f4f4f4;
+  background-color: var(--bg-color-tertiary);
   font-size: 1.5rem;
   font-weight: 500;
   padding-inline: 24px;

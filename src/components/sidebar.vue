@@ -174,9 +174,9 @@ const pathProfile = computed(() => {
   line-height: 1.2rem;
   margin-bottom: 12px;
   margin-left: 16px;
-  color: rgba(189, 193, 198, 0.8);
   font-weight: 400;
   pointer-events: none;
+  color: rgba(189, 193, 198, 0.8);
 }
 .sidebar__list {
   display: flex;
@@ -196,7 +196,7 @@ const pathProfile = computed(() => {
 .sidebar__text {
   flex-grow: 1;
   font-size: 1.6rem;
-  color: #bdc1c6;
+  color: var(--text-color-secondary);
 }
 .sidebar__collapse > .sidebar__list {
   height: calc(
@@ -225,7 +225,8 @@ const pathProfile = computed(() => {
 .sidebar__collapse-text {
   flex-shrink: 1;
   font-size: 1.6rem;
-  color: rgba(189, 193, 198, 0.4);
+  color: var(--text-color-secondary);
+  opacity: 0.4;
 }
 .sidebar__collapse-checkbox:checked + .sidebar__collapse-button > .show-more {
   display: none;

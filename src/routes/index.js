@@ -56,6 +56,11 @@ router.beforeEach((to, from, next) => {
   }
   const accountStore = useAccountStore();
   const { account } = storeToRefs(accountStore);
+  if (to.fullPath == "/user/connect" && account.value.hasAccount) {
+    console.log("entrou");
+    account.value.wallet;
+    return next(`/user/${account.value.wallet}`);
+  }
   if (to.meta?.auth && !account.value.hasAccount) {
     return next("/user/connect");
   }

@@ -53,7 +53,7 @@ onBeforeMount(async () => {
             :hasLiked="account.isConnected ? item.hasLiked : false"
             :hasShared="account.isConnected ? item.hasShared : false"
             :isConnected="account.isConnected"
-            :isMyProfile="isMyProfile"
+            :isMyProfile="false"
           />
         </template>
       </section>

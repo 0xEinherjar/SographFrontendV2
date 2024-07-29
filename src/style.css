@@ -1,15 +1,24 @@
 :root {
+  /* Background color */
   --bg-color-primary: #1a1b1d;
   --bg-color-secondary: #28292b;
   --bg-color-tertiary: #4e4f51;
+  --bg-color-quaternary: #f4f4f4;
+  --bg-color-quinary: #bdc1c6;
+
+  /* text color */
   --text-color-primary: #f4f4f4;
   --text-color-secondary: #bdc1c6;
   --text-color-tertiary: #e8eaed;
+  --text-color-quaternary: #1a1b1d;
+  --text-color-quinary: #28292b;
+
   --color-red: #ff6370;
   --color-blue-light: #96e7fe;
   --color-blue: #0177fb;
   --color-green: #2fc687;
   --color-yellow: #ffde6b;
+  --color-icon-primary: #bdc1c6;
 }
 *,
 *::before,
@@ -58,22 +67,16 @@ body {
 }
 body {
   font-size: 1.6rem;
-  background-color: #1a1b1d;
+  background-color: var(--bg-color-primary);
   color: var(--text-color-primary);
   font-family: "Inter", sans-serif;
   font-weight: 400;
   line-height: 150%;
   -webkit-font-smoothing: antialiased;
 }
-
-body {
-  background-color: #1a1b1d;
-  font-family: "Inter", sans-serif;
-}
 #app {
   min-height: 100vh;
   --width: 1440px;
-  font-size: 1.6rem;
   display: grid;
   grid-template-columns:
     calc(50vw - calc(var(--width) / 2))
@@ -107,18 +110,18 @@ body {
   display: none !important;
 }
 .c-hashtag {
-  color: #0177fb;
+  color: var(--color-blue);
   font-weight: 500;
 }
 .c-icon {
   height: 2.4rem;
   width: 2.4rem;
-  fill: #bdc1c6;
+  fill: var(--color-icon-primary);
 }
 .c-icon-outline {
   height: 2.4rem;
   width: 2.4rem;
-  stroke: #bdc1c6;
+  stroke: var(--color-icon-primary);
 }
 .c-soon {
   position: relative;
@@ -130,8 +133,8 @@ body {
   position: absolute;
   top: -1px;
   right: 67%;
-  color: #f4f4f4;
-  background-color: #ff6370;
+  color: var(--text-color-primary);
+  background-color: var(--color-red);
   padding: 2px 4px 3px;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -207,6 +210,8 @@ body {
 }
 .c-form__input::placeholder {
   font-size: inherit;
+  /* color: var(--text-color-tertiary);
+  opacity: 0.6; */
   color: rgba(232, 234, 237, 0.6);
 }
 .c-form__connect {
@@ -239,11 +244,10 @@ body {
   height: 32px;
   border-radius: 8px;
   padding-inline: 16px;
-  background-color: var(--bg-color-tertiary);
   font-size: 1.2rem;
   font-weight: 500;
   margin-left: auto;
-  background-color: #0177fb;
+  background-color: var(--color-blue);
 }
 .c-form__submit:disabled {
   cursor: default;
@@ -378,12 +382,12 @@ body {
 }
 .header__button {
   font-weight: 600;
-  color: #1a1b1d;
+  color: var(--text-color-quaternary);
   border-radius: 12px;
   padding-inline: 24px;
   font-size: 15px;
   height: 48px;
-  background-color: #f4f4f4;
+  background-color: var(--bg-color-quaternary);
 }
 .header__user {
   gap: 12px;

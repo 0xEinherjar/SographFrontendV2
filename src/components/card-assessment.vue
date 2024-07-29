@@ -205,10 +205,10 @@ onMounted(() => {
   gap: 12px;
 }
 .assessment__card-button {
-  height: 32px;
+  height: 40px;
   padding-inline: 16px;
-  border-radius: 8px;
-  font-size: 1.2rem;
+  border-radius: 12px;
+  font-size: 1.3rem;
   font-weight: 500;
   display: flex;
   align-items: center;
