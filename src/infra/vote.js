@@ -115,7 +115,6 @@ export default class Vote {
       if (transaction[0].length == 0) return { data: [], success: true };
 
       const blockchain = new Blockchain();
-
       const data = [];
       for (const item of transaction) {
         if (item[6] && formatToNumber(item[7]) == 4) {
@@ -133,7 +132,10 @@ export default class Vote {
             profileHandle: null,
           });
         } else {
-          const { data: profile } = await blockchain.getProfile(item[5]);
+          const { data: profile, success } = await blockchain.getProfile(
+            item[5]
+          );
+          if (!success) continue;
           data.push({
             id: formatToNumber(item[0]),
             voteEnd: formatToNumber(item[1]),

@@ -102,7 +102,6 @@ onBeforeMount(async () => {
   await minParticipation();
   const vote = new Vote();
   const { success, data } = await vote.getAssessments();
-  console.log(data);
   if (success) {
     for (const item of data) {
       assessment.value.push({
