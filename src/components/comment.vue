@@ -39,7 +39,7 @@ const { dateFormat } = useUtils();
 .c-comment__paragraph {
   font-size: 1.5rem;
   grid-column: 2/3;
-  color: var(--text-color-tertiary);
+  color: var(--text-color-quaternary);
 }
 .c-comment__dot {
   height: 2px;

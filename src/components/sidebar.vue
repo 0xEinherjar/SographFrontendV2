@@ -178,6 +178,9 @@ const pathProfile = computed(() => {
   pointer-events: none;
   color: rgba(189, 193, 198, 0.8);
 }
+.light-mode .sidebar__caption {
+  color: #292d32cc;
+}
 .sidebar__list {
   display: flex;
   flex-direction: column;
@@ -195,8 +198,11 @@ const pathProfile = computed(() => {
 }
 .sidebar__text {
   flex-grow: 1;
-  font-size: 1.6rem;
   color: var(--text-color-secondary);
+}
+.light-mode .sidebar__text {
+  color: var(--text-color-primary);
+  font-weight: 500;
 }
 .sidebar__collapse > .sidebar__list {
   height: calc(
@@ -224,9 +230,7 @@ const pathProfile = computed(() => {
 }
 .sidebar__collapse-text {
   flex-shrink: 1;
-  font-size: 1.6rem;
-  color: var(--text-color-secondary);
-  opacity: 0.4;
+  color: var(--text-color-tertiary);
 }
 .sidebar__collapse-checkbox:checked + .sidebar__collapse-button > .show-more {
   display: none;

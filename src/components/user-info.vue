@@ -30,7 +30,7 @@ function logout() {
     <div class="c-user-info__left">
       <h3 class="c-user-info__name u-text-ellipsis">{{ user.name }}</h3>
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.6199 5.2207L7.81655 9.02404C7.36738 9.4732 6.63238 9.4732 6.18322 9.02404L2.37988 5.2207" stroke="#BDC1C6" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M11.6199 5.2207L7.81655 9.02404C7.36738 9.4732 6.63238 9.4732 6.18322 9.02404L2.37988 5.2207" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <ul class="c-user-info__dropdown">
         <li>
@@ -60,11 +60,12 @@ function logout() {
 }
 .c-user-info__left svg {
   margin-top: 2px;
+  stroke: var(--color-icon-primary);
 }
 .c-user-info__name {
   font-size: 2.1rem;
   font-weight: 500;
-  color: #ffffff;
+  color: var(--text-color-primary);
   max-width: 150px;
 }
 .c-user-info__avatar-wrapper {
@@ -76,7 +77,7 @@ function logout() {
   width: 14px;
   border-radius: 50%;
   background-color: #2fc687;
-  border: 3px solid #1a1b1d;
+  border: 3px solid var(--bg-color-primary);
   position: absolute;
   bottom: -2px;
   right: -1px;

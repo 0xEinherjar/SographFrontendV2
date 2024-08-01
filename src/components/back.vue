@@ -27,7 +27,7 @@ watch(
 </script>
 <!-- prettier-ignore -->
 <template>
-  <router-link :to="history.route || '#'" class="c-back" role="button">
+  <router-link :to="history.route || '#'" class="c-back u-flex-line" role="button">
     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M9.40625 12.4498L5.33125 8.3748C4.85 7.89355 4.85 7.10605 5.33125 6.6248L9.40625 2.5498" stroke="#BDC1C6" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -59,13 +59,11 @@ watch(
 </template>
 <style>
 .c-back {
-  display: flex;
-  align-items: center;
   cursor: pointer;
+  font-size: 1.4rem;
 }
 .c-back__text {
-  font-size: 1.4rem;
-  color: #bdc1c6;
+  color: var(--text-color-secondary);
   margin-left: 4px;
 }
 .c-back > .c-icon,
@@ -73,8 +71,6 @@ watch(
   margin-inline: 12px;
 }
 .c-back__name {
-  font-size: 1.4rem;
   font-weight: 500;
-  color: #f4f4f4;
 }
 </style>

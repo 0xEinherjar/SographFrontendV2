@@ -29,14 +29,14 @@ watch(
 </script>
 <!-- prettier-ignore -->
 <template>
-  <nav class="profile__nav">
-    <ul class="profile__nav-list">
+  <nav class="profile__nav u-flex-line-between">
+    <ul class="profile__nav-list u-flex-line">
       <li class="profile__nav-item is-active" data-nav="Publications" @click="profileNav">Publications</li>
       <li class="profile__nav-item" data-nav="Followers" @click="profileNav">Followers</li>
       <li class="profile__nav-item" data-nav="Following" @click="profileNav">Following</li>
       <li class="profile__nav-item" data-nav="About" @click="profileNav">About</li>
     </ul>
-    <ul class="profile__nav-actions">
+    <ul class="profile__nav-actions u-flex-line">
       <li class="profile__nav-actions-items dropdown">
         <svg class="c-icon-outline" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14.9902 17.5H16.5002C19.5202 17.5 22.0002 15.03 22.0002 12C22.0002 8.98 19.5302 6.5 16.5002 6.5H14.9902" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -148,28 +148,19 @@ watch(
   display: block !important;
 }
 .profile__nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding-right: 40px;
 }
+.profile__nav-actions,
 .profile__nav-list {
-  display: flex;
-  align-items: center;
   gap: 32px;
 }
 .profile__nav-item {
-  font-size: 1.6rem;
-  color: rgba(244, 244, 244, 0.4);
+  color: var(--text-color-tertiary);
   line-height: 2.4rem;
   cursor: pointer;
 }
 .profile__nav-item.is-active {
-  color: rgba(244, 244, 244, 1);
-}
-.profile__nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 32px;
+  color: var(--text-color-primary);
+  opacity: 1;
 }
 </style>
