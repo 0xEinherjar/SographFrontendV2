@@ -52,7 +52,7 @@ import { useRouter } from "vue-router";
       <div class="footer__column">
         <div class="footer__column-head">Use Graph</div>
         <div class="footer__column-content">
-          <router-link class="footer__link u-flex-line" to="/vote">Faucet</router-link>
+          <router-link class="footer__link u-flex-line" to="/faucet">Faucet</router-link>
           <a href="#" class="footer__link u-flex-line">Add to Metamask</a>
           <a href="https://testnet.bscscan.com/token/0xEA9810d6deF262Ba30a7F96a8B3b7B6C724bE532" target="_blank" class="footer__link u-flex-line">BNBChain Testnet</a>
         </div>
