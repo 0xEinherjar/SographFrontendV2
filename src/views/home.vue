@@ -44,7 +44,7 @@ import { useRouter } from "vue-router";
       <div class="footer__column">
         <div class="footer__column-head">Get Involved</div>
         <div class="footer__column-content">
-          <a href="#" class="footer__link u-flex-line">Vote</a>
+          <router-link class="footer__link u-flex-line" to="/vote">Vote</router-link>
           <a href="#" class="footer__link u-flex-line">User Guide</a>
           <a href="#" class="footer__link u-flex-line">Docs</a>
         </div>
@@ -52,9 +52,9 @@ import { useRouter } from "vue-router";
       <div class="footer__column">
         <div class="footer__column-head">Use Graph</div>
         <div class="footer__column-content">
-          <a href="#" class="footer__link u-flex-line">Faucet</a>
+          <router-link class="footer__link u-flex-line" to="/vote">Faucet</router-link>
           <a href="#" class="footer__link u-flex-line">Add to Metamask</a>
-          <a href="#" class="footer__link u-flex-line">BNBChain Testnet</a>
+          <a href="https://testnet.bscscan.com/token/0xEA9810d6deF262Ba30a7F96a8B3b7B6C724bE532" target="_blank" class="footer__link u-flex-line">BNBChain Testnet</a>
         </div>
       </div>
       <div class="footer__column">
