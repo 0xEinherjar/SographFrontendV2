@@ -35,6 +35,23 @@ export const useMetamask = () => {
     return address;
   }
 
+  async function addToken() {
+    const tokenAddress = "0xEA9810d6deF262Ba30a7F96a8B3b7B6C724bE532"
+    const tokenSymbol = "GPH"
+    const tokenDecimals = 8
+    await window.ethereum.request({
+      method: "wallet_watchAsset",
+      params: {
+        type: "ERC20",
+        options: {
+          address: tokenAddress,
+          symbol: tokenSymbol,
+          decimals: tokenDecimals,
+        },
+      },
+    })
+  }
+
   async function changeChain(id = chainBNB) {
     try {
       await window.ethereum.request({
