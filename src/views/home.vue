@@ -60,7 +60,7 @@ import { useRouter } from "vue-router";
       <div class="footer__column">
         <div class="footer__column-head">Social</div>
         <div class="footer__column-content">
-          <a href="https://x.com/SographApp" class="footer__link u-flex-line">
+          <a href="https://x.com/SographApp" target="_blank" class="footer__link u-flex-line">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M18 17H13.0625L9.19551 12.1062L4.76756 17.0003H2.3125L8.04974 10.6562L2 3H7.0625L10.5575 7.47359L14.5974 3H17.0509L11.6949 8.92946L18 17ZM13.7422 15.5782H15.1012L6.32587 4.34668H4.86719L13.7422 15.5782Z" fill="#f4f4f4"/>
             </svg>
