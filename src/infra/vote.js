@@ -2,7 +2,7 @@ import { ethers, Contract, isError, Block, toBigInt } from "ethers";
 import { storeToRefs } from "pinia";
 import { useUtils } from "../composables/utils.js";
 import { useModeratorStore } from "../store/moderator.js";
-import voteAbi from "../json/Votting.json";
+import voteAbi from "../json/Voting.json";
 import Blockchain from "./blockchain.js";
 const { formatToNumber } = useUtils();
 
@@ -11,12 +11,12 @@ export default class Vote {
   static voteContract;
   static profileContract;
   static provider;
-  static rpc = "https://sepolia.base.org";
+  static rpc = "https://data-seed-prebsc-1-s1.binance.org:8545/";
 
   async init(window) {
     if (window.ethereum == null) {
       Vote.provider = new ethers.JsonRpcProvider(Vote.rpc);
-    } else if (window.ethereum && window.ethereum.chainId != "0x14a34") {
+    } else if (window.ethereum && window.ethereum.chainId != "0x61") {
       Vote.provider = new ethers.JsonRpcProvider(Vote.rpc);
     } else {
       Vote.provider = new ethers.BrowserProvider(window.ethereum);

@@ -1,13 +1,13 @@
 export const useMetamask = () => {
-  const chainBASE = "0x14a34";
+  const chainBNB = "0x61";
 
   function isMetaMask() {
     const { ethereum } = window;
     return Boolean(ethereum && ethereum.isMetaMask);
   }
 
-  function isBASE() {
-    return window.ethereum.chainId === chainBASE;
+  function isBNB() {
+    return window.ethereum.chainId === chainBNB;
   }
 
   function isConnected() {
@@ -28,14 +28,14 @@ export const useMetamask = () => {
       await window.ethereum.request({ method: "eth_requestAccounts" })
     )[0];
     if (!address) return null;
-    if (!isBASE()) {
+    if (!isBNB()) {
       const result = await changeChain();
       if (!result) return null;
     }
     return address;
   }
 
-  async function changeChain(id = chainBASE) {
+  async function changeChain(id = chainBNB) {
     try {
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
@@ -51,11 +51,11 @@ export const useMetamask = () => {
             params: [
               {
                 chainId: id,
-                chainName: "Base Sepolia",
-                rpcUrls: ["https://sepolia.base.org"],
+                chainName: "BNB Testnet",
+                rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
                 nativeCurrency: {
-                  name: "ETH",
-                  symbol: "ETH",
+                  name: "tBNB",
+                  symbol: "tBNB",
                   decimals: 18,
                 },
               },
@@ -69,5 +69,5 @@ export const useMetamask = () => {
     }
   }
 
-  return { isBASE, getAccount, isMetaMask, isConnected, changeChain, connect };
+  return { isBNB, getAccount, isMetaMask, isConnected, changeChain, connect };
 };

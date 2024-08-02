@@ -14,7 +14,6 @@ async function uploadFile(file) {
     );
     const result = await response.json();
     if (!result.IpfsHash) return { success: false };
-    console.log("1 ", result, result.IpfsHash);
     return { success: true, data: `https://ipfs.io/ipfs/${result.IpfsHash}` };
   } catch (error) {
     return { success: false };

@@ -1,5 +1,5 @@
 {
-  "address": "0x045568aa8410c6f27E8C8ddd89453a2DeA6872AA",
+  "address": "0xEA9810d6deF262Ba30a7F96a8B3b7B6C724bE532",
   "abi": [
     "function assessments(uint256) view returns (uint256, uint256, uint256, string, address, address, bool)",
     "function counter() view returns (uint256)",

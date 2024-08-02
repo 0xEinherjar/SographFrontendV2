@@ -1,5 +1,5 @@
 {
-  "address": "0x03b29D78F8E3537e992B50977d99aBB85Bb06DF3",
+  "address": "0xcB63c8DAF18999CD978FfDD389F3242613db0bA7",
   "abi": [
     "function addressByProfileId(uint256) view returns (address)",
     "function assessment(address)",
@@ -20,7 +20,7 @@
     "function redeemPost(uint256)",
     "function redeemProfile()",
     "function restore(address)",
-    "function setVotting(address)",
+    "function setVoting(address)",
     "function share(uint256)",
     "function totalShared(uint256) view returns (uint256)",
     "function unfollow(address)",

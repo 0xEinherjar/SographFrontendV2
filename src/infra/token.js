@@ -8,7 +8,7 @@ const { formatToNumber } = useUtils();
 export default class Token {
   static tokenContract;
   static provider;
-  static rpc = "https://sepolia.base.org";
+  static rpc = "https://data-seed-prebsc-1-s1.binance.org:8545/";
 
   async init(window) {
     if (window.ethereum == null) {

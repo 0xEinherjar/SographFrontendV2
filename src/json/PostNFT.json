@@ -1,5 +1,5 @@
 {
-  "address": "0x9B9102c7460e5dc4F7aa136E1731283559C06495",
+  "address": "0xfdAf38e0faeF13ECaC79c9A50fa9C91b346ab1eF",
   "abi": [
     "function approve(address,uint256)",
     "function balanceOf(address) view returns (uint256)",

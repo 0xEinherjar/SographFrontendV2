@@ -14,13 +14,12 @@ export default class Blockchain {
   static sographContract;
   static tokenContract;
   static provider;
-  static rpc = "https://sepolia.base.org";
-  // static rpc = "https://base-sepolia.g.alchemy.com/v2/Your-API-Key";
+  static rpc = "https://data-seed-prebsc-1-s1.binance.org:8545/";
 
   async init(window) {
     if (window.ethereum == null) {
       Blockchain.provider = new ethers.JsonRpcProvider(Blockchain.rpc);
-    } else if (window.ethereum && window.ethereum.chainId != "0x14a34") {
+    } else if (window.ethereum && window.ethereum.chainId != "0x61") {
       Blockchain.provider = new ethers.JsonRpcProvider(Blockchain.rpc);
     } else {
       Blockchain.provider = new ethers.BrowserProvider(window.ethereum);

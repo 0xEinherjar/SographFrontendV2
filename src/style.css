@@ -20,6 +20,22 @@
   --color-yellow: #ffde6b;
   --color-icon-primary: #bdc1c6;
 }
+/* .light-mode:root {
+  --bg-color-primary: #ffffff;
+  --bg-color-secondary: #f3f8fd;
+
+  --bg-color-quaternary: #1a1b1d;
+  --bg-color-quinary: #bdc1c6;
+
+  --text-color-primary: #292d32;
+  --text-color-secondary: #292d3266;
+  --text-color-tertiary: #292d3266;
+
+  --text-color-quaternary: #1a1b1d;
+  --text-color-quinary: #28292b;
+
+  --color-icon-primary: #292d32;
+} */
 *,
 *::before,
 *::after {
