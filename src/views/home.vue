@@ -117,6 +117,7 @@ import { useRouter } from "vue-router";
   font-size: 1.5rem;
   font-weight: 500;
   padding-inline: 24px;
+  white-space: nowrap;
 }
 .button-info-chain span {
   height: 10px;
@@ -127,8 +128,7 @@ import { useRouter } from "vue-router";
 .home {
   min-height: 100vh;
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  /* grid-template-rows: auto calc(100vh - 100px) auto; */
+  grid-template-rows: auto minmax(61rem, 1fr) auto;
   grid-column: sidebar-start / main-end;
   padding-inline: 4rem;
 }

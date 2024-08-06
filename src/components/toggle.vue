@@ -2,15 +2,15 @@
 import { ref } from "vue";
 
 const isLight = ref(false);
-function toggleLightMode() {
-  if (!isLight.value) {
-    document.querySelector("html").classList.add("light-mode");
-    isLight.value = true;
-  } else {
-    document.querySelector("html").classList.remove("light-mode");
-    isLight.value = false;
-  }
-}
+// function toggleLightMode() {
+//   if (!isLight.value) {
+//     document.querySelector("html").classList.add("light-mode");
+//     isLight.value = true;
+//   } else {
+//     document.querySelector("html").classList.remove("light-mode");
+//     isLight.value = false;
+//   }
+// }
 </script>
 <!-- prettier-ignore -->
 <template>
