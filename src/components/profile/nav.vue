@@ -2,6 +2,7 @@
 import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { useUtils } from "../../composables/utils.js";
+import ModalReport from "../modal-report.vue";
 
 const { truncateAddress, copyContent } = useUtils();
 const route = useRoute();
@@ -38,7 +39,7 @@ watch(
     </ul>
     <ul class="profile__nav-actions u-flex-line">
       <li class="profile__nav-actions-items dropdown">
-        <svg class="c-icon-outline" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="c-icon--outline" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14.9902 17.5H16.5002C19.5202 17.5 22.0002 15.03 22.0002 12C22.0002 8.98 19.5302 6.5 16.5002 6.5H14.9902" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M9 6.5H7.5C4.47 6.5 2 8.97 2 12C2 15.02 4.47 17.5 7.5 17.5H9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path opacity="0.4" d="M8 12H16" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -87,21 +88,24 @@ watch(
         </div>
       </li>
       <li class="profile__nav-actions-items dropdown">
-        <svg class="c-icon-outline" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="c-icon--outline" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M5 10C3.9 10 3 10.9 3 12C3 13.1 3.9 14 5 14C6.1 14 7 13.1 7 12C7 10.9 6.1 10 5 10Z" stroke-width="1.5"/>
           <path d="M19 10C17.9 10 17 10.9 17 12C17 13.1 17.9 14 19 14C20.1 14 21 13.1 21 12C21 10.9 20.1 10 19 10Z" stroke-width="1.5"/>
           <path opacity="0.4" d="M12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10Z" stroke-width="1.5"/>
         </svg>
         <div class="dropdown__group">
           <ul class="dropdown__menu">
-            <li class="dropdown__item">
+            <li>
+              <modal-report/>
+            </li>
+            <!-- <li class="dropdown__item">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="#f4f4f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path opacity="0.34" d="M12 8V13" stroke="#f4f4f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path opacity="0.34" d="M11.9941 16H12.0031" stroke="#f4f4f4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
               <span class="dropdown__item-text-grow c-soon">Report</span>
-            </li>
+            </li> -->
           </ul>
         </div>
       </li>
@@ -133,12 +137,10 @@ watch(
   align-items: center;
   gap: 8px;
   font-size: 1.4rem;
+  cursor: pointer;
 }
 .dropdown__item-text-grow {
   flex-grow: 1;
-}
-.dropdown__item-text-grow.c-soon::before {
-  right: 30%;
 }
 .dropdown__item svg {
   height: 20px;

@@ -20,7 +20,7 @@
   --color-yellow: #ffde6b;
   --color-icon-primary: #bdc1c6;
 }
-/* .light-mode:root {
+.light-mode:root {
   --bg-color-primary: #ffffff;
   --bg-color-secondary: #f3f8fd;
 
@@ -35,7 +35,7 @@
   --text-color-quinary: #28292b;
 
   --color-icon-primary: #292d32;
-} */
+}
 *,
 *::before,
 *::after {
@@ -134,7 +134,7 @@ body {
   width: 2.4rem;
   fill: var(--color-icon-primary);
 }
-.c-icon-outline {
+.c-icon--outline {
   height: 2.4rem;
   width: 2.4rem;
   stroke: var(--color-icon-primary);

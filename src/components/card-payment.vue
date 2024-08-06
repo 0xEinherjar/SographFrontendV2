@@ -46,12 +46,12 @@ onBeforeMount(async () => {
   <dialog class="c-card-payment" ref="modal">
     <div class="c-card-payment__content">
       <button class="c-card-payment__close" @click="modal.close()" type="button">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="c-icon--outline" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g opacity="0.4">
-          <path d="M9.16992 14.8299L14.8299 9.16992" stroke="#F4F4F4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M14.8299 14.8299L9.16992 9.16992" stroke="#F4F4F4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9.16992 14.8299L14.8299 9.16992" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14.8299 14.8299L9.16992 9.16992" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </g>
-          <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="#F4F4F4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
       <div class="c-card-payment__header">
@@ -174,7 +174,6 @@ onBeforeMount(async () => {
   font-weight: 600;
   line-height: 2.1rem;
   text-align: center;
-  color: var(--text-color-primary);
 }
 .c-card-payment__subtitle {
   font-size: 1.5rem;
@@ -210,7 +209,7 @@ onBeforeMount(async () => {
 }
 .c-card-payment__list-text {
   font-size: 1.5rem;
-  color: rgba(189, 193, 198, 0.4);
+  color: var(--text-color-tertiary);
   margin-top: 6px;
 }
 
@@ -222,11 +221,11 @@ onBeforeMount(async () => {
   gap: 32px;
 }
 .c-card-payment__pay {
-  background-color: #f4f4f4;
+  background-color: var(--bg-color-quaternary);
   border-radius: 12px;
   height: 48px;
   width: 100%;
-  color: #1a1b1d;
+  color: var(--text-color-quinary);
   font-size: 1.4rem;
   font-weight: 500;
 }
@@ -244,7 +243,7 @@ onBeforeMount(async () => {
 }
 .c-card-payment__count-button svg {
   transform: scale(0.55);
-  fill: #f4f4f4;
+  fill: var(--text-color-primary);
 }
 .c-card-payment__count-text {
   flex-grow: 1;
