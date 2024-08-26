@@ -11,10 +11,6 @@ export const usePrepare = () => {
     if (avatar != null && !avatar.startsWith("https://ipfs.io/ipfs/")) {
       avatar = null;
     }
-    // const publications = [];
-    // for (const item of data[9]) {
-    //   publications.push(Number(String(item).replace(/n/i, "")));
-    // }
     return {
       avatar: avatar,
       name: metadata.name,
@@ -120,9 +116,96 @@ export const usePrepare = () => {
       });
     }
     return postInfo.reverse();
-    // return postInfo.sort((a, b) => {
-    //   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    // });
+  }
+
+  return { profile, profileToCaller, post, postToCaller };
+};
+
+export const usePrepare2 = () => {
+  // Função auxiliar para buscar e validar metadata a partir de uma URL IPFS
+  async function fetchAndValidateMetadata(url) {
+    if (!url.startsWith("https://ipfs.io/ipfs/")) return null;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Falha ao buscar metadata");
+    const metadata = await response.json();
+    return metadata;
+  }
+
+  // Função auxiliar para processar dados de perfil
+  function processProfileData(data, metadata) {
+    return {
+      avatar:
+        metadata.avatar && metadata.avatar.startsWith("https://ipfs.io/ipfs/")
+          ? metadata.avatar
+          : null,
+      name: metadata.name,
+      description: metadata.description,
+      handle: data[1],
+      hasSubscription: data[4],
+      following: formatToNumber(data[2]),
+      followers: formatToNumber(data[3]),
+      biography: metadata.biography,
+      location: metadata.location,
+      createdAt: metadata.created_at,
+      links: metadata.links,
+    };
+  }
+
+  // Função para preparar os dados do perfil
+  async function profile(data) {
+    const metadata = await fetchAndValidateMetadata(data[0]);
+    if (!metadata) return null;
+    return processProfileData(data, metadata);
+  }
+
+  // Função para preparar os dados do perfil para o chamador
+  async function profileToCaller(data) {
+    const metadata = await fetchAndValidateMetadata(data[0]);
+    if (!metadata) return null;
+    return processProfileData(data, metadata);
+  }
+
+  // Função auxiliar para processar dados de posts
+  function processPostData(list, author, metadata) {
+    return {
+      authorName: author.name,
+      authorAvatar: author.avatar,
+      id: formatToNumber(list[0]),
+      hasShared: list[1],
+      authorHasSubscription: list[2],
+      authorHandle: list[4],
+      owner: list[6],
+      totalLike: formatToNumber(list[7]),
+      totalShared: formatToNumber(list[8]),
+      totalComments: formatToNumber(list[9]),
+      attachment: metadata.attachment,
+      text: metadata.text,
+      createdAt: metadata.created_at,
+    };
+  }
+
+  // Função para preparar os dados dos posts
+  async function post(data) {
+    const postInfo = [];
+    for (const list of data) {
+      if (list[6] === "0x0000000000000000000000000000000000000000") continue;
+
+      const [author, metadata] = await Promise.all([
+        fetchAndValidateMetadata(list[3]),
+        fetchAndValidateMetadata(list[5]),
+      ]);
+
+      if (author && metadata) {
+        postInfo.push(processPostData(list, author, metadata));
+      }
+    }
+    return postInfo.reverse();
+  }
+
+  // Função para preparar os dados dos posts para o chamador
+  async function postToCaller(data) {
+    const postInfo = await post(data);
+    return postInfo;
   }
 
   return { profile, profileToCaller, post, postToCaller };

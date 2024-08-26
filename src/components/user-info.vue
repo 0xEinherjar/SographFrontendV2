@@ -3,6 +3,7 @@ import Avatar from "./avatar.vue";
 import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
+import { useMetamask } from "../composables/metamask.js";
 import { useRouter } from "vue-router";
 import { computed } from "vue";
 
@@ -12,6 +13,7 @@ const userStore = useUserStore();
 const { resetAccount } = accountStore;
 const { removeUser } = userStore;
 const { user } = storeToRefs(userStore);
+const { disconnect } = useMetamask();
 
 const pathProfile = computed(() => {
   return user.value?.handle ? user.value?.handle : user.value?.owner;
@@ -21,13 +23,14 @@ function logout() {
   const path = pathProfile.value;
   resetAccount();
   removeUser();
-  router.push({ path: `/user/${path}` });
+  disconnect();
+  router.push({ path: `/${path}` });
 }
 </script>
 <!-- prettier-ignore -->
 <template>
-  <header class="c-user-info">
-    <div class="c-user-info__left">
+  <header class="c-user-info u-flex-line-between">
+    <div class="c-user-info__left u-flex-line">
       <h3 class="c-user-info__name u-text-ellipsis">{{ user.name }}</h3>
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M11.6199 5.2207L7.81655 9.02404C7.36738 9.4732 6.63238 9.4732 6.18322 9.02404L2.37988 5.2207" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -46,14 +49,9 @@ function logout() {
 </template>
 <style>
 .c-user-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding-inline: 16px;
 }
 .c-user-info__left {
-  display: flex;
-  align-items: center;
   gap: 8px;
   position: relative;
   height: 100%;
@@ -76,7 +74,7 @@ function logout() {
   height: 14px;
   width: 14px;
   border-radius: 50%;
-  background-color: #2fc687;
+  background-color: var(--color-green);
   border: 3px solid var(--bg-color-primary);
   position: absolute;
   bottom: -2px;

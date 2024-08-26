@@ -63,7 +63,7 @@ watch(
   font-size: 1.4rem;
 }
 .c-back__text {
-  color: var(--text-color-secondary);
+  color: var(--text-color-primary);
   margin-left: 4px;
 }
 .c-back > .c-icon,

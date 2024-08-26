@@ -1,39 +1,40 @@
-async function uploadFile(file) {
+const API_URL = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+const AUTH_HEADER = {
+  Authorization: `Bearer ${import.meta.env.VITE_PINATA_KEY_JWT}`,
+};
+
+async function pinToIPFS(data) {
   try {
-    const data = new FormData();
-    data.append("file", file);
-    const response = await fetch(
-      "https://api.pinata.cloud/pinning/pinFileToIPFS",
-      {
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_PINATA_KEY_JWT}`,
-        },
-        body: data,
-      }
-    );
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: AUTH_HEADER,
+      body: data,
+    });
     const result = await response.json();
-    if (!result.IpfsHash) return { success: false };
+    if (!result.IpfsHash) {
+      return { success: false, message: "Failed to obtain IPFS hash" };
+    }
     return { success: true, data: `https://ipfs.io/ipfs/${result.IpfsHash}` };
   } catch (error) {
-    return { success: false };
+    return { success: false, message: "Failed to upload to IPFS" };
   }
+}
+
+async function uploadFile(file) {
+  const data = new FormData();
+  data.append("file", file);
+  return await pinToIPFS(data);
 }
 
 export async function pinProfileToIPFS(params) {
   try {
-    const data = new FormData();
-    let avatar = params.avatar;
-    if (params.avatar instanceof File) {
-      const result = await uploadFile(params.avatar);
-      if (result.success) {
-        avatar = result.data;
-      } else {
-        return { success: false };
-      }
+    let avatarUrl = null;
+    if (params.avatar) {
+      const { success, data } = await handleFileUpload(params.avatar);
+      avatarUrl = success ? data : avatarUrl;
     }
-    const json = JSON.stringify({
-      avatar: avatar,
+    const profileData = {
+      avatar: avatarUrl,
       name: params.name,
       description: params.description,
       created_at: params.createdAt,
@@ -45,60 +46,43 @@ export async function pinProfileToIPFS(params) {
         twitch: params.links?.twitch ?? "",
         instagram: params.links?.instagram ?? "",
       },
-    });
-    const blob = new Blob([json], { type: "application/json" });
-    data.append("file", blob);
-    const response = await fetch(
-      "https://api.pinata.cloud/pinning/pinFileToIPFS",
-      {
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_PINATA_KEY_JWT}`,
-        },
-        body: data,
-      }
-    );
-    const result = await response.json();
-    if (!result.IpfsHash) return { success: false };
-    return { success: true, data: `https://ipfs.io/ipfs/${result.IpfsHash}` };
+    };
+    return await pinJsonToIPFS(profileData);
   } catch (error) {
-    return { success: false };
+    return { success: false, message: "Failed to pin profile to IPFS" };
   }
 }
 
 export async function pinPostToIPFS(params) {
   try {
-    const data = new FormData();
-    let attachment = null;
-    if (Boolean(params.attachment)) {
-      const result = await uploadFile(params.attachment);
-      if (result.success) {
-        attachment = result.data;
-      } else {
-        return { success: false };
-      }
+    let attachmentUrl = null;
+    if (params.attachment) {
+      const { success, data } = await handleFileUpload(params.attachment);
+      attachmentUrl = success ? data : attachmentUrl;
     }
-    const json = JSON.stringify({
-      attachment: attachment,
+    const postData = {
+      attachment: attachmentUrl,
       text: params.text,
       created_at: params.createdAt,
-    });
-    const blob = new Blob([json], { type: "application/json" });
-    data.append("file", blob);
-    const response = await fetch(
-      "https://api.pinata.cloud/pinning/pinFileToIPFS",
-      {
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_PINATA_KEY_JWT}`,
-        },
-        body: data,
-      }
-    );
-    const result = await response.json();
-    if (!result.IpfsHash) return { success: false };
-    return { success: true, data: `https://ipfs.io/ipfs/${result.IpfsHash}` };
+    };
+    return await pinJsonToIPFS(postData);
   } catch (error) {
-    return { success: false };
+    return { success: false, message: "Failed to pin post to IPFS" };
   }
+}
+
+async function handleFileUpload(file) {
+  if (file instanceof File) {
+    return await uploadFile(file);
+  }
+  return { success: true, data: file };
+}
+
+async function pinJsonToIPFS(jsonData) {
+  const blob = new Blob([JSON.stringify(jsonData)], {
+    type: "application/json",
+  });
+  const data = new FormData();
+  data.append("file", blob);
+  return await pinToIPFS(data);
 }

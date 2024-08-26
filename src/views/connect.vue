@@ -44,14 +44,13 @@ async function handleConnect() {
   wallet.value = address;
   const blockchain = new Blockchain();
   const result = await blockchain.getProfile(address);
-  // console.log(result);
   if (result.success == false && result?.message == "NOT_FOUND") {
     enableForm.value = true;
   } else if (result.success) {
     userStore.setUser(result.data);
     accountStore.setHasAccount();
     router.push({
-      path: `/user/${result.data.handle ? result.data.handle : address}`,
+      path: `/${result.data.handle ? result.data.handle : address}`,
     });
   }
 }
@@ -73,9 +72,7 @@ async function reactivateProfile() {
   userStore.setUser(profileResult.data);
   accountStore.setHasAccount();
   router.push({
-    path: `/user/${
-      profileResult.data.handle ? profileResult.data.handle : address
-    }`,
+    path: `/${profileResult.data.handle ? profileResult.data.handle : address}`,
   });
 }
 
@@ -105,16 +102,13 @@ async function create() {
     }
     const blockchain = new Blockchain();
     const result = await blockchain.createProfile(metadata.data);
-    // console.log(result);
     if (result.success) {
       accountStore.setHasAccount();
       const profile = await blockchain.getProfile(wallet.value);
       if (profile.success) userStore.setUser(profile.data);
-      router.push({ path: `/user/${wallet.value}` });
+      router.push({ path: `/${wallet.value}` });
     }
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
   isLoading.value = false;
 }
 </script>

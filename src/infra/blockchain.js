@@ -7,7 +7,7 @@ import { useUserStore } from "../store/user.js";
 import sographAbi from "../json/Sograph.json";
 import profileAbi from "../json/ProfileNFT.json";
 import tokenAbi from "../json/Token.json";
-const { formatToNumber } = useUtils();
+const { formatToNumber, isAddress } = useUtils();
 
 export default class Blockchain {
   static profileContract;
@@ -17,115 +17,159 @@ export default class Blockchain {
   static rpc = "https://data-seed-prebsc-1-s1.binance.org:8545/";
 
   async init(window) {
-    if (window.ethereum == null) {
-      Blockchain.provider = new ethers.JsonRpcProvider(Blockchain.rpc);
-    } else if (window.ethereum && window.ethereum.chainId != "0x61") {
-      Blockchain.provider = new ethers.JsonRpcProvider(Blockchain.rpc);
-    } else {
-      Blockchain.provider = new ethers.BrowserProvider(window.ethereum);
+    Blockchain.provider =
+      window.ethereum && window.ethereum.chainId === "0x61"
+        ? new ethers.BrowserProvider(window.ethereum)
+        : new ethers.JsonRpcProvider(Blockchain.rpc);
+
+    Blockchain.sographContract = this._getContract(sographAbi);
+    Blockchain.profileContract = this._getContract(profileAbi);
+    Blockchain.tokenContract = this._getContract(tokenAbi);
+  }
+
+  _getContract(abi) {
+    return new Contract(abi.address, abi.abi, Blockchain.provider);
+  }
+
+  async _executeContractMethod(contract, method, args = [], errorMessage = "") {
+    try {
+      const signer = await Blockchain.provider.getSigner();
+      const transaction = await contract.connect(signer)[method](...args);
+      await transaction.wait();
+      return { success: true };
+    } catch (error) {
+      return this._handleError(error, errorMessage);
     }
-    Blockchain.sographContract = new Contract(
-      sographAbi.address,
-      sographAbi.abi,
-      Blockchain.provider
-    );
-    Blockchain.profileContract = new Contract(
-      profileAbi.address,
-      profileAbi.abi,
-      Blockchain.provider
-    );
-    Blockchain.tokenContract = new Contract(
-      tokenAbi.address,
-      tokenAbi.abi,
-      Blockchain.provider
-    );
+  }
+
+  _handleError(error, defaultMsg) {
+    if (isError(error, "CALL_EXCEPTION")) {
+      return { success: false, message: error.reason || defaultMsg };
+    }
+    return { success: false, message: defaultMsg };
   }
 
   async createProfile(metadata) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .createProfile(metadata);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "createProfile",
+      [metadata],
+      "Error creating profile"
+    );
   }
 
   async update(metadata) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .updateProfile(metadata);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "updateProfile",
+      [metadata],
+      "Error updating profile"
+    );
   }
 
   async like(id) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .like(id);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "like",
+      [id],
+      "Error liking post"
+    );
   }
 
   async share(id) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .share(id);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "share",
+      [id],
+      "Error sharing post"
+    );
   }
 
   async unshare(id) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .unshare(id);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "unshare",
+      [id],
+      "Error unsharing post"
+    );
+  }
+
+  async createPost(metadata) {
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "createPost",
+      [metadata],
+      "Error creating post"
+    );
+  }
+
+  async follow(address) {
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "follow",
+      [address],
+      "Error following user"
+    );
+  }
+
+  async unfollow(address) {
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "unfollow",
+      [address],
+      "Error unfollowing user"
+    );
+  }
+
+  async redeemProfile() {
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "redeemProfile",
+      [],
+      "Error redeeming profile"
+    );
+  }
+
+  async redeemPost(id) {
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "redeemPost",
+      [id],
+      "Error redeeming post"
+    );
+  }
+
+  async approve(id) {
+    return this._executeContractMethod(
+      Blockchain.profileContract,
+      "approve",
+      [sographAbi.address, id],
+      "Error approving transaction"
+    );
+  }
+
+  async reactivateProfile(id) {
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "reactivateProfile",
+      [id],
+      "Error reactivating profile"
+    );
+  }
+
+  async subscription(id, period) {
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "subscription",
+      [id, period],
+      "Error subscription profile"
+    );
   }
 
   async getProfile(profile) {
     const accountStore = useAccountStore();
     const { account } = storeToRefs(accountStore);
     const prepare = usePrepare();
-    const { isAddress, formatToNumber } = useUtils();
     try {
       if (!isAddress(profile)) {
         const address = await Blockchain.sographContract.ownerOfHandle(profile);
@@ -148,6 +192,7 @@ export default class Blockchain {
         data.id = formatToNumber(transaction[1]);
         data.role = formatToNumber(transaction[2]);
         data.owner = profile;
+
         if (!data) return { success: false, message: "" };
         return { success: true, data };
       } else {
@@ -386,118 +431,6 @@ export default class Blockchain {
     }
   }
 
-  async createPost(metadata) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .createPost(metadata);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
-  }
-
-  async follow(address) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .follow(address);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
-  }
-
-  async unfollow(address) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .unfollow(address);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
-  }
-
-  async redeemProfile() {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .redeemProfile();
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
-  }
-
-  async redeemPost(id) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .redeemPost(id);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
-  }
-
-  async approve(id) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.profileContract
-        .connect(signer)
-        .approve(sographAbi.address, id);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
-  }
-
-  async reactivateProfile(id) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .reactivateProfile(id);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
-  }
-
   async approveToken(value) {
     try {
       const accountStore = useAccountStore();
@@ -529,38 +462,6 @@ export default class Blockchain {
     return (
       formatToNumber(transaction[2]) / 10 ** formatToNumber(transactionToken)
     );
-  }
-
-  async subscription(id, period) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.profileContract
-        .connect(signer)
-        .subscription(id, period);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
-  }
-
-  async updateHandle(handle) {
-    try {
-      const signer = await Blockchain.provider.getSigner();
-      const transaction = await Blockchain.sographContract
-        .connect(signer)
-        .updateHandle(handle);
-      await transaction.wait();
-      return { success: true };
-    } catch (error) {
-      if (isError(error, "CALL_EXCEPTION")) {
-        return { success: false, message: error.reason };
-      }
-      return { success: false, message: "" };
-    }
   }
 
   async isHandleAvailable(handle) {

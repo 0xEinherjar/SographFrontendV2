@@ -84,18 +84,11 @@ const active = ref(false);
 }
 .c-report__list {
   display: grid;
-  max-height: 541px;
+  max-height: 520px;
   overflow-y: auto;
 }
-.c-report__list::-webkit-scrollbar-track {
-  background: transparent;
-}
-.c-report__list::-webkit-scrollbar-thumb {
-  background-color: var(--bg-color-secondary);
-  border-radius: 10px;
-}
 .c-report__list::-webkit-scrollbar {
-  width: 6px;
+  width: 0;
 }
 .c-report__item {
   text-align: left;

@@ -7,7 +7,7 @@ const formSearch = ref("");
 
 function search() {
   if (!formSearch.value) return;
-  router.push({ path: `/user/${formSearch.value.toLowerCase()}` });
+  router.push({ path: `/${formSearch.value.toLowerCase()}` });
   formSearch.value = "";
 }
 </script>

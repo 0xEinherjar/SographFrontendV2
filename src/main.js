@@ -4,14 +4,11 @@ import "./style.css";
 import App from "./App.vue";
 import router from "./routes/index.js";
 import Blockchain from "./infra/blockchain.js";
-import Vote from "./infra/vote.js";
 import Token from "./infra/token.js";
 
 const blockchain = new Blockchain();
-const vote = new Vote();
 const token = new Token();
 blockchain.init(window);
-vote.init(window);
 token.init(window);
 const pinia = createPinia();
 const app = createApp(App);

@@ -35,10 +35,22 @@ export const useMetamask = () => {
     return address;
   }
 
+  async function disconnect() {
+    if (!isMetaMask()) return null;
+    await window.ethereum.request({
+      method: "wallet_revokePermissions",
+      params: [
+        {
+          eth_accounts: {},
+        },
+      ],
+    });
+  }
+
   async function addToken() {
-    const tokenAddress = "0xEA9810d6deF262Ba30a7F96a8B3b7B6C724bE532"
-    const tokenSymbol = "GPH"
-    const tokenDecimals = 8
+    const tokenAddress = "0xEA9810d6deF262Ba30a7F96a8B3b7B6C724bE532";
+    const tokenSymbol = "GPH";
+    const tokenDecimals = 8;
     await window.ethereum.request({
       method: "wallet_watchAsset",
       params: {
@@ -49,7 +61,7 @@ export const useMetamask = () => {
           decimals: tokenDecimals,
         },
       },
-    })
+    });
   }
 
   async function changeChain(id = chainBNB) {
@@ -86,5 +98,13 @@ export const useMetamask = () => {
     }
   }
 
-  return { isBNB, getAccount, isMetaMask, isConnected, changeChain, connect };
+  return {
+    isBNB,
+    getAccount,
+    isMetaMask,
+    isConnected,
+    changeChain,
+    connect,
+    disconnect,
+  };
 };
