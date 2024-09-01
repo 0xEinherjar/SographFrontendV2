@@ -7,6 +7,7 @@ import Setting from "../views/setting.vue";
 import Connect from "../views/connect.vue";
 import Feed from "../views/feed.vue";
 import Home from "../views/home.vue";
+import Reactivate from "../views/reactivate.vue";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -14,7 +15,8 @@ const router = createRouter({
     { path: "/", component: Home, meta: { auth: false } },
     { path: "/feed", component: Feed, meta: { auth: true } },
     { path: "/settings", component: Setting, meta: { auth: true } },
-    { path: "/connect", component: Connect, meta: { auth: false } },
+    { path: "/create", component: Connect, meta: { auth: true } },
+    { path: "/reactivate", component: Reactivate, meta: { auth: true } },
     { path: "/:profile", component: Profile, meta: { auth: false } },
   ],
 });
@@ -49,15 +51,27 @@ router.beforeEach((to, from, next) => {
   }
   const accountStore = useAccountStore();
   const { account } = storeToRefs(accountStore);
-  if (to.fullPath == "/connect" && account.value.hasAccount) {
-    account.value.wallet;
+  const path = to.fullPath;
+  const hasAccountAndIsConnected =
+    (path == "/create" || path == "/reactivate" || path == "/") &&
+    account.value.hasAccount &&
+    account.value.isConnected;
+  if (hasAccountAndIsConnected) {
     return next(`/${account.value.wallet}`);
   }
-  if (to.meta?.auth && !account.value.hasAccount) {
-    return next("/connect");
+  if (
+    (path == "/create" || path == "/reactivate") &&
+    !account.value.isConnected
+  ) {
+    return next("/");
   }
-  if (to.fullPath == "/" && account.value.hasAccount) {
-    return next(`/${account.value.wallet}`);
+  if (
+    to.meta?.auth &&
+    !account.value.hasAccount &&
+    path != "/create" &&
+    path != "/reactivate"
+  ) {
+    return next("/");
   }
   next();
 });

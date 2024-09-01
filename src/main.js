@@ -8,8 +8,8 @@ import Token from "./infra/token.js";
 
 const blockchain = new Blockchain();
 const token = new Token();
-blockchain.init(window);
-token.init(window);
+blockchain.init();
+token.init();
 const pinia = createPinia();
 const app = createApp(App);
 app.use(router);

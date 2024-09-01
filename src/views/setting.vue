@@ -11,7 +11,9 @@ import { useAccountStore } from "../store/account.js";
 import { pinProfileToIPFS } from "../infra/pinata.js";
 import Blockchain from "../infra/blockchain.js";
 import { useRouter } from "vue-router";
+import { useDisconnect } from "@web3modal/ethers/vue";
 
+const { disconnect } = useDisconnect();
 const router = useRouter();
 const accountStore = useAccountStore();
 const { resetAccount } = accountStore;
@@ -61,6 +63,7 @@ async function redeem() {
   if (result.success) {
     resetAccount();
     removeUser();
+    disconnect();
     router.push({ path: "/" });
   }
 }

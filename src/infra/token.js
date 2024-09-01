@@ -1,25 +1,24 @@
 import { ethers, Contract, isError, Block } from "ethers";
 import { useUtils } from "../composables/utils.js";
 import tokenAbi from "../json/Token.json";
-const { formatToNumber } = useUtils();
 
 export default class Token {
   static tokenContract;
   static provider;
   static rpc = "https://data-seed-prebsc-1-s1.binance.org:8545/";
 
-  async init(window) {
-    if (window.ethereum == null) {
-      Token.provider = new ethers.JsonRpcProvider(Token.rpc);
-    } else {
-      Token.provider = new ethers.BrowserProvider(window.ethereum);
-    }
+  async init() {
+    Token.provider = new ethers.JsonRpcProvider(Token.rpc);
 
     Token.tokenContract = new Contract(
       tokenAbi.address,
       tokenAbi.abi,
       Token.provider
     );
+  }
+
+  setProvider(provider) {
+    Token.provider = new ethers.BrowserProvider(provider);
   }
 
   async approve({ address, amount }) {

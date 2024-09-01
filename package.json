@@ -9,9 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@wagmi/connectors": "^5.1.7",
+    "@wagmi/core": "^2.13.4",
+    "@web3modal/ethers": "^5.1.4",
+    "@web3modal/wagmi": "^5.1.4",
     "ethers": "^6.10.0",
-    "nft.storage": "^7.1.1",
     "pinia": "^2.1.7",
+    "viem": "^2.21.0",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"
   },

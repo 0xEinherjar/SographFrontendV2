@@ -91,7 +91,7 @@ const pathProfile = computed(() => {
             <span class="sidebar__collapse-text show-less">Show Less</span>
           </label>
         </section>
-        <router-link v-if="!account.hasAccount" class="sidebar__connect u-flex-line-center" to="/connect">Connect</router-link>
+        <router-link v-if="!account.hasAccount" class="sidebar__connect u-flex-line-center" to="/">Connect</router-link>
         <section v-if="account.hasAccount && favorite.length">
           <h6 class="sidebar__caption">Favorite Profile</h6>
           <ul class="sidebar__list">

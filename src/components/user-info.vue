@@ -3,17 +3,17 @@ import Avatar from "./avatar.vue";
 import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
-import { useMetamask } from "../composables/metamask.js";
 import { useRouter } from "vue-router";
 import { computed } from "vue";
+import { useDisconnect } from "@web3modal/ethers/vue";
 
+const { disconnect } = useDisconnect();
 const router = useRouter();
 const accountStore = useAccountStore();
 const userStore = useUserStore();
 const { resetAccount } = accountStore;
 const { removeUser } = userStore;
 const { user } = storeToRefs(userStore);
-const { disconnect } = useMetamask();
 
 const pathProfile = computed(() => {
   return user.value?.handle ? user.value?.handle : user.value?.owner;
@@ -63,7 +63,6 @@ function logout() {
 .c-user-info__name {
   font-size: 2.1rem;
   font-weight: 500;
-  color: var(--text-color-primary);
   max-width: 150px;
 }
 .c-user-info__avatar-wrapper {
@@ -93,7 +92,6 @@ function logout() {
   gap: 24px;
 }
 .c-user-info__dropdown-item {
-  color: var(--text-color-secondary);
   width: 100%;
   text-align: left;
 }

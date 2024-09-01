@@ -14,17 +14,23 @@ export default class Blockchain {
   static sographContract;
   static tokenContract;
   static provider;
+  static hasClient = false;
   static rpc = "https://data-seed-prebsc-1-s1.binance.org:8545/";
 
-  async init(window) {
-    Blockchain.provider =
-      window.ethereum && window.ethereum.chainId === "0x61"
-        ? new ethers.BrowserProvider(window.ethereum)
-        : new ethers.JsonRpcProvider(Blockchain.rpc);
+  async init() {
+    Blockchain.provider = new ethers.JsonRpcProvider(Blockchain.rpc);
 
     Blockchain.sographContract = this._getContract(sographAbi);
     Blockchain.profileContract = this._getContract(profileAbi);
     Blockchain.tokenContract = this._getContract(tokenAbi);
+  }
+
+  hasClient() {
+    Blockchain.hasClient = true;
+  }
+
+  setProvider(provider) {
+    Blockchain.provider = new ethers.BrowserProvider(provider);
   }
 
   _getContract(abi) {
@@ -177,7 +183,11 @@ export default class Blockchain {
           return { success: false, message: "profile address not found" };
         profile = address;
       }
-      if (account.value.isConnected && account.value.hasAccount) {
+      if (
+        account.value.isConnected &&
+        account.value.hasAccount &&
+        Blockchain.hasClient
+      ) {
         const signer = await Blockchain.provider.getSigner();
         const transaction = await Blockchain.sographContract
           .connect(signer)
@@ -237,7 +247,11 @@ export default class Blockchain {
       const accountStore = useAccountStore();
       const { account } = storeToRefs(accountStore);
       const prepare = usePrepare();
-      if (account.value.isConnected && account.value.hasAccount) {
+      if (
+        account.value.isConnected &&
+        account.value.hasAccount &&
+        Blockchain.hasClient
+      ) {
         const signer = await Blockchain.provider.getSigner();
         const transaction = await Blockchain.sographContract
           .connect(signer)
@@ -272,7 +286,11 @@ export default class Blockchain {
       );
       if (!transaction[0].length) return { success: true, data: [], cursor: 0 };
       const profiles = [];
-      if (account.value.isConnected && account.value.hasAccount) {
+      if (
+        account.value.isConnected &&
+        account.value.hasAccount &&
+        Blockchain.hasClient
+      ) {
         for (const follwerId of transaction[0]) {
           let _id = formatToNumber(follwerId);
           const profile =
@@ -345,7 +363,11 @@ export default class Blockchain {
       );
       if (!transaction[0].length) return { success: true, data: [], cursor: 0 };
       const profiles = [];
-      if (account.value.isConnected && account.value.hasAccount) {
+      if (
+        account.value.isConnected &&
+        account.value.hasAccount &&
+        Blockchain.hasClient
+      ) {
         for (const follwerId of transaction[0]) {
           let _id = formatToNumber(follwerId);
           const profile =
