@@ -71,6 +71,18 @@ export async function pinPostToIPFS(params) {
   }
 }
 
+export async function pinCommentToIPFS(params) {
+  try {
+    const postData = {
+      text: params.text,
+      created_at: params.createdAt,
+    };
+    return await pinJsonToIPFS(postData);
+  } catch (error) {
+    return { success: false, message: "Failed to pin comment to IPFS" };
+  }
+}
+
 async function handleFileUpload(file) {
   if (file instanceof File) {
     return await uploadFile(file);

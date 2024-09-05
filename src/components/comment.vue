@@ -2,21 +2,18 @@
 import { useUtils } from "../composables/utils.js";
 import Avatar from "./avatar.vue";
 const { dateFormat } = useUtils();
-// const { date } = defineProps(["date"]);
+const props = defineProps(["date", "text", "name", "avatar"]);
 </script>
 <!-- prettier-ignore -->
 <template>
   <div class="c-comment">
-    <avatar length="24px"/>
+    <avatar length="24px" :avatar="props.avatar"/>
     <div class="c-comment__info u-flex-line">
-      <div class="c-comment__name">Chily Mii</div>
+      <div class="c-comment__name">{{ props.name }}</div>
       <span class="c-comment__dot"></span>
-      <time class="c-comment__time">{{ "Jul 15" }}</time>
-      <!-- <time class="c-comment__time" :datetime="date">{{ dateFormat(date) }}</time> -->
+      <time class="c-comment__time" :datetime="props.date">{{ dateFormat(props.date) }}</time>
     </div>
-    <div class="c-comment__paragraph">
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit magni, non enim nisi.
-    </div>
+    <div class="c-comment__paragraph">{{ props.text }}</div>
   </div>
 </template>
 <style>

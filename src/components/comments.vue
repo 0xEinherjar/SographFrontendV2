@@ -1,7 +1,19 @@
 <script setup>
+import { ref, onBeforeMount } from "vue";
 import Comment from "./comment.vue";
 import CreateComment from "./create-comment.vue";
-const { counter } = defineProps(["counter"]);
+import IconClose from "./icons/close.vue";
+import Post from "../infra/post.js";
+const props = defineProps(["id"]);
+const comments = ref([]);
+function newComment(data) {
+  comments.value.unshift(data);
+}
+onBeforeMount(async () => {
+  const post = new Post();
+  const { data } = await post.getComments(props.id, 0, 20);
+  comments.value = data;
+});
 </script>
 <!-- prettier-ignore -->
 <template>
@@ -15,22 +27,19 @@ const { counter } = defineProps(["counter"]);
               <path opacity="0.4" d="M22.0003 12.86C22.0003 15.15 20.8203 17.1801 19.0003 18.4601L17.6603 21.41C17.3503 22.08 16.4503 22.2101 15.9803 21.6401L14.5003 19.86C12.0803 19.86 9.92031 18.7901 8.57031 17.1201L9.50031 16.0001C13.6403 16.0001 17.0003 12.8701 17.0003 9.00006C17.0003 7.95006 16.7503 6.96007 16.3003 6.07007C19.5703 6.82007 22.0003 9.58005 22.0003 12.86Z" stroke="#f4f4f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               <path opacity="0.4" d="M7 9H12" stroke="#f4f4f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>Comments <span class="c-comments__counter">{{ counter }}</span></span>
+            <span>Comments <span class="c-comments__counter">{{ comments.length }}</span></span>
           </div>
           <button class="c-comments__close" @click="$emit('close')" type="button">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g opacity="0.4">
-              <path d="M9.16992 14.8299L14.8299 9.16992" stroke="#F4F4F4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M14.8299 14.8299L9.16992 9.16992" stroke="#F4F4F4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke="#F4F4F4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <icon-close />
           </button>
         </div>
-        <create-comment/>
-        <div class="c-comments__list">
-          <comment/>
+        <create-comment @new-comment="newComment" :id="props.id"/>
+        <div v-if="comments?.length > 0" class="c-comments__list">
+          <template v-for="item in comments">
+            <comment :date="item.createdAt" :text="item.text" :name="item.authorName" :avatar="item.authorAvatar"/>
+          </template>
         </div>
+        <div v-else class="c-comments__note">No comments have been made yet.</div>
       </div>
     </div>
   <!-- </Teleport> -->
@@ -43,6 +52,7 @@ const { counter } = defineProps(["counter"]);
   place-items: center;
   background-color: rgba(26, 27, 29, 0.85);
   overflow-y: auto;
+  z-index: 2;
 }
 .c-comments {
   width: min(500px, 100%);
@@ -80,5 +90,9 @@ const { counter } = defineProps(["counter"]);
 }
 .c-comments__list::-webkit-scrollbar {
   width: 6px;
+}
+.c-comments__note {
+  font-size: 1.4rem;
+  text-align: center;
 }
 </style>

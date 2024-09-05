@@ -1,26 +1,50 @@
 <script setup>
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
-import { useUtils } from "../composables/utils.js";
 import Avatar from "./avatar.vue";
 import { useUserStore } from "../store/user.js";
-const { dateFormat } = useUtils();
+import Post from "../infra/post.js";
+import { pinCommentToIPFS } from "../infra/pinata.js";
+const props = defineProps(["id"]);
+const emit = defineEmits(["new-comment"]);
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const commentLength = ref(0);
+const text = ref("");
 
 function showPlaceholder(event) {
   commentLength.value = event.target.innerText.length;
   if (event.target.innerText.length > 0) {
-    // form.value.text = event.target.innerText;
+    text.value = event.target.innerText;
     event.target.parentNode
       .querySelector(".c-create-comment__textarea-placeholder")
       .classList.add("is-hidden");
   } else {
-    // form.value.text = "";
+    text.value = "";
     event.target.parentNode
       .querySelector(".c-create-comment__textarea-placeholder")
       .classList.remove("is-hidden");
+  }
+}
+
+async function create() {
+  if (text.value.length == 0) return;
+  const data = {
+    text: text.value,
+    createdAt: new Date().toISOString(),
+  };
+  const metadata = await pinCommentToIPFS(data);
+  if (metadata.success == false) return;
+  const post = new Post();
+  const { success } = await post.comment(props.id, metadata.data);
+  if (success) {
+    emit(
+      "new-comment",
+      Object.assign(data, {
+        authorName: user.value.name,
+        authorAvatar: user.value.avatar,
+      })
+    );
   }
 }
 </script>
@@ -33,7 +57,7 @@ function showPlaceholder(event) {
       <div @keyup="showPlaceholder" class="c-create-comment__textarea-input" contenteditable="true"></div>
     </div>
     <span class="c-create-comment__counter u-flex-line">{{ commentLength }}/400</span>
-    <button class="c-create-comment__send u-flex-line">
+    <button class="c-create-comment__send u-flex-line" @click="create">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M9.51002 4.23013L18.07 8.51013C21.91 10.4301 21.91 13.5701 18.07 15.4901L9.51002 19.7701C3.75002 22.6501 1.40002 20.2901 4.28002 14.5401L5.15002 12.8101C5.40002 12.3001 5.40002 11.7101 5.15002 11.2001L4.28002 9.46013C1.40002 3.71013 3.76002 1.35013 9.51002 4.23013Z"/>
         <path d="M14.8399 12.75H9.43994C9.02994 12.75 8.68994 12.41 8.68994 12C8.68994 11.59 9.02994 11.25 9.43994 11.25H14.8399C15.2499 11.25 15.5899 11.59 15.5899 12C15.5899 12.41 15.2499 12.75 14.8399 12.75Z" fill="#F4F4F4"/>

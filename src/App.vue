@@ -7,6 +7,7 @@ import {
 } from "@web3modal/ethers/vue";
 import Blockchain from "./infra/blockchain.js";
 import Token from "./infra/token.js";
+import Post from "./infra/post.js";
 
 const projectId = import.meta.env.VITE_PROJECT_ID;
 
@@ -56,6 +57,8 @@ onMounted(() => {
       const blockchain = new Blockchain();
       blockchain.setProvider(walletProvider.value);
       blockchain.hasClient();
+      const post = new Post();
+      post.setProvider(walletProvider.value);
       const token = new Token();
       token.setProvider(walletProvider.value);
     }

@@ -5,10 +5,13 @@ import App from "./App.vue";
 import router from "./routes/index.js";
 import Blockchain from "./infra/blockchain.js";
 import Token from "./infra/token.js";
+import Post from "./infra/post.js";
 
 const blockchain = new Blockchain();
+const post = new Post();
 const token = new Token();
 blockchain.init();
+post.init();
 token.init();
 const pinia = createPinia();
 const app = createApp(App);
