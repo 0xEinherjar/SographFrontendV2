@@ -174,7 +174,7 @@ export default class Blockchain {
 
   async subscription(id, period) {
     return this._executeContractMethod(
-      Blockchain.sographContract,
+      Blockchain.profileContract,
       "subscription",
       [id, period],
       "Error subscription profile"
