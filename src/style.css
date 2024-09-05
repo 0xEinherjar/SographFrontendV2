@@ -14,6 +14,7 @@
   --text-color-quaternary: #e8eaed;
   --text-color-quinary: #1a1b1d;
 
+  --color-purple: #6b6bff;
   --color-red: #ff6370;
   --color-blue-light: #96e7fe;
   --color-blue: #0177fb;
@@ -126,6 +127,7 @@ body {
 .is-hidden {
   display: none !important;
 }
+.c-link,
 .c-hashtag {
   color: var(--color-blue);
   font-weight: 500;

@@ -9,6 +9,13 @@ export const useUtils = () => {
     return true;
   }
 
+  function makerLink(text) {
+    return text.replace(
+      /(@\w{0,15})/gm,
+      `<a href='/#/$1' class='c-link'>$1</a>`
+    );
+  }
+
   function hashtagDecorator(text) {
     return text.replace(/(#\w{0,15})/gm, "<span class='c-hashtag'>$1</span>");
   }
@@ -81,6 +88,7 @@ export const useUtils = () => {
     isAddress,
     truncateAddress,
     imgURLtoFile,
+    makerLink,
     hashtagDecorator,
     formatToNumber,
     dateFormat,

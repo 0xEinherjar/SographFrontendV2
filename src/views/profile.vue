@@ -30,7 +30,7 @@ const isLoadingPost = ref(true);
 const isLoadingProfile = ref(true);
 const accountStore = useAccountStore();
 const { account } = storeToRefs(accountStore);
-const { isAddress, truncateAddress, hashtagDecorator } = useUtils();
+const { isAddress, truncateAddress, hashtagDecorator, makerLink } = useUtils();
 const isFavorite = ref(false);
 
 function toggleFavorite() {
@@ -83,7 +83,13 @@ function profileNavActive(nav) {
 
 async function getProfile() {
   const blockchain = new Blockchain();
-  const result = await blockchain.getProfile(route.params.profile);
+  let routeParam;
+  if (route.params.profile.startsWith("@")) {
+    routeParam = route.params.profile.replace("@", "");
+  } else {
+    routeParam = route.params.profile;
+  }
+  const result = await blockchain.getProfile(routeParam);
   isLoadingProfile.value = false;
   publications.value = [];
   if (result.success) {
@@ -157,7 +163,7 @@ onBeforeMount(async () => {
               </svg>
             </div>
             <strong class="profile__address">{{ isAddress(username) ? truncateAddress(username) : `@${username}` }}</strong>
-            <p class="profile__description" v-html="hashtagDecorator(profile.description)"></p>
+            <p class="profile__description" v-html="makerLink(hashtagDecorator(profile.description))"></p>
           </div>
         </div>
         <profile-nav :address="profile.owner" :links="profile.links" @profile-nav="profileNavActive"/>

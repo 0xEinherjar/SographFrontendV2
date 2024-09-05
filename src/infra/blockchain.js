@@ -163,6 +163,15 @@ export default class Blockchain {
     );
   }
 
+  async updateHandle(handle) {
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "updateHandle",
+      [handle],
+      "Error"
+    );
+  }
+
   async subscription(id, period) {
     return this._executeContractMethod(
       Blockchain.sographContract,
