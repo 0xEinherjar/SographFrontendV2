@@ -96,16 +96,8 @@ watch(
         <div class="dropdown__group">
           <ul class="dropdown__menu">
             <li>
-              <modal-report/>
+              <modal-report :account="address"/>
             </li>
-            <!-- <li class="dropdown__item">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="#f4f4f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path opacity="0.34" d="M12 8V13" stroke="#f4f4f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path opacity="0.34" d="M11.9941 16H12.0031" stroke="#f4f4f4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="dropdown__item-text-grow c-soon">Report</span>
-            </li> -->
           </ul>
         </div>
       </li>

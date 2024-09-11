@@ -1,17 +1,13 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
-import Comment from "./comment.vue";
-import CreateComment from "./create-comment.vue";
+import { ref, onBeforeMount, inject } from "vue";
+import { Comment, CreateComment } from "./";
 import IconClose from "./icons/close.vue";
-import Post from "../infra/post.js";
+const postClient = inject("postClient");
 const props = defineProps(["id"]);
 const comments = ref([]);
-function newComment(data) {
-  comments.value.unshift(data);
-}
+const newComment = (data) => comments.value.unshift(data);
 onBeforeMount(async () => {
-  const post = new Post();
-  const { data } = await post.getComments(props.id, 0, 20);
+  const { data } = await postClient.getComments(props.id, 0, 20);
   comments.value = data;
 });
 </script>

@@ -1,11 +1,11 @@
 <script setup>
 import { useWeb3ModalAccount } from "@web3modal/ethers/vue";
-import { ref } from "vue";
+import { inject, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
-import Blockchain from "../infra/blockchain.js";
-import loading from "../components/loading.vue";
+import { Loading } from "../components";
+const blockchainClient = inject("blockchainClient");
 const isLoading = ref(false);
 const reactivateProfileId = ref(null);
 const router = useRouter();
@@ -21,13 +21,12 @@ const form = ref({
 async function reactivateProfile() {
   if (!reactivateProfileId || !address.value) return;
   isLoading.value = true;
-  const blockchain = new Blockchain();
-  await blockchain.approve(reactivateProfileId.value);
-  const reactivateResult = await blockchain.reactivateProfile(
+  await blockchainClient.approve(reactivateProfileId.value);
+  const reactivateResult = await blockchainClient.reactivateProfile(
     reactivateProfileId.value
   );
   if (!reactivateResult.success) return;
-  const profileResult = await blockchain.getProfile(address.value);
+  const profileResult = await blockchainClient.getProfile(address.value);
   if (!profileResult.success) return;
   accountStore.setWallet(address.value);
   accountStore.setConnected();

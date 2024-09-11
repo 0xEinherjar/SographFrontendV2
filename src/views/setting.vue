@@ -1,18 +1,14 @@
 <script setup>
-import Back from "../components/back.vue";
-import Sidebar from "../components/sidebar.vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
-import FormHandle from "../components/form/handle.vue";
-import Avatar from "../components/avatar.vue";
-import Loading from "../components/loading.vue";
 import { useUserStore } from "../store/user.js";
 import { useAccountStore } from "../store/account.js";
 import { pinProfileToIPFS } from "../infra/pinata.js";
-import Blockchain from "../infra/blockchain.js";
 import { useRouter } from "vue-router";
 import { useDisconnect } from "@web3modal/ethers/vue";
+import { FormHandle, Avatar, Loading, Back, Sidebar } from "../components";
 
+const blockchainClient = inject("blockchainClient");
 const { disconnect } = useDisconnect();
 const router = useRouter();
 const accountStore = useAccountStore();
@@ -58,8 +54,7 @@ function removeAvatar() {
 }
 
 async function redeem() {
-  const blockchain = new Blockchain();
-  const result = await blockchain.redeemProfile();
+  const result = await blockchainClient.redeemProfile();
   if (result.success) {
     resetAccount();
     removeUser();
@@ -100,10 +95,11 @@ async function update() {
     isLoading.value = false;
     return;
   }
-  const blockchain = new Blockchain();
-  const result = await blockchain.update(metadata.data);
+  const result = await blockchainClient.update(metadata.data);
   if (result.success) {
-    const resultgetProfile = await blockchain.getProfile(user.value.owner);
+    const resultgetProfile = await blockchainClient.getProfile(
+      user.value.owner
+    );
     if (resultgetProfile.success) {
       userStore.setUser(resultgetProfile.data);
     }

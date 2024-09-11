@@ -1,14 +1,16 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { onBeforeMount, ref } from "vue";
-import CreatePost from "../components/create-post.vue";
+import { inject, onBeforeMount, ref } from "vue";
 import { useAccountStore } from "../store/account.js";
-import Blockchain from "../infra/blockchain.js";
 import { useUserStore } from "../store/user.js";
-import Post from "../components/post.vue";
-import PostPlaceholder from "../components/post-placeholder.vue";
-import Sidebar from "../components/sidebar.vue";
-import Back from "../components/back.vue";
+import {
+  CreatePost,
+  Post,
+  PostPlaceholder,
+  Sidebar,
+  Back,
+} from "../components";
+const blockchainClient = inject("blockchainClient");
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const accountStore = useAccountStore();
@@ -17,8 +19,9 @@ const publications = ref([]);
 const isLoadingPost = ref(true);
 
 onBeforeMount(async () => {
-  const blockchain = new Blockchain();
-  const { success, data } = await blockchain.getPostFollowings(user.value.id);
+  const { success, data } = await blockchainClient.getPostFollowings(
+    user.value.id
+  );
   if (success) {
     publications.value = data;
   }
@@ -58,7 +61,7 @@ onBeforeMount(async () => {
         </template>
       </section>
       <div v-else style="text-align: center; margin-top: 80px">
-        No has publications in the your feed
+        You don't have any publications in your feed yet.
       </div>
     </template>
     <section v-else class="l-post">

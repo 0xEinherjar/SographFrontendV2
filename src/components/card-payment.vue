@@ -1,9 +1,9 @@
 <script setup>
-import { onBeforeMount, ref } from "vue";
-import Blockchain from "../infra/blockchain.js";
+import { inject, onBeforeMount, ref } from "vue";
 import IconClose from "./icons/close.vue";
 import { useUserStore } from "../store/user.js";
 import { storeToRefs } from "pinia";
+const blockchainClient = inject("blockchainClient");
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const modal = ref(null);
@@ -12,13 +12,15 @@ const price = ref(0);
 const duration = ref(1);
 
 async function subscription() {
-  const blockchain = new Blockchain();
-  const approveResult = await blockchain.approveToken(price.value);
+  const approveResult = await blockchainClient.approveToken(price.value);
   if (!approveResult.success) {
     modal.value.close();
     return;
   }
-  const result = await blockchain.subscription(user.value.id, duration.value);
+  const result = await blockchainClient.subscription(
+    user.value.id,
+    duration.value
+  );
   if (result.success) {
     userStore.updateSubscription();
     modal.value.close();
@@ -36,8 +38,7 @@ function counterDuration(operator) {
   }
 }
 onBeforeMount(async () => {
-  const blockchain = new Blockchain();
-  const result = await blockchain.getPriceSubscription();
+  const result = await blockchainClient.getPriceSubscription();
   minPrice.value = result;
   price.value = result;
 });
@@ -52,7 +53,7 @@ onBeforeMount(async () => {
       <div class="c-card-payment__header">
         <h3 class="c-card-payment__title">Sograph Premium</h3>
         <p class="c-card-payment__subtitle">
-          Subscribe to Sograph Premium and unlock exclusive features to go beyond the limits!
+          Subscribe to Sograph Premium and access exclusive features that take your experience to the next level!
         </p>
       </div>
       <ul class="c-card-payment__list">
@@ -64,9 +65,9 @@ onBeforeMount(async () => {
             </svg>
           </div>
           <div>
-            <h5 class="c-card-payment__list-title">Custom identifier</h5>
+            <h5 class="c-card-payment__list-title">Personalized identifier</h5>
             <p class="c-card-payment__list-text">
-              Customize your identifier so people can find you better
+              Personalize your handle to make it easier for people to find you!
             </p>
           </div>
         </li>
@@ -79,9 +80,9 @@ onBeforeMount(async () => {
             </svg>
           </div>
           <div>
-            <h5 class="c-card-payment__list-title">Emblem</h5>
+            <h5 class="c-card-payment__list-title">Badge</h5>
             <p class="c-card-payment__list-text">
-              Display your Sograph subscription with a badge on your profile.
+              Show off your Sograph subscription with a badge on your profile.
             </p>
           </div>
         </li>
@@ -95,7 +96,7 @@ onBeforeMount(async () => {
           <div>
             <h5 class="c-card-payment__list-title">No transaction fee</h5>
             <p class="c-card-payment__list-text">
-              Interact without needing to open the wallet to confirm the transaction.
+              Engage seamlessly without needing to open your wallet for transaction confirmations.
             </p>
           </div>
         </li>

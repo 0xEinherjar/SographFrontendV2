@@ -1,6 +1,60 @@
 <script setup>
-import { ref } from "vue";
+import { inject, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useAccountStore } from "../store/account.js";
+const reportGateway = inject("reportGateway");
+const props = defineProps(["account"]);
+const accountStore = useAccountStore();
+const { account } = storeToRefs(accountStore);
 const active = ref(false);
+
+const reportType = ref([
+  {
+    code: 1,
+    title: "Spam",
+    description:
+      "Report unwanted, repetitive, and unsolicited messages or content that may include advertisements, malicious links, or fraud attempts.",
+  },
+  {
+    code: 2,
+    title: "Violence Speech",
+    description:
+      "Report statements or content that incite, promote, or glorify violence against individuals or groups.",
+  },
+  {
+    code: 3,
+    title: "Child Abuse",
+    description:
+      "Report any content that exploits or abuses minors, including images, videos, or discussions of illicit or harmful activities.",
+  },
+  {
+    code: 4,
+    title: "Illegal Drugs",
+    description:
+      "Report any promotion, sale, or distribution of illegal substances, as well as discussions or content that encourage drug use.",
+  },
+  {
+    code: 5,
+    title: "Terrorism",
+    description:
+      "Report content that promotes, incites, or glorifies terrorist activities or organizations involved in acts of terrorism.",
+  },
+  {
+    code: 6,
+    title: "Other",
+    description:
+      "Use this option to report any other type of content that does not fall into the above categories but that you consider inappropriate or harmful.",
+  },
+]);
+
+async function report(code) {
+  const { status } = await reportGateway.create({
+    reason: code,
+    reported: props.account,
+    whistleblower: account.value.wallet,
+  });
+  active.value = false;
+}
 </script>
 <!-- prettier-ignore -->
 <template>
@@ -28,29 +82,9 @@ const active = ref(false);
           </button>
         </div>
         <div class="c-report__list">
-          <button class="c-report__item" type="button">
-            <span>Spam</span>
-            <div class="c-report__item-description">Report unwanted, repetitive, and unsolicited messages or content that may include advertisements, malicious links, or fraud attempts.</div>
-          </button>
-          <button class="c-report__item" type="button">
-            <span>Violence Speech</span>
-            <div class="c-report__item-description">Report statements or content that incite, promote, or glorify violence against individuals or groups.</div>
-          </button>
-          <button class="c-report__item" type="button">
-            <span>Child Abuse</span>
-            <div class="c-report__item-description">Report any content that exploits or abuses minors, including images, videos, or discussions of illicit or harmful activities.</div>
-          </button>
-          <button class="c-report__item" type="button">
-            <span>Illegal Drugs</span>
-            <div class="c-report__item-description">Report any promotion, sale, or distribution of illegal substances, as well as discussions or content that encourage drug use.</div>
-          </button>
-          <button class="c-report__item" type="button">
-            <span>Terrorism</span>
-            <div class="c-report__item-description">Report content that promotes, incites, or glorifies terrorist activities or organizations involved in acts of terrorism.</div>
-          </button>
-          <button class="c-report__item" type="button">
-            <span>Other</span>
-            <div class="c-report__item-description">Use this option to report any other type of content that does not fall into the above categories but that you consider inappropriate or harmful.</div>
+          <button v-for="item in reportType" @click="report(item.code)" class="c-report__item" type="button">
+            <span>{{ item.title }}</span>
+            <div class="c-report__item-description">{{ item.description }}</div>
           </button>
         </div>
       </div>

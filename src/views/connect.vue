@@ -6,8 +6,8 @@ import { useUtils } from "../composables/utils.js";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
 import { pinProfileToIPFS } from "../infra/pinata.js";
-import Blockchain from "../infra/blockchain.js";
-import loading from "../components/loading.vue";
+import { Loading } from "../components";
+const blockchainClient = inject("blockchainClient");
 const isLoading = ref(false);
 const avatarURL = ref("");
 const form = ref({
@@ -58,11 +58,10 @@ async function create() {
       isLoading.value = false;
       return;
     }
-    const blockchain = new Blockchain();
-    const result = await blockchain.createProfile(metadata.data);
+    const result = await blockchainClient.createProfile(metadata.data);
     if (result.success) {
       accountStore.setHasAccount();
-      const profile = await blockchain.getProfile(address.value);
+      const profile = await blockchainClient.getProfile(address.value);
       if (profile.success) userStore.setUser(profile.data);
       router.push({ path: `/${address.value}` });
     }

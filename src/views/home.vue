@@ -1,11 +1,11 @@
 <script setup>
-import Logo from "../components/logo.vue";
 import { useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers/vue";
-import { ref, watch } from "vue";
+import { inject, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import { Logo } from "../components";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
-import Blockchain from "../infra/blockchain.js";
+const blockchainClient = inject("blockchainClient");
 const wallet = ref("");
 const router = useRouter();
 const accountStore = useAccountStore();
@@ -22,8 +22,7 @@ watch(address, async (newAddress, _) => {
   accountStore.setWallet(newAddress);
   accountStore.setConnected();
   wallet.value = newAddress;
-  const blockchain = new Blockchain();
-  const result = await blockchain.getProfile(newAddress);
+  const result = await blockchainClient.getProfile(newAddress);
   if (result.success == false) {
     router.push({
       path: "/create",

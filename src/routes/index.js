@@ -2,12 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
 import { useHistoryStore } from "../store/history.js";
-import Profile from "../views/profile.vue";
-import Setting from "../views/setting.vue";
-import Connect from "../views/connect.vue";
-import Feed from "../views/feed.vue";
-import Home from "../views/home.vue";
-import Reactivate from "../views/reactivate.vue";
+import { Profile, Setting, Connect, Feed, Home, Reactivate } from "../views";
 
 const router = createRouter({
   history: createWebHashHistory(),

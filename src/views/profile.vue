@@ -1,23 +1,24 @@
 <script setup>
-import Back from "../components/back.vue";
-// import ProfileHeader from "../components/profile/header.vue";
-import Sidebar from "../components/sidebar.vue";
-import Avatar from "../components/avatar.vue";
-import CreatePost from "../components/create-post.vue";
-import Post from "../components/post.vue";
-import PostPlaceholder from "../components/post-placeholder.vue";
-import ProfileNav from "../components/profile/nav.vue";
-import Followers from "../components/profile/followers.vue";
-import Following from "../components/profile/following.vue";
-import ProfileAbout from "../components/profile/about.vue";
 import { useUtils } from "../composables/utils.js";
 import { useAccountStore } from "../store/account.js";
 import { useFavoriteStore } from "../store/favorite.js";
-import { computed, onBeforeMount, ref, watch } from "vue";
+import { computed, inject, onBeforeMount, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import Blockchain from "../infra/blockchain.js";
 import { useUserStore } from "../store/user.js";
 import { storeToRefs } from "pinia";
+import {
+  Avatar,
+  Back,
+  Sidebar,
+  CreatePost,
+  Post,
+  PostPlaceholder,
+  ProfileNav,
+  ProfileAbout,
+  Followers,
+  Following,
+} from "../components";
+const blockchainClient = inject("blockchainClient");
 const userStore = useUserStore();
 const favoriteStore = useFavoriteStore();
 const { user } = storeToRefs(userStore);
@@ -49,8 +50,7 @@ function toggleFavorite() {
 }
 
 async function handleFollow(address) {
-  const blockchain = new Blockchain();
-  const result = await blockchain.follow(address);
+  const result = await blockchainClient.follow(address);
   if (result.success) {
     profile.value.isFollowing = true;
     profile.value.followers += 1;
@@ -58,8 +58,7 @@ async function handleFollow(address) {
 }
 
 async function handleUnfollow(address) {
-  const blockchain = new Blockchain();
-  const result = await blockchain.unfollow(address);
+  const result = await blockchainClient.unfollow(address);
   if (result.success) {
     profile.value.isFollowing = false;
     profile.value.followers -= 1;
@@ -82,20 +81,19 @@ function profileNavActive(nav) {
 }
 
 async function getProfile() {
-  const blockchain = new Blockchain();
   let routeParam;
   if (route.params.profile.startsWith("@")) {
     routeParam = route.params.profile.replace("@", "");
   } else {
     routeParam = route.params.profile;
   }
-  const result = await blockchain.getProfile(routeParam);
+  const result = await blockchainClient.getProfile(routeParam);
   isLoadingProfile.value = false;
   publications.value = [];
   if (result.success) {
     profile.value = result.data;
     result.data.isFollowing;
-    const { data, cursor } = await blockchain.getPost(
+    const { data, cursor } = await blockchainClient.getPost(
       profile.value.owner,
       0,
       20
@@ -201,7 +199,7 @@ onBeforeMount(async () => {
               </template>
             </section>
             <section v-else style="text-align: center; margin-top: 80px">
-              No has publications
+              No publications have been made yet.
             </section>
           </template>
           <template v-else>
