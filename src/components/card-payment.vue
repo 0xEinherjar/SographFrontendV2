@@ -1,8 +1,8 @@
 <script setup>
 import { inject, onBeforeMount, ref } from "vue";
-import IconClose from "./icons/close.vue";
-import { useUserStore } from "../store/user.js";
 import { storeToRefs } from "pinia";
+import { Icon } from "./";
+import { useUserStore } from "../store/user.js";
 const blockchainClient = inject("blockchainClient");
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
@@ -48,7 +48,7 @@ onBeforeMount(async () => {
   <dialog class="c-card-payment" ref="modal">
     <div class="c-card-payment__content">
       <button class="c-card-payment__close" @click="modal.close()" type="button">
-        <icon-close/>
+        <icon iconClass="c-icon1" name="close"/>
       </button>
       <div class="c-card-payment__header">
         <h3 class="c-card-payment__title">Sograph Premium</h3>

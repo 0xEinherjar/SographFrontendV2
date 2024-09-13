@@ -137,6 +137,11 @@ body {
   width: 2.4rem;
   fill: var(--color-icon-primary);
 }
+.c-icon1 {
+  height: 2.4rem;
+  width: 2.4rem;
+  color: var(--color-icon-primary);
+}
 .c-icon--outline {
   height: 2.4rem;
   width: 2.4rem;

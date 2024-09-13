@@ -1,6 +1,6 @@
 <script setup>
 import { useUtils } from "../composables/utils.js";
-import Avatar from "./avatar.vue";
+import { Avatar } from "./";
 const { dateFormat } = useUtils();
 const props = defineProps(["date", "text", "name", "avatar"]);
 </script>

@@ -1,11 +1,11 @@
 <script setup>
-import Avatar from "./avatar.vue";
 import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
 import { useRouter } from "vue-router";
 import { computed } from "vue";
 import { useDisconnect } from "@web3modal/ethers/vue";
+import { Avatar } from "./";
 
 const { disconnect } = useDisconnect();
 const router = useRouter();

@@ -1,11 +1,10 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
-import loading from "./loading.vue";
-import Avatar from "../components/avatar.vue";
-import Blockchain from "../infra/blockchain.js";
+import { computed, inject, ref } from "vue";
+import { Avatar, Loading, Icon } from "./";
 import { pinPostToIPFS } from "../infra/pinata.js";
 import { useUserStore } from "../store/user.js";
+const blockchainClient = inject("blockchainClient");
 const modal = ref(null);
 const form = ref({
   attachment: null,
@@ -69,8 +68,7 @@ async function create() {
       isLoading.value = false;
       return;
     }
-    const blockchain = new Blockchain();
-    await blockchain.createPost(metadata.data);
+    await blockchainClient.createPost(metadata.data);
     form.value.attachment = null;
     form.value.text = "";
     attachmentURL.value = "";
@@ -85,20 +83,14 @@ async function create() {
 <template>
   <dialog class="c-create" ref="modal">
     <form class="c-create__form" @submit.prevent="create">
-      <div class="c-create__header">
-        <div class="c-create__author">
+      <div class="c-create__header u-flex-line">
+        <div class="c-create__author u-flex-line">
           <div class="c-create__text">From:</div>
           <avatar :avatar="user?.avatar" length="24px"/>
           <h4 class="c-create__author-name">{{ user?.name }}</h4>
         </div>
         <button class="c-card-payment__close" @click="modal.close()" type="button">
-          <svg class="c-icon--outline" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g opacity="0.4">
-              <path d="M9.16992 14.8299L14.8299 9.16992" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M14.8299 14.8299L9.16992 9.16992" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </g>
-            <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <icon iconClass="c-icon1" name="close"/>
         </button>
       </div>
       <div class="c-create__body">
@@ -107,24 +99,20 @@ async function create() {
           <div class="c-create__textarea-input" @keyup="showPlaceholder" contenteditable="true" ref="textarea"></div>
         </div>
         <div v-if="attachmentURL" class="c-create__attachment">
-          <h5 class="c-create__attachment-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14.99 17.5H16.5C19.52 17.5 22 15.03 22 12C22 8.98 19.53 6.5 16.5 6.5H14.99" stroke="#0177FB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9 6.5H7.5C4.47 6.5 2 8.97 2 12C2 15.02 4.47 17.5 7.5 17.5H9" stroke="#0177FB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path opacity="0.4" d="M8 12H16" stroke="#0177FB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <h5 class="c-create__attachment-title u-flex-line">
+            <icon iconClass="c-icon1" name="link"/>
             <span>Attachment</span>
           </h5>
-          <ul class="c-create__attachment-previews">
+          <ul class="c-create__attachment-previews u-flex-line">
             <li class="c-create__attachment-item">
-              <img class="c-create__attachment-image" :src="attachmentURL" />
-              <span class="c-create__attachment-name">Einherjar<span class="c-create__attachment-type">.png</span></span>
+              <img class="c-create__attachment-image" :src="attachmentURL"/>
+              <span class="c-create__attachment-name">image<span class="c-create__attachment-type">.png</span></span>
             </li>
           </ul>
         </div>
       </div>
-      <div class="c-create__footer">
-        <button v-if="attachmentURL" @click="clear" class="c-create__clear" type="button">
+      <div class="c-create__footer u-flex-line">
+        <button v-if="attachmentURL" @click="clear" class="c-create__clear u-flex-line" type="button">
           <span>Delete image</span>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M17.5 4.98356C14.725 4.70856 11.9333 4.56689 9.15 4.56689C7.5 4.56689 5.85 4.65023 4.2 4.81689L2.5 4.98356" stroke="#FF6370" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -134,20 +122,13 @@ async function create() {
             <path opacity="0.34" d="M7.91675 10.4165H12.0834" stroke="#FF6370" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
-        <div class="c-create__footer-group">
+        <div class="c-create__footer-group u-flex-line">
           <input class="c-create__input-file" @change="onFileChange" type="file" accept="image/png, image/jpeg" name="image" id="image"/>
           <label class="c-create__file" for="image">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g opacity="0.4">
-                <path d="M9 17V11L7 13" stroke="#BDC1C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9 11L11 13" stroke="#BDC1C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <path d="M22 10V15C22 20 20 22 15 22H9C4 22 2 20 2 15V9C2 4 4 2 9 2H14" stroke="#BDC1C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M22 10H18C15 10 14 9 14 6V2L22 10Z" stroke="#BDC1C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <icon iconClass="c-icon1" name="upload"/>
           </label>
           <button :disabled="isFormDisabled" class="c-create__submit u-flex-line" type="submit">
-            <loading v-if="isLoading" type="small" />
+            <loading v-if="isLoading" type="small"/>
             <template v-else>Save</template>
           </button>
         </div>
@@ -202,14 +183,9 @@ async function create() {
   padding-top: 24px;
 }
 .c-create__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding-inline: 24px;
 }
 .c-create__author {
-  display: flex;
-  align-items: center;
   gap: 8px;
 }
 .c-create__author-name {
@@ -272,8 +248,6 @@ async function create() {
   margin-top: 32px;
 }
 .c-create__attachment-title {
-  display: flex;
-  align-items: center;
   gap: 8px;
   font-weight: 400;
   color: var(--text-color-secondary);
@@ -286,8 +260,6 @@ async function create() {
   display: none;
 }
 .c-create__attachment-previews {
-  display: flex;
-  align-items: center;
   gap: 16px;
 }
 .c-create__attachment-item {
@@ -315,18 +287,12 @@ async function create() {
   background-color: var(--bg-color-secondary);
   height: 80px;
   padding-inline: 24px;
-  display: flex;
-  align-items: center;
 }
 .c-create__footer-group {
-  display: flex;
-  align-items: center;
   gap: 22px;
   margin-left: auto;
 }
 .c-create__clear {
-  display: flex;
-  align-items: center;
   gap: 6px;
   color: #ff6370;
   font-size: 1.2rem;
