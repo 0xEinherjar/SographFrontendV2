@@ -11,7 +11,6 @@ const router = useRouter();
 const accountStore = useAccountStore();
 const userStore = useUserStore();
 const { open } = useWeb3Modal();
-
 const { address } = useWeb3ModalAccount();
 
 async function connect() {
@@ -51,7 +50,7 @@ watch(address, async (newAddress, _) => {
       <button type="button" class="button-info-chain"><span class=""></span>BNBChain Testnet</button>
     </header>
     <div class="u-flex-line-center">
-      <button class="home__button" type="button" @click="connect">Connect</button>
+      <button class="home__button u-flex-line-center" type="button" @click="connect">Connect</button>
     </div>
     <footer class="footer">
       <div class="footer__column">
@@ -152,13 +151,9 @@ watch(address, async (newAddress, _) => {
 .home__button {
   height: 87px;
   width: 370px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border: 1px solid var(--bg-color-tertiary);
   color: var(--text-color-primary);
   border-radius: 16px;
-  font-size: 1.6rem;
   font-weight: 600;
   margin-bottom: 100px;
   gap: 16px;

@@ -2,6 +2,7 @@
 import { inject, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
+import { Icon } from "./";
 const reportGateway = inject("reportGateway");
 const props = defineProps(["account"]);
 const accountStore = useAccountStore();
@@ -58,12 +59,8 @@ async function report(code) {
 </script>
 <!-- prettier-ignore -->
 <template>
-  <div class="dropdown__item" @click="active = true">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="#f4f4f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path opacity="0.34" d="M12 8V13" stroke="#f4f4f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path opacity="0.34" d="M11.9941 16H12.0031" stroke="#f4f4f4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+  <div class="dropdown__item u-flex-line" @click="active = true">
+    <icon iconClass="c-icon--small" name="info"/>
     <span class="dropdown__item-text-grow">Report</span>
   </div>
   <teleport to="body">
@@ -72,13 +69,7 @@ async function report(code) {
         <div class="c-report__header u-flex-line-between">
           <h3 class="c-report__title c-soon">Report Profile</h3>
           <button @click="active = false" type="button">
-            <svg class="c-icon--outline" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g opacity="0.4">
-                <path d="M9.16992 14.8299L14.8299 9.16992" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M14.8299 14.8299L9.16992 9.16992" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-              <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <icon iconClass="c-icon" name="close"/>
           </button>
         </div>
         <div class="c-report__list">

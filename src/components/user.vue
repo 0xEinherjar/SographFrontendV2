@@ -1,8 +1,8 @@
 <script setup>
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useUtils } from "../composables/utils.js";
-import Blockchain from "../infra/blockchain.js";
 import { Avatar } from "./";
+const blockchainClient = inject("blockchainClient");
 const { truncateAddress } = useUtils();
 const props = defineProps([
   "avatar",
@@ -16,16 +16,14 @@ const props = defineProps([
 const username = computed(() => {
   return Boolean(props.handle) ? props.handle : props.owner;
 });
-async function handleFollow(address) {
-  const blockchain = new Blockchain();
-  const result = await blockchain.follow(address);
+async function follow(address) {
+  const result = await blockchainClient.follow(address);
   if (result.success) {
   }
 }
 
-async function handleUnfollow(address) {
-  const blockchain = new Blockchain();
-  const result = await blockchain.unfollow(address);
+async function unfollow(address) {
+  const result = await blockchainClient.unfollow(address);
   if (result.success) {
   }
 }
@@ -40,8 +38,8 @@ async function handleUnfollow(address) {
     <span class="c-user__username u-text-ellipsis">{{ username.length == 42 ? truncateAddress(username) : `@${username}` }}</span>
     <button v-if="!props.isConnected" class="c-user__action" type="button">Follow</button>
     <template v-else>
-      <button v-if="props.isFollowing" class="c-user__action" type="button" @click="handleUnfollow(props.owner)">Following</button>
-      <button v-else class="c-user__action" type="button" @click="handleFollow(props.owner)">Follow</button>
+      <button v-if="props.isFollowing" class="c-user__action" type="button" @click="unfollow(props.owner)">Following</button>
+      <button v-else class="c-user__action" type="button" @click="follow(props.owner)">Follow</button>
     </template>
   </div>
 </template>

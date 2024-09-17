@@ -33,13 +33,13 @@ watch(
     <span class="c-back__text">back to</span>
     <template v-if="history.route || history.isProfile">
       <avatar v-if="history.isProfile" class="c-back__avatar" :avatar="history.avatar" length="26px" radius="8px"/>
-      <icon v-if="history.name == 'Feed'" iconClass="c-icon1" name="home"/>
-      <icon v-if="history.name == 'Explorer'" iconClass="c-icon1" name="explore"/>
-      <icon v-if="history.name == 'Settings'" iconClass="c-icon1" name="setting"/>
+      <icon v-if="history.name == 'Feed'" iconClass="c-icon" name="home"/>
+      <icon v-if="history.name == 'Explorer'" iconClass="c-icon" name="explore"/>
+      <icon v-if="history.name == 'Settings'" iconClass="c-icon" name="setting"/>
       <h6 class="c-back__name">{{ history.name }}</h6>
     </template>
     <template v-else>
-      <icon v-if="history.name == 'Feed'" iconClass="c-icon1" name="home"/>
+      <icon v-if="history.name == 'Feed'" iconClass="c-icon" name="home"/>
       <h6 class="c-back__name">Feed</h6>
     </template>
   </router-link>

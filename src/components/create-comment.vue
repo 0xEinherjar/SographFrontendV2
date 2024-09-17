@@ -44,6 +44,7 @@ async function create() {
         authorAvatar: user.value.avatar,
       })
     );
+    text.value = "";
   }
 }
 </script>
@@ -57,7 +58,7 @@ async function create() {
     </div>
     <span class="c-create-comment__counter u-flex-line">{{ commentLength }}/400</span>
     <button class="c-create-comment__send u-flex-line" @click="create">
-      <icon iconClass="c-icon1" name="send"/>
+      <icon iconClass="c-icon" name="send"/>
     </button>
   </div>
 </template>

@@ -1,14 +1,16 @@
 <script setup>
-import { onBeforeMount, ref } from "vue";
-import User from "../user.vue";
-import UserPlaceholder from "../user-placeholder.vue";
-import Blockchain from "../../infra/blockchain.js";
+import { inject, onBeforeMount, ref } from "vue";
+import { User, UserPlaceholder } from "../";
+const blockchainClient = inject("blockchainClient");
 const { id, isConnected } = defineProps(["id", "isConnected"]);
 const followers = ref([]);
 const isLoading = ref(true);
 onBeforeMount(async () => {
-  const blockchain = new Blockchain();
-  const { success, data, cursor } = await blockchain.getFollowers(id, 0, 20);
+  const { success, data, cursor } = await blockchainClient.getFollowers(
+    id,
+    0,
+    20
+  );
   if (success) {
     followers.value = data;
   }

@@ -6,7 +6,7 @@ import Icon from "./icons/icon.vue";
 <template>
   <img v-if="avatar" class="c-avatar" :src="avatar" :style="{width: length, height: length, 'border-radius': radius || length}" alt="User avatar">
   <div v-else class="c-avatar--placeholder" :style="{width: length, height: length, 'border-radius': radius || length}">
-    <icon iconClass="c-icon1" name="profile"/>
+    <icon iconClass="c-icon" name="profile"/>
   </div>
 </template>
 <style>

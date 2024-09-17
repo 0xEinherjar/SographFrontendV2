@@ -5,7 +5,7 @@ import { useUserStore } from "../store/user.js";
 import { useRouter } from "vue-router";
 import { computed } from "vue";
 import { useDisconnect } from "@web3modal/ethers/vue";
-import { Avatar } from "./";
+import { Avatar, Icon } from "./";
 
 const { disconnect } = useDisconnect();
 const router = useRouter();
@@ -32,13 +32,9 @@ function logout() {
   <header class="c-user-info u-flex-line-between">
     <div class="c-user-info__left u-flex-line">
       <h3 class="c-user-info__name u-text-ellipsis">{{ user.name }}</h3>
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.6199 5.2207L7.81655 9.02404C7.36738 9.4732 6.63238 9.4732 6.18322 9.02404L2.37988 5.2207" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <icon iconClass="c-icon c-user-info__icon" name="arrow"/>
       <ul class="c-user-info__dropdown">
-        <li>
-          <button class="c-user-info__dropdown-item" @click="logout" type="button">Logout</button>
-        </li>
+        <li><button class="c-user-info__dropdown-item" @click="logout" type="button">Logout</button></li>
       </ul>
     </div>
     <div class="c-user-info__avatar-wrapper">
@@ -64,6 +60,10 @@ function logout() {
   font-size: 2.1rem;
   font-weight: 500;
   max-width: 150px;
+}
+.c-user-info__icon {
+  height: 1.4rem;
+  width: 1.4rem;
 }
 .c-user-info__avatar-wrapper {
   position: relative;

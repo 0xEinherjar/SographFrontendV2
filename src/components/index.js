@@ -1,6 +1,7 @@
 export { default as Avatar } from "./avatar.vue";
 export { default as Back } from "./back.vue";
 export { default as CardPayment } from "./card-payment.vue";
+export { default as CommentPlaceholder } from "./comment-placeholder.vue";
 export { default as Comment } from "./comment.vue";
 export { default as Comments } from "./comments.vue";
 export { default as CreateComment } from "./create-comment.vue";
@@ -15,7 +16,7 @@ export { default as Sidebar } from "./sidebar.vue";
 export { default as Toggle } from "./toggle.vue";
 export { default as UserInfo } from "./user-info.vue";
 export { default as UserPlaceholder } from "./user-placeholder.vue";
-export { default as user } from "./user.vue";
+export { default as User } from "./user.vue";
 export { default as ProfileAbout } from "./profile/about.vue";
 export { default as Followers } from "./profile/followers.vue";
 export { default as Following } from "./profile/following.vue";

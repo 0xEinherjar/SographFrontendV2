@@ -1,13 +1,27 @@
 <script setup>
 import { ref, onBeforeMount, inject } from "vue";
-import { Comment, CreateComment, Icon } from "./";
+import { Comment, CreateComment, Icon, CommentPlaceholder } from "./";
 const postClient = inject("postClient");
-const props = defineProps(["id"]);
+const props = defineProps(["id", "totalComments"]);
+const isLoading = ref(true);
+const cursorPag = ref(0);
+const lengthPag = ref(10);
 const comments = ref([]);
+
 const newComment = (data) => comments.value.unshift(data);
+
+async function fetchComments() {
+  const { data, cursor } = await postClient.getComments(
+    props.id,
+    cursorPag.value,
+    lengthPag.value
+  );
+  comments.value.unshift(...data);
+  cursorPag.value = cursor;
+}
 onBeforeMount(async () => {
-  const { data } = await postClient.getComments(props.id, 0, 20);
-  comments.value = data;
+  await fetchComments();
+  isLoading.value = false;
 });
 </script>
 <!-- prettier-ignore -->
@@ -16,24 +30,35 @@ onBeforeMount(async () => {
     <div class="c-comments">
       <div class="u-flex-line-between">
         <div class="c-comments__title u-flex-line">
-          <icon iconClass="c-icon1" name="chat"/>
-          <span>Comments <span class="c-comments__counter">{{ comments.length }}</span></span>
+          <icon iconClass="c-icon" name="chat"/>
+          <span>Comments <span class="c-comments__counter">{{ props.totalComments }}</span></span>
         </div>
         <button class="c-comments__close" @click="$emit('close')" type="button">
-          <icon iconClass="c-icon1" name="close"/>
+          <icon iconClass="c-icon" name="close"/>
         </button>
       </div>
       <create-comment @new-comment="newComment" :id="props.id"/>
-      <div v-if="comments?.length > 0" class="c-comments__list">
-        <template v-for="item in comments">
-          <comment :date="item.createdAt" :text="item.text" :name="item.authorName" :avatar="item.authorAvatar"/>
-        </template>
-      </div>
-      <div v-else class="c-comments__note">No comments have been made yet.</div>
+      <template v-if="!isLoading">
+        <div v-if="comments?.length > 0" class="c-comments__list">
+          <template v-for="item in comments">
+            <comment :date="item.createdAt" :text="item.text" :name="item.authorName" :avatar="item.authorAvatar"/>
+          </template>
+          <button v-if="cursorPag != 0" @click="fetchComments" class="sentinel-comment" type="button">Load more comments</button>
+        </div>
+        <div v-else class="c-comments__note">No comments have been made yet.</div>
+      </template>
+      <template v-else>
+        <comment-placeholder/>
+      </template>
     </div>
   </div>
 </template>
 <style>
+.sentinel-comment {
+  padding-bottom: 8px;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
 .c-comments-layer {
   position: fixed;
   inset: 0 0 0 0;

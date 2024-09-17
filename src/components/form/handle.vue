@@ -1,8 +1,8 @@
 <script setup>
-import { onBeforeMount, ref } from "vue";
-import Blockchain from "../../infra/blockchain.js";
+import { inject, onBeforeMount, ref } from "vue";
 import { useUserStore } from "../../store/user.js";
 import Loading from "../loading.vue";
+const blockchainClient = inject("blockchainClient");
 const { userHandle } = defineProps(["userHandle"]);
 const userStore = useUserStore();
 const handle = ref("");
@@ -27,8 +27,7 @@ async function isHandleAvailable() {
     return;
   }
   handleNote.value = handle.value;
-  const blockchain = new Blockchain();
-  const result = await blockchain.isHandleAvailable(handle.value);
+  const result = await blockchainClient.isHandleAvailable(handle.value);
   if (result.success) {
     isCorrect.value = true;
     isAvailable.value = result.isAvailable;
@@ -37,8 +36,7 @@ async function isHandleAvailable() {
 
 async function updateHandle() {
   isLoading.value = true;
-  const blockchain = new Blockchain();
-  const result = await blockchain.updateHandle(handle.value);
+  const result = await blockchainClient.updateHandle(handle.value);
   if (result.success) userStore.updateHandle(handle.value);
   isLoading.value = false;
 }

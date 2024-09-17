@@ -32,13 +32,13 @@ const pathProfile = computed(() => {
             <template v-if="account.hasAccount">
               <li>
                 <router-link class="sidebar__item" to="/feed">
-                  <icon iconClass="c-icon1" name="home"/>
+                  <icon iconClass="c-icon" name="home"/>
                   <span class="sidebar__text">Feed</span>
                 </router-link>
               </li>
               <li>
                 <router-link class="sidebar__item" :to="`/${pathProfile}`">
-                  <icon iconClass="c-icon1" name="profile"/>
+                  <icon iconClass="c-icon" name="profile"/>
                   <span class="sidebar__text">Profile</span>
                 </router-link>
               </li>
@@ -48,20 +48,20 @@ const pathProfile = computed(() => {
             </template>
             <li>
               <router-link class="sidebar__item" to="#">
-                <icon iconClass="c-icon1" name="explore"/>
+                <icon iconClass="c-icon" name="explore"/>
                 <span class="sidebar__text c-soon">Explorer</span>
               </router-link>
             </li>
             <li>
               <a class="sidebar__item" href="https://faucet.sograph.app/">
-                <icon iconClass="c-icon1" name="wallet"/>
+                <icon iconClass="c-icon" name="wallet"/>
                 <span class="sidebar__text">Faucet</span>
               </a>
             </li>
           </ul>
           <input class="sidebar__collapse-checkbox" type="checkbox" id="collapse">
           <label class="sidebar__collapse-button" role="button" for="collapse">
-            <icon iconClass="c-icon1" name="more1"/>
+            <icon iconClass="c-icon" name="more1"/>
             <span class="sidebar__collapse-text show-more">Show More</span>
             <span class="sidebar__collapse-text show-less">Show Less</span>
           </label>
@@ -82,12 +82,12 @@ const pathProfile = computed(() => {
       <ul class="sidebar__list">
         <li v-if="account.hasAccount">
           <router-link class="sidebar__item" to="/settings">
-            <icon iconClass="c-icon1" name="setting"/>
+            <icon iconClass="c-icon" name="setting"/>
             <span class="sidebar__text">Settings</span>
           </router-link>
         </li>
         <li class="sidebar__item">
-          <icon iconClass="c-icon1" name="sun"/>
+          <icon iconClass="c-icon" name="sun"/>
           <span class="sidebar__text">Dark Mode</span>
           <toggle/>
         </li>
