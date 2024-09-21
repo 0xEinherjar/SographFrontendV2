@@ -29,6 +29,7 @@ const navActive = ref("Publications");
 const profileErrorInfo = ref("");
 const publications = ref([]);
 const isLoadingPost = ref(true);
+const isLoadingPostScroll = ref(false);
 const isLoadingProfile = ref(true);
 const accountStore = useAccountStore();
 const { account } = storeToRefs(accountStore);
@@ -85,6 +86,7 @@ function profileNavActive(nav) {
 }
 
 async function fetchPost(cursorParams) {
+  isLoadingPostScroll.value = true;
   const { data, cursor } = await blockchainClient.getPost(
     profile.value.owner,
     cursorParams,
@@ -92,6 +94,7 @@ async function fetchPost(cursorParams) {
   );
   cursorPag.value = cursor;
   publications.value.unshift(...data);
+  isLoadingPostScroll.value = false;
   if (cursor == 0) {
     observer.value?.disconnect();
     return;
@@ -210,7 +213,9 @@ onBeforeMount(async () => {
                   :isMyProfile="isMyProfile"
                 />
               </template>
-              <div class="sentinel" id="sentinel"></div>
+              <div class="sentinel" id="sentinel">
+                <post-placeholder v-if="isLoadingPostScroll"/>
+              </div>
             </section>
             <section v-else style="text-align: center; margin-top: 80px">
               No publications have been made yet.

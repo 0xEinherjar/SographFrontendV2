@@ -3,6 +3,8 @@ import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
 import { useHistoryStore } from "../store/history.js";
 import { Profile, Setting, Connect, Feed, Home, Reactivate } from "../views";
+import Blockchain from "../infra/blockchain.js";
+const blockchain = new Blockchain();
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -16,33 +18,52 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const historyStore = useHistoryStore();
+  const { isBack } = storeToRefs(historyStore);
   const previousPath = from.fullPath.split("/")[1];
-  if (previousPath == "feed") {
-    historyStore.setHistory({
-      name: "Feed",
-      route: from.fullPath,
-      isProfile: false,
-    });
-  } else if (previousPath == "settings") {
-    historyStore.setHistory({
-      name: "Settings",
-      route: from.fullPath,
-      isProfile: false,
-    });
-  } else if (previousPath == "explorer") {
-    historyStore.setHistory({
-      name: "Explorer",
-      path: from.fullPath,
-      isProfile: false,
-    });
+  const defaultRoute = ["feed", "settings", "explorer"];
+  const addProfileHistory = async (path) => {
+    const result = await blockchain.getProfile(path);
+    if (result.success) {
+      historyStore.setHistory({
+        avatar: result.data.avatar,
+        name: result.data.name,
+        isProfile: true,
+        route: result.data.handle || result.data.owner,
+      });
+    } else {
+      historyStore.setHistory({
+        avatar: null,
+        name: path,
+        isProfile: true,
+        route: path,
+      });
+    }
+  };
+  if (!isBack.value) {
+    if (defaultRoute.some((item) => item == previousPath)) {
+      historyStore.setHistory({
+        name: previousPath,
+        route: previousPath,
+        isProfile: false,
+      });
+    } else if (previousPath == "" && to.fullPath) {
+      const toPath = to.fullPath.split("/")[1];
+      if (defaultRoute.some((item) => item == toPath)) {
+        historyStore.setHistory({
+          name: toPath,
+          path: toPath,
+          isProfile: false,
+        });
+      } else {
+        await addProfileHistory(toPath);
+      }
+    } else {
+      await addProfileHistory(previousPath);
+    }
   } else {
-    historyStore.setHistory({
-      name: previousPath,
-      path: from.fullPath,
-      isProfile: true,
-    });
+    historyStore.setBack();
   }
   const accountStore = useAccountStore();
   const { account } = storeToRefs(accountStore);

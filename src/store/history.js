@@ -2,19 +2,27 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useHistoryStore = defineStore("history", () => {
-  const history = ref({
-    avatar: null,
-    name: null,
-    route: "",
-    isProfile: false,
-  });
+  const history = ref([]);
+  const isBack = ref(false);
 
-  function setHistory({ avatar, name, route, isProfile }) {
-    history.value.avatar = avatar ?? null;
-    history.value.name = name;
-    history.value.route = route;
-    history.value.isProfile = isProfile ?? false;
+  function setBack() {
+    isBack.value = false;
   }
 
-  return { history, setHistory };
+  function setHistory({ avatar, name, route, isProfile }) {
+    history.value.push({
+      avatar: avatar,
+      name: name,
+      route: route,
+      isProfile: isProfile,
+    });
+  }
+
+  function back() {
+    if (history.value.length == 1) return null;
+    isBack.value = true;
+    return history.value.pop();
+  }
+
+  return { history, isBack, setHistory, back, setBack };
 });

@@ -279,7 +279,9 @@ export default class Blockchain {
         const data = await prepare.post(transaction[0]);
         return { data: data, cursor: formatToNumber(transaction[1]) };
       }
-    } catch (error) {}
+    } catch (error) {
+      return this._handleError(error, "");
+    }
   }
 
   async getFollowers(id, cursor, size) {

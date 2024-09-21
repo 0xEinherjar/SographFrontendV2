@@ -2,7 +2,7 @@
 import { ref, onBeforeMount, inject } from "vue";
 import { Comment, CreateComment, Icon, CommentPlaceholder } from "./";
 const postClient = inject("postClient");
-const props = defineProps(["id", "totalComments"]);
+const props = defineProps(["id", "totalComments", "isConnected"]);
 const isLoading = ref(true);
 const cursorPag = ref(0);
 const lengthPag = ref(10);
@@ -11,13 +11,15 @@ const comments = ref([]);
 const newComment = (data) => comments.value.unshift(data);
 
 async function fetchComments() {
-  const { data, cursor } = await postClient.getComments(
+  const { success, data, cursor } = await postClient.getComments(
     props.id,
     cursorPag.value,
     lengthPag.value
   );
-  comments.value.unshift(...data);
-  cursorPag.value = cursor;
+  if (success) {
+    comments.value.unshift(...data);
+    cursorPag.value = cursor;
+  }
 }
 onBeforeMount(async () => {
   await fetchComments();
@@ -37,7 +39,7 @@ onBeforeMount(async () => {
           <icon iconClass="c-icon" name="close"/>
         </button>
       </div>
-      <create-comment @new-comment="newComment" :id="props.id"/>
+      <create-comment v-if="props.isConnected" @new-comment="newComment" :id="props.id"/>
       <template v-if="!isLoading">
         <div v-if="comments?.length > 0" class="c-comments__list">
           <template v-for="item in comments">

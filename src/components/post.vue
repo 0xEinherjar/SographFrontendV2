@@ -108,11 +108,11 @@ onMounted(() => {
     </p>
     <div class="u-flex-line-between">
       <div class="c-post__actions u-flex-line">
+        <button class="c-post__action u-flex-line" @click="isCommentActive = true">
+          <icon iconClass="c-icon--small" name="chat"/>
+          <span class="c-post__action-count">{{ post.totalComment }}</span>
+        </button>
         <template v-if="props.isConnected">
-          <button class="c-post__action u-flex-line" @click="isCommentActive = true">
-            <icon iconClass="c-icon--small" name="chat"/>
-            <span class="c-post__action-count">{{ post.totalComment }}</span>
-          </button>
           <button class="c-post__action u-flex-line" @click="handleLike(props.id)">
             <icon :iconClass="{'c-icon--small': true, 'c-icon--fill-none': true, 'is-liked': post.hasLiked }" name="like"/>
             <span class="c-post__action-count">{{ post.totalLiked }}</span>
@@ -123,10 +123,6 @@ onMounted(() => {
           </button>
         </template>
         <template v-else>
-          <button class="c-post__action u-flex-line">
-            <icon iconClass="c-icon--small" name="chat"/>
-            <span class="c-post__action-count">{{ post.totalComment }}</span>
-          </button>
           <button class="c-post__action u-flex-line">
             <icon iconClass="c-icon--small" name="like"/>
             <span class="c-post__action-count">{{ post.totalLiked }}</span>
@@ -139,7 +135,7 @@ onMounted(() => {
       </div>
       <span class="c-post__id">#{{ props.id }}</span>
     </div>
-    <Comments v-if="isCommentActive" @close="isCommentActive = false" :id="props.id" :totalComments="post.totalComment"/>
+    <Comments v-if="isCommentActive" @close="isCommentActive = false" :id="props.id" :totalComments="post.totalComment" :isConnected="props.isConnected"/>
   </article>
 </template>
 

@@ -65,7 +65,8 @@ export default class Post {
         cursor,
         size
       );
-      if (transaction[0].length == 0) return { data: [], cursor: 0 };
+      if (transaction[0].length == 0)
+        return { success: true, data: [], cursor: 0 };
       const data = [];
       for (const item of transaction[0]) {
         const url = item[1];
@@ -91,7 +92,13 @@ export default class Post {
           account: item[0],
         });
       }
-      return { data: data, cursor: formatToNumber(transaction[1]) };
-    } catch (error) {}
+      return {
+        success: true,
+        data: data,
+        cursor: formatToNumber(transaction[1]),
+      };
+    } catch (error) {
+      return this._handleError(error, "");
+    }
   }
 }
