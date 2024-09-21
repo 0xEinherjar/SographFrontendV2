@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, ref } from "vue";
+import { inject, onBeforeMount, ref } from "vue";
 import { User, UserPlaceholder } from "../";
 const blockchainClient = inject("blockchainClient");
 const { id, isConnected } = defineProps(["id", "isConnected"]);
