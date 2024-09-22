@@ -50,6 +50,15 @@ export default class Post {
     return { success: false, message: defaultMsg };
   }
 
+  async approve(id) {
+    return this._executeContractMethod(
+      Post.postContract,
+      "approve",
+      [sographAbi.address, id],
+      "Error approving transaction"
+    );
+  }
+
   async comment(id, metadata) {
     return this._executeContractMethod(
       Post.sographContract,

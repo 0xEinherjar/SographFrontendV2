@@ -22,4 +22,5 @@ export { default as Followers } from "./profile/followers.vue";
 export { default as Following } from "./profile/following.vue";
 export { default as ProfileNav } from "./profile/nav.vue";
 export { default as FormHandle } from "./form/handle.vue";
+export { default as FormReactivatePost } from "./form/reactivate-post.vue";
 export { default as Icon } from "./icons/icon.vue";

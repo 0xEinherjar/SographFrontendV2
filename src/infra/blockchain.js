@@ -181,6 +181,15 @@ export default class Blockchain {
     );
   }
 
+  async reactivatePost(id) {
+    return this._executeContractMethod(
+      Blockchain.sographContract,
+      "reactivatePost",
+      [id],
+      "Error reactivate post"
+    );
+  }
+
   async getProfile(profile) {
     const accountStore = useAccountStore();
     const { account } = storeToRefs(accountStore);

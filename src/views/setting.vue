@@ -7,6 +7,7 @@ import { pinProfileToIPFS } from "../infra/pinata.js";
 import { useRouter } from "vue-router";
 import { useDisconnect } from "@web3modal/ethers/vue";
 import {
+  FormReactivatePost,
   FormHandle,
   Avatar,
   Loading,
@@ -204,9 +205,9 @@ onMounted(() => {
               <label class="c-form__label" for="location">Location</label>
               <input class="c-form__input" type="text" name="location" id="location" v-model="form.location" placeholder="Location"/>
             </div>
-            <div @click="isAddLinkActive = !isAddLinkActive" :class="{ 'is-active': isAddLinkActive }" class="c-form__expand u-flex-line-between">
+            <div @click="isAddLinkActive = !isAddLinkActive" :class="{ 'is-active': isAddLinkActive }" class="c-form__expand u-flex-line-center">
               Add links social
-              <icon iconClass="c-icon--small" name="arrow"/>
+              <icon iconClass="c-form__expand-icon" name="arrow"/>
             </div>
             <template v-if="isAddLinkActive">
               <div class="c-form__group">
@@ -248,6 +249,11 @@ onMounted(() => {
           <form-handle :user-handle="user.handle" />
         </section>
         <div class="c-line"></div>
+        <section class="setting__section" id="add-post">
+          <h3 class="setting__title u-font-500">Reactivate Publication</h3>
+          <form-reactivate-post/>
+        </section>
+        <div class="c-line"></div>
         <section class="setting__section" id="redeem">
           <h3 class="setting__title u-font-500">Redeem Zone</h3>
           <div class="c-redeem u-flex-line">
@@ -266,6 +272,8 @@ onMounted(() => {
             <a @click="scrollMeTo('handle')" :class="{'is-active' : sectionActive == 'handle'}" class="setting__nav-text">Update Handle</a>
           </template>
           <span class="setting__nav-pointer"></span>
+          <a @click="scrollMeTo('add-post')" :class="{'is-active' : sectionActive == 'add-post'}" class="setting__nav-text">Reactivate Publication</a>
+          <span class="setting__nav-pointer"></span>
           <a @click="scrollMeTo('redeem')" :class="{'is-active' : sectionActive == 'redeem'}" class="setting__nav-text">Redeem Zone</a>
         </div>
       </aside>
@@ -282,7 +290,7 @@ onMounted(() => {
 .c-redeem {
   height: 80px;
   padding-inline: 24px;
-  border-radius: 8px;
+  border-radius: var(--border-radius-default);
   background-color: var(--bg-color-secondary);
   gap: 40px;
 }
