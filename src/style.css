@@ -369,32 +369,6 @@ body {
   font-weight: 500;
   cursor: pointer;
 }
-
-/* .c-button {
-  border: 2px solid #f4f4f4;
-  color: #f4f4f4;
-  height: 40px;
-  padding-inline: 16px;
-  font-size: 1.6rem;
-  font-weight: 500;
-  border-radius: 8px;
-}
-.button-create {
-  height: 48px;
-  border-radius: 12px;
-  padding-inline: 16px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background-color: #4e4f51;
-  position: fixed;
-  bottom: 32px;
-  right: 40px;
-  font-size: 1.6rem;
-  font-weight: 500;
-  color: #f4f4f4;
-  cursor: pointer;
-} */
 .l-post {
   padding-block: 76px;
   display: grid;
