@@ -6,7 +6,7 @@ import { ModalReport, Icon } from "../";
 
 const { truncateAddress, copyContent } = useUtils();
 const route = useRoute();
-const { links, address } = defineProps(["links", "address"]);
+const props = defineProps(["links", "address"]);
 const emit = defineEmits(["profile-nav"]);
 
 function profileNav(router) {
@@ -43,26 +43,26 @@ watch(
         <div class="dropdown__group">
           <ul class="dropdown__menu">
             <li class="dropdown__item u-flex-line">
-              <span class="dropdown__item-text-grow">{{ truncateAddress(address) }}</span>
-              <button type="button" @click="copyContent(address)">
+              <span class="dropdown__item-text-grow">{{ truncateAddress(props.address) }}</span>
+              <button type="button" @click="copyContent(props.address)">
                 <icon iconClass="c-icon--small" name="copy"/>
               </button>
             </li>
-            <li v-if="links?.twitch" class="dropdown__item u-flex-line">
+            <li v-if="props.links?.twitch" class="dropdown__item u-flex-line">
               <icon iconClass="c-icon" name="twitch"/>
-              <span>{{ links.twitch }}</span>
+              <span>{{ props.links.twitch }}</span>
             </li>
-            <li v-if="links?.twitter" class="dropdown__item u-flex-line">
+            <li v-if="props.links?.twitter" class="dropdown__item u-flex-line">
               <icon iconClass="c-icon" name="x"/>
-              <span>{{ links.twitter }}</span>
+              <span>{{ props.links.twitter }}</span>
             </li>
-            <li v-if="links?.youtube" class="dropdown__item u-flex-line">
+            <li v-if="props.links?.youtube" class="dropdown__item u-flex-line">
               <icon iconClass="c-icon" name="youtube"/>
-              <span>{{ links.youtube }}</span>
+              <span>{{ props.links.youtube }}</span>
             </li>
-            <li v-if="links?.instagram" class="dropdown__item u-flex-line">
+            <li v-if="props.links?.instagram" class="dropdown__item u-flex-line">
               <icon iconClass="c-icon" name="instagram"/>
-              <span>{{ links.instagram }}</span>
+              <span>{{ props.links.instagram }}</span>
             </li>
           </ul>
         </div>
@@ -72,7 +72,7 @@ watch(
         <div class="dropdown__group">
           <ul class="dropdown__menu">
             <li>
-              <modal-report :account="address"/>
+              <modal-report :account="props.address"/>
             </li>
           </ul>
         </div>

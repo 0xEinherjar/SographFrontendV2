@@ -18,6 +18,7 @@ import {
   Followers,
   Following,
   Icon,
+  ProfilePlaceholder,
 } from "../components";
 const blockchainClient = inject("blockchainClient");
 const userStore = useUserStore();
@@ -26,7 +27,6 @@ const { user } = storeToRefs(userStore);
 const route = useRoute();
 const profile = ref(null);
 const navActive = ref("Publications");
-const profileErrorInfo = ref("");
 const publications = ref([]);
 const isLoadingPost = ref(true);
 const isLoadingPostScroll = ref(false);
@@ -38,6 +38,7 @@ const isFavorite = ref(false);
 const observer = ref(null);
 const cursorPag = ref(0);
 const lengthPag = ref(15);
+const profileErrorInfo = ref({ isBanned: null, username: "" });
 
 function toggleFavorite() {
   if (isFavorite.value == false) {
@@ -120,10 +121,12 @@ async function getProfile() {
     profile.value = null;
     publications.value = [];
     if (result.message == "BANNED") {
-      profileErrorInfo.value = "Profile banned";
+      profileErrorInfo.value.isBanned = true;
+      profileErrorInfo.value.username = routeParam;
       return;
     }
-    profileErrorInfo.value = "Profile not found";
+    profileErrorInfo.value.isBanned = false;
+    profileErrorInfo.value.username = routeParam;
   }
 }
 
@@ -237,8 +240,8 @@ onBeforeMount(async () => {
           <profile-about :profile="profile"/>
         </template>
       </template>
-      <div v-else style="text-align: center; margin-top: 40px">
-        {{ profileErrorInfo }}
+      <div v-else>
+        <profile-placeholder :isBanned="profileErrorInfo.isBanned" :username="profileErrorInfo.username"/>
       </div>
     </template>
   </main>

@@ -49,6 +49,7 @@ const reportType = ref([
 ]);
 
 async function report(code) {
+  if (!account.value.isConnected) return;
   const { status } = await reportGateway.create({
     reason: code,
     reported: props.account,

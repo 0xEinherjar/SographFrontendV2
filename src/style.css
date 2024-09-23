@@ -404,7 +404,7 @@ body {
   padding-block: 76px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(104px, max-content));
-  gap: 80px;
+  gap: 76px;
 }
 .l-header {
   display: flex;
