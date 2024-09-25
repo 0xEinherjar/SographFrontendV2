@@ -337,7 +337,7 @@ export default class Blockchain {
           });
         }
       } else {
-        for (const follwerId of transaction) {
+        for (const follwerId of transaction[0]) {
           let _id = String(follwerId).replace(/n/i, "");
           const profile = await Blockchain.profileContract.getProfileById(_id);
           if (!String(profile[0]).startsWith("https://ipfs.io/ipfs/")) continue;
@@ -415,7 +415,7 @@ export default class Blockchain {
           });
         }
       } else {
-        for (const follwerId of transaction) {
+        for (const follwerId of transaction[0]) {
           let _id = String(follwerId).replace(/n/i, "");
           const profile = await Blockchain.profileContract.getProfileById(_id);
           if (!String(profile[0]).startsWith("https://ipfs.io/ipfs/")) continue;
