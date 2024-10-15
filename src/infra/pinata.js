@@ -30,8 +30,12 @@ export async function pinProfileToIPFS(params) {
   try {
     let avatarUrl = null;
     if (params.avatar) {
-      const { success, data } = await handleFileUpload(params.avatar);
-      avatarUrl = success ? data : avatarUrl;
+      if (typeof params.avatar == "string") {
+        avatarUrl = params.avatar;
+      } else {
+        const { success, data } = await handleFileUpload(params.avatar);
+        avatarUrl = success ? data : avatarUrl;
+      }
     }
     const profileData = {
       avatar: avatarUrl,

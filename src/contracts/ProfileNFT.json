@@ -1,5 +1,5 @@
 {
-  "address": "0xE1ce9Bd55fE53fD24Ad573Bcb3D13Bb93353FbEa",
+  "address": "0xd1fDd011aeDE7a3FA05c616Fab65b4090480F785",
   "abi": [
     "function approve(address,uint256)",
     "function balanceOf(address) view returns (uint256)",
@@ -29,7 +29,6 @@
     "function symbol() view returns (string)",
     "function tokenURI(uint256) view returns (string)",
     "function transferFrom(address,address,uint256)",
-    "function unfollow(uint256,uint256)",
     "function update(uint256,string)",
     "function updateHandle(uint256,string) returns (string)",
     "function wallets() view returns (address, address)"

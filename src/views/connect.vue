@@ -7,6 +7,9 @@ import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
 import { pinProfileToIPFS } from "../infra/pinata.js";
 import { Loading, Icon, Avatar } from "../components";
+import { useBasename } from "../composables/basename.js";
+const { getBasename, getBasenameAvatar, getBasenameTextRecord } = useBasename();
+
 const blockchainClient = inject("blockchainClient");
 const isLoading = ref(false);
 const avatarURL = ref("");
@@ -14,6 +17,9 @@ const form = ref({
   name: "",
   description: "",
   avatar: null,
+  links: {
+    twitter: "",
+  },
 });
 const router = useRouter();
 const enableForm = ref(false);
@@ -52,6 +58,7 @@ async function create() {
       avatar: form.value.avatar,
       name: form.value.name,
       description: form.value.description,
+      links: form.value.links,
       createdAt: new Date().toISOString(),
     });
     if (metadata.success == false) {
@@ -68,12 +75,30 @@ async function create() {
   } catch (error) {}
   isLoading.value = false;
 }
+
+async function enableFormCreate() {
+  const basename = await getBasename(address.value);
+  let avatar = null;
+  if (basename) {
+    form.value.name = basename;
+    avatar = await getBasenameAvatar(basename);
+    const description = await getBasenameTextRecord(basename, "description");
+    if (description) form.value.description = description;
+    const twitter = await getBasenameTextRecord(basename, "com.twitter");
+    if (twitter) form.value.links.twitter = twitter;
+  }
+  if (avatar) {
+    form.value.avatar = avatar;
+    avatarURL.value = avatar;
+  }
+  enableForm.value = true;
+}
 </script>
 <!-- prettier-ignore -->
 <template>
   <div class="connect u-flex-line-center">
     <div v-if="!enableForm" class="connect__box">
-      <button class="connect__button" @click="enableForm = true" type="button">
+      <button class="connect__button" @click="enableFormCreate" type="button">
         Create Profile
       </button>
       <div class="connect__spacer u-flex-line">

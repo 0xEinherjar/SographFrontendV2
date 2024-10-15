@@ -60,7 +60,7 @@ async function unfollow(address) {
   font-size: 1.2rem;
   line-height: 1.8rem;
   font-weight: 500;
-  color: rgba(189, 193, 198, 0.4);
+  color: var(--text-color-secondary);
 }
 .c-user__name,
 .c-user__username {

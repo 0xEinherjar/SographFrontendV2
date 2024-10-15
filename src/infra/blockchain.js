@@ -4,9 +4,9 @@ import { useUtils } from "../composables/utils.js";
 import { usePrepare } from "../composables/prepare.js";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
-import sographAbi from "../json/Sograph.json";
-import profileAbi from "../json/ProfileNFT.json";
-import tokenAbi from "../json/Token.json";
+import sographAbi from "../contracts/Sograph.json";
+import profileAbi from "../contracts/ProfileNFT.json";
+import tokenAbi from "../contracts/Token.json";
 const { formatToNumber, isAddress } = useUtils();
 
 export default class Blockchain {
@@ -207,18 +207,21 @@ export default class Blockchain {
         Blockchain.hasClient
       ) {
         const signer = await Blockchain.provider.getSigner();
-        const transaction = await Blockchain.sographContract
-          .connect(signer)
-          .getUserByAddressToCaller(profile);
+        const transaction = await Blockchain.sographContract.getUserByAddress(
+          profile
+        );
+        const transaction1 = await Blockchain.sographContract.getUserByAddress(
+          account.value.wallet
+        );
         const transactionProfile = await Blockchain.profileContract
           .connect(signer)
           .getProfileByIdToCaller(
-            formatToNumber(transaction[0]),
-            formatToNumber(transaction[1])
+            formatToNumber(transaction1[0]),
+            formatToNumber(transaction[0])
           );
         const data = await prepare.profileToCaller(transactionProfile);
-        data.id = formatToNumber(transaction[1]);
-        data.role = formatToNumber(transaction[2]);
+        data.id = formatToNumber(transaction[0]);
+        data.role = formatToNumber(transaction[1]);
         data.owner = profile;
 
         if (!data) return { success: false, message: "" };

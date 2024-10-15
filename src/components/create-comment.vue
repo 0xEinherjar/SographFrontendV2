@@ -70,8 +70,8 @@ async function create() {
   gap: 10px;
   display: flex;
   align-items: flex-start;
-  border-bottom: 1px solid rgba(244, 244, 244, 0.3);
-  border-top: 1px solid rgba(244, 244, 244, 0.3);
+  border-bottom: 1px solid var(--color-border-primary);
+  border-top: 1px solid var(--color-border-primary);
   padding-top: 24px;
   padding-bottom: 24px;
 }
@@ -119,11 +119,5 @@ async function create() {
 }
 .c-create-comment__send {
   padding: 4px 0 4px 4px;
-}
-.c-create-comment__send svg {
-  color: var(--bg-color-tertiary) !important;
-}
-.c-create-comment__send.is-active svg {
-  color: var(--color-blue) !important;
 }
 </style>

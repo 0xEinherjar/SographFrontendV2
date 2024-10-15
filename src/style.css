@@ -29,7 +29,7 @@
 .light-mode:root {
   --bg-color-primary: #ffffff;
   --bg-color-secondary: #f3f8fd;
-
+  --bg-color-tertiary: #f3f8fd;
   --bg-color-quaternary: #1a1b1d;
   --bg-color-quinary: #bdc1c6;
 
@@ -38,11 +38,11 @@
   --text-color-tertiary: #292d3266;
 
   --text-color-quaternary: #1a1b1d;
-  --text-color-quinary: #28292b;
+  --text-color-quinary: #f4f4f4;
 
   --color-icon-primary: #292d32;
   --color-border-primary: #292d324d;
-  /* --color-input-placeholder-default: #e8eaed99; */
+  --color-input-placeholder-default: #292d32cc;
 }
 *,
 *::before,
@@ -140,7 +140,6 @@ body {
 }
 .c-icon,
 .c-icon--small {
-  /* color: #E6EAEE; */
   color: var(--color-icon-primary);
 }
 .c-icon {
@@ -320,7 +319,7 @@ body {
   z-index: 2;
   min-height: 48px;
   line-height: 48px;
-  color: rgba(232, 234, 237, 0.6);
+  color: var(--color-input-placeholder-default);
 }
 .c-form__textarea-input {
   min-height: 48px;

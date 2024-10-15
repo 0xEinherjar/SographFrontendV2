@@ -40,7 +40,7 @@ const date = computed(() => {
     </ul>
     <section class="about__section">
       <h4 class="about__title u-font-500">Links</h4>
-      <ul class="about__list">
+      <ul class="about__list u-flex-line">
         <li v-if="profile" class="about__list-item u-font-500 u-flex-line">
           <icon iconClass="c-icon" name="link"/>
           <span>@{{ profile?.handle ? profile?.handle : truncateAddress(profile?.owner) }}</span>
@@ -62,7 +62,7 @@ const date = computed(() => {
     <ul class="about__details u-flex-line">
       <li v-if="profile.hasSubscription" class="about__details-item u-font-500 u-flex-line">
         <icon iconClass="c-icon" name="verify"/>
-        <span>Premium profile</span>
+        <span>Premium</span>
       </li>
       <li v-else class="about__details-item u-font-500 u-flex-line">
         <icon iconClass="c-icon" name="profile"/>

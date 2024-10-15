@@ -1,6 +1,6 @@
 import { ethers, Contract, isError, Block } from "ethers";
 import { useUtils } from "../composables/utils.js";
-import tokenAbi from "../json/Token.json";
+import tokenAbi from "../contracts/Token.json";
 
 export default class Token {
   static tokenContract;

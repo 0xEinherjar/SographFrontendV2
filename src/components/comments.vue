@@ -73,20 +73,19 @@ onBeforeMount(async () => {
 .c-comments {
   width: min(500px, 100%);
   padding: 32px 24px;
-  background-color: #28292b;
+  background-color: var(--bg-color-secondary);
   border-radius: 20px;
   margin-block: 40px;
   display: grid;
   gap: 32px;
   position: relative;
 }
+.light-mode .c-comments {
+  background-color: var(--bg-color-primary);
+}
 .c-comments__title {
   gap: 8px;
   font-size: 1.6rem;
-}
-.c-comments__title svg {
-  height: 2.2rem;
-  width: 2.2rem;
 }
 .c-comments__counter {
   opacity: 0.4;

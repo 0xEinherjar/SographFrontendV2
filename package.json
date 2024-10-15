@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coinbase/onchainkit": "^0.33.6",
     "@wagmi/connectors": "^5.1.7",
     "@wagmi/core": "^2.13.4",
     "@web3modal/ethers": "^5.1.4",
@@ -16,7 +17,7 @@
     "axios": "^1.7.7",
     "ethers": "^6.10.0",
     "pinia": "^2.1.7",
-    "viem": "^2.21.0",
+    "viem": "^2.21.23",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"
   },

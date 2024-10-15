@@ -1,8 +1,8 @@
 import { ethers, Contract, isError } from "ethers";
 import { useUtils } from "../composables/utils.js";
-import postAbi from "../json/PostNFT.json";
-import profileAbi from "../json/ProfileNFT.json";
-import sographAbi from "../json/Sograph.json";
+import postAbi from "../contracts/PostNFT.json";
+import profileAbi from "../contracts/ProfileNFT.json";
+import sographAbi from "../contracts/Sograph.json";
 const { formatToNumber } = useUtils();
 
 export default class Post {

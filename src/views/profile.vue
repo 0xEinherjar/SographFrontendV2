@@ -20,6 +20,8 @@ import {
   Icon,
   ProfilePlaceholder,
 } from "../components";
+import { useBasename } from "../composables/basename.js";
+const { getBasenameAddress } = useBasename();
 const blockchainClient = inject("blockchainClient");
 const userStore = useUserStore();
 const favoriteStore = useFavoriteStore();
@@ -106,6 +108,13 @@ async function getProfile() {
   let routeParam;
   if (route.params.profile.startsWith("@")) {
     routeParam = route.params.profile.replace("@", "");
+  } else if (route.params.profile.endsWith(".base.eth")) {
+    const addressEns = await getBasenameAddress(route.params.profile);
+    if (addressEns) {
+      routeParam = addressEns;
+    } else {
+      routeParam = route.params.profile;
+    }
   } else {
     routeParam = route.params.profile;
   }

@@ -86,7 +86,7 @@ onBeforeMount(async () => {
             </p>
           </div>
         </li>
-        <li class="c-card-payment__list-item">
+        <!-- <li class="c-card-payment__list-item">
           <div class="c-card-payment__list-box c-soon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2Z" fill="#F4F4F4"/>
@@ -99,7 +99,7 @@ onBeforeMount(async () => {
               Engage seamlessly without needing to open your wallet for transaction confirmations.
             </p>
           </div>
-        </li>
+        </li> -->
       </ul>
       <div class="c-card-payment__footer u-flex-line">
         <div class="c-card-payment__count u-flex-line">

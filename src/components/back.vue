@@ -20,8 +20,8 @@ const lastPath = computed(() => {
 <!-- prettier-ignore -->
 <template>
   <div @click="back" class="c-back u-flex-line" role="button">
-    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M9.40625 12.4498L5.33125 8.3748C4.85 7.89355 4.85 7.10605 5.33125 6.6248L9.40625 2.5498" stroke="#BDC1C6" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg class="c-back__icon" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9.40625 12.4498L5.33125 8.3748C4.85 7.89355 4.85 7.10605 5.33125 6.6248L9.40625 2.5498" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <span class="c-back__text">back to</span>
     <template v-if="lastPath.isProfile">
@@ -33,16 +33,17 @@ const lastPath = computed(() => {
       <icon v-if="lastPath.name == 'settings'" iconClass="c-icon" name="setting"/>
     </template>
     <h6 class="c-back__name">{{ lastPath.name }}</h6>
-    <!-- <template v-else>
-      <icon v-if="lastPath.name == 'Feed'" iconClass="c-icon" name="home"/>
-      <h6 class="c-back__name">Feed</h6>
-    </template> -->
   </div>
 </template>
 <style>
 .c-back {
   cursor: pointer;
   font-size: 1.4rem;
+}
+.c-back__icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  color: var(--color-icon-primary);
 }
 .c-back__text {
   color: var(--text-color-primary);

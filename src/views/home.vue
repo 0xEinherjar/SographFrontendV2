@@ -45,7 +45,8 @@ watch(address, async (newAddress, _) => {
       <nav class="header__nav u-flex-line">
         <a class="header__nav-item" target="_blank" href="https://faucet.sograph.app/">Faucet</a>
         <a class="header__nav-item" target="_blank" href="https://vote.sograph.app/">Vote</a>
-        <div class="header__nav-item header__nav-item-home c-soon">Docs</div>
+        <a class="header__nav-item" target="_blank" href="https://docs.sograph.app/">Docs</a>
+        <div class="header__nav-item">Docs</div>
       </nav>
       <button type="button" class="button-info-chain"><span class=""></span>BNBChain Testnet</button>
     </header>
@@ -60,9 +61,9 @@ watch(address, async (newAddress, _) => {
       <div class="footer__column">
         <div class="footer__column-head">Get Involved</div>
         <div class="footer__column-content">
-          <a href="https://vote.sograph.app/" class="footer__link u-flex-line">Vote</a>
+          <a href="https://vote.sograph.app/" target="_blank" class="footer__link u-flex-line">Vote</a>
           <a href="#" class="footer__link u-flex-line">User Guide</a>
-          <a href="#" class="footer__link u-flex-line">Docs</a>
+          <a href="https://docs.sograph.app/" target="_blank" class="footer__link u-flex-line">Docs</a>
         </div>
       </div>
       <div class="footer__column">
@@ -160,8 +161,5 @@ watch(address, async (newAddress, _) => {
 }
 .home__button:hover {
   animation: rotate 3ms alternate-reverse;
-}
-.header__nav-item-home.c-soon::before {
-  right: -58%;
 }
 </style>

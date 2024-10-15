@@ -16,26 +16,16 @@ async function reactivate() {
 </script>
 <!-- prettier-ignore -->
 <template>
-  <form class="c-form-add u-flex-line" @submit.prevent="reactivate">
-    <input v-model="postId" class="c-form__input" type="text" placeholder="Enter the PostNFT ID">
-    <button class="c-form__submit u-flex-line" :disabled="!postId" type="submit">
-      <loading v-if="isLoading" type="small"/>
-      <template v-else>Add</template>
-    </button>
+    <form class="c-form" @submit.prevent="reactivate">
+    <div class="c-form__field">
+      <label class="c-form__label" for="username">Publication Id</label>
+      <input class="c-form__input" type="text" v-model="postId" placeholder="Enter the PostNFT ID">
+    </div>
+    <div class="c-form__footer">
+      <button class="c-form__submit u-flex-line" :disabled="!postId" type="submit">
+        <loading v-if="isLoading" type="small"/>
+        <template v-else>Add</template>
+      </button>
+    </div>
   </form>
 </template>
-<style>
-.c-form-add {
-  border-radius: var(--border-radius-default);
-  background-color: var(--bg-color-secondary);
-  padding: 32px 24px;
-  gap: 24px;
-}
-.c-form-add > .c-form__submit {
-  margin-left: 0 !important;
-}
-.c-form-add > .c-form__input {
-  flex-grow: 1;
-  height: 32px !important;
-}
-</style>

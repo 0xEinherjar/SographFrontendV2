@@ -3,7 +3,7 @@ import { inject, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
 import { Icon } from "./";
-const reportGateway = inject("reportGateway");
+const reportClient = inject("reportClient");
 const props = defineProps(["account"]);
 const accountStore = useAccountStore();
 const { account } = storeToRefs(accountStore);
@@ -48,13 +48,9 @@ const reportType = ref([
   },
 ]);
 
-async function report(code) {
+async function report(reason) {
   if (!account.value.isConnected) return;
-  const { status } = await reportGateway.create({
-    reason: code,
-    reported: props.account,
-    whistleblower: account.value.wallet,
-  });
+  const { success } = await reportClient.report(props.account, reason);
   active.value = false;
 }
 </script>

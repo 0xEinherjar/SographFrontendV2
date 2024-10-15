@@ -306,6 +306,9 @@ onMounted(() => {
   font-weight: 500;
   margin-left: auto;
 }
+.light-mode .c-redeem__button {
+  color: var(--text-color-quinary);
+}
 .setting {
   padding-block: 32px;
   display: flex;
@@ -341,7 +344,8 @@ onMounted(() => {
   grid-column: 1/2;
   justify-self: center;
   height: 100%;
-  background-color: rgba(189, 193, 198, 0.6);
+  background-color: var(--bg-color-quinary);
+  opacity: 0.6;
   z-index: -1;
 }
 .setting__nav-pointer {
@@ -361,11 +365,13 @@ onMounted(() => {
   font-size: 1.4rem;
   line-height: 1.6rem;
   color: rgba(189, 193, 198, 0.6);
+  color: var(--text-color-secondary);
 }
 .setting__nav-text.is-active {
   font-weight: 400;
   font-size: 1.5rem;
-  color: rgba(189, 193, 198, 1);
+  color: var(--text-color-primary);
+  opacity: 0.9;
 }
 .setting__content {
   flex-grow: 1;

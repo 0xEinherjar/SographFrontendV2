@@ -8,6 +8,7 @@ import {
 import Blockchain from "./infra/blockchain.js";
 import Token from "./infra/token.js";
 import Post from "./infra/post.js";
+import Report from "./infra/report.js";
 
 const projectId = import.meta.env.VITE_PROJECT_ID;
 
@@ -61,6 +62,8 @@ onMounted(() => {
       post.setProvider(walletProvider.value);
       const token = new Token();
       token.setProvider(walletProvider.value);
+      const report = new Report();
+      report.setProvider(walletProvider.value);
     }
   }, 300);
 });
