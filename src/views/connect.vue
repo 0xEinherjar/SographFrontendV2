@@ -16,7 +16,7 @@ import { abi, contract } from "../contracts/Sograph.js";
 import { useProfile } from "../composables/useProfile.js";
 const { getBasename, getBasenameAvatar, getBasenameTextRecord } = useBasename();
 const { address } = useAccount();
-const { data: hash, writeContractAsync } = useWriteContract();
+const { data, writeContractAsync } = useWriteContract();
 const isLoading = ref(false);
 const avatarURL = ref("");
 const form = ref({
@@ -98,13 +98,16 @@ async function enableFormCreate() {
 }
 
 const { isSuccess } = useWaitForTransactionReceipt({
-  hash,
+  hash: data,
 });
 const { getProfile } = useProfile();
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {
+    accountStore.setWallet(address.value);
+    accountStore.setConnected();
     accountStore.setHasAccount();
     const profile = await getProfile(address.value);
+
     if (profile.success) userStore.setUser(profile.data);
     router.push({ path: `/${address.value}` });
   }
