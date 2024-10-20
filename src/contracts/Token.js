@@ -1,4 +1,4 @@
-export const contract = "0x461485b61FB18CF36d95855C9F71510b8072824F";
+export const contract = "0x3e5711dDc0501b70BDA94939fcF6cfed91726BcA";
 export const abi = [
   {
     inputs: [],

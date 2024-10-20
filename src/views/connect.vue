@@ -108,8 +108,10 @@ watch(isSuccess, async (newIsSuccess) => {
     accountStore.setHasAccount();
     const profile = await getProfile(address.value);
 
-    if (profile.success) userStore.setUser(profile.data);
-    router.push({ path: `/${address.value}` });
+    if (profile.success) {
+      userStore.setUser(profile.data);
+      router.push({ path: `/${address.value}` });
+    }
   }
 });
 </script>
