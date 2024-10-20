@@ -1,17 +1,17 @@
 <script setup>
-import { ref, onBeforeMount, inject } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { Comment, CreateComment, Icon, CommentPlaceholder } from "./";
-const postClient = inject("postClient");
+import { useComments } from "../composables/useComments";
 const props = defineProps(["id", "totalComments", "isConnected"]);
 const isLoading = ref(true);
 const cursorPag = ref(0);
 const lengthPag = ref(10);
 const comments = ref([]);
-
+const { getComments } = useComments();
 const newComment = (data) => comments.value.unshift(data);
 
 async function fetchComments() {
-  const { success, data, cursor } = await postClient.getComments(
+  const { success, data, cursor } = await getComments(
     props.id,
     cursorPag.value,
     lengthPag.value

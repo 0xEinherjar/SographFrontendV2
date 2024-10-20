@@ -1,4 +1,4 @@
-export const contract = "0xf944Bcc951b0aE4a14EE2026Ef56eC088fF9C28a";
+export const contract = "0xFfD49A8c75DEA0311BdF6c48B745ffAB4C8C176D";
 export const abi = [
   {
     inputs: [
@@ -227,11 +227,6 @@ export const abi = [
     inputs: [
       {
         internalType: "address",
-        name: "caller",
-        type: "address",
-      },
-      {
-        internalType: "address",
         name: "user",
         type: "address",
       },
@@ -415,13 +410,6 @@ export const abi = [
       },
     ],
     name: "redeemPost",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "redeemProfile",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

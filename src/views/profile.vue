@@ -2,13 +2,14 @@
 import { useUtils } from "../composables/utils.js";
 import { useAccountStore } from "../store/account.js";
 import { useFavoriteStore } from "../store/favorite.js";
-import { computed, inject, onBeforeMount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useUserStore } from "../store/user.js";
 import { storeToRefs } from "pinia";
 import {
   Avatar,
   Back,
+  ButtonFollow,
   Sidebar,
   CreatePost,
   Post,
@@ -21,8 +22,11 @@ import {
   ProfilePlaceholder,
 } from "../components";
 import { useBasename } from "../composables/basename.js";
+import { useProfile } from "../composables/useProfile.js";
+import { usePublication } from "../composables/usePublication.js";
+const { getProfile: getProfile2 } = useProfile();
+const { getPublication } = usePublication();
 const { getBasenameAddress } = useBasename();
-const blockchainClient = inject("blockchainClient");
 const userStore = useUserStore();
 const favoriteStore = useFavoriteStore();
 const { user } = storeToRefs(userStore);
@@ -57,22 +61,6 @@ function toggleFavorite() {
   }
 }
 
-async function handleFollow(address) {
-  const result = await blockchainClient.follow(address);
-  if (result.success) {
-    profile.value.isFollowing = true;
-    profile.value.followers += 1;
-  }
-}
-
-async function handleUnfollow(address) {
-  const result = await blockchainClient.unfollow(address);
-  if (result.success) {
-    profile.value.isFollowing = false;
-    profile.value.followers -= 1;
-  }
-}
-
 const username = computed(() => {
   return !!profile.value.handle ? profile.value.handle : profile.value.owner;
 });
@@ -90,13 +78,13 @@ function profileNavActive(nav) {
 
 async function fetchPost(cursorParams) {
   isLoadingPostScroll.value = true;
-  const { data, cursor } = await blockchainClient.getPost(
+  const { data, cursor } = await getPublication(
     profile.value.owner,
     cursorParams,
     lengthPag.value
   );
   cursorPag.value = cursor;
-  publications.value.unshift(...data);
+  publications.value.push(...data);
   isLoadingPostScroll.value = false;
   if (cursor == 0) {
     observer.value?.disconnect();
@@ -118,11 +106,13 @@ async function getProfile() {
   } else {
     routeParam = route.params.profile;
   }
-  const result = await blockchainClient.getProfile(routeParam);
+
+  const result = await getProfile2(routeParam);
   isLoadingProfile.value = false;
   publications.value = [];
   if (result.success) {
     profile.value = result.data;
+    cursorPag.value = result.data.postLength;
     result.data.isFollowing;
     await fetchPost(cursorPag.value);
     isLoadingPost.value = false;
@@ -170,12 +160,7 @@ onBeforeMount(async () => {
       <back/>
       <template v-if="profile">
         <template v-if="account.hasAccount">
-          <button v-if="!isMyProfile && !profile?.isFollowing == true" class="profile__button u-font-500" @click="handleFollow(profile.owner)">
-            Follow {{ profile?.name }}
-          </button>
-          <button v-if="!isMyProfile && profile?.isFollowing == true" class="profile__button u-font-500" @click="handleUnfollow(profile.owner)">
-            Following
-          </button>
+          <button-follow v-if="!isMyProfile" :isFollowing="profile?.isFollowing" :name="profile?.name" :profile="profile.owner"/>
         </template>
         <button v-else class="profile__button u-font-500" disabled>Follow {{ profile.name }}</button>
       </template>
@@ -240,10 +225,10 @@ onBeforeMount(async () => {
           </template>
         </template>
         <template v-else-if="navActive == 'Followers'">
-          <followers :id="profile.id" :isConnected="account.isConnected"/>
+          <followers :id="profile.id" :length="profile.postLength" :isConnected="account.isConnected"/>
         </template>
         <template v-else-if="navActive == 'Following'">
-          <following :id="profile.id" :isConnected="account.isConnected"/>
+          <following :id="profile.id" :length="profile.postLength" :isConnected="account.isConnected"/>
         </template>
         <template v-else-if="navActive == 'About'">
           <profile-about :profile="profile"/>

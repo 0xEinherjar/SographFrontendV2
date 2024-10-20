@@ -1,8 +1,12 @@
 <script setup>
-import { inject, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import { useUserStore } from "../../store/user.js";
-import Loading from "../loading.vue";
-const blockchainClient = inject("blockchainClient");
+import { Loading } from "../";
+import { useReadSographContract } from "../../composables/useReadSographContract.js";
+import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
+import { abi, contract } from "../../contracts/Sograph.js";
+const { writeContractAsync, data } = useWriteContract();
+const { readSographContract } = useReadSographContract();
 const { userHandle } = defineProps(["userHandle"]);
 const userStore = useUserStore();
 const handle = ref("");
@@ -27,19 +31,39 @@ async function isHandleAvailable() {
     return;
   }
   handleNote.value = handle.value;
-  const result = await blockchainClient.isHandleAvailable(handle.value);
-  if (result.success) {
+  try {
+    const result = await readSographContract("ownerOfHandle", [handle.value]);
+    if (String(result) == "0x0000000000000000000000000000000000000000") {
+      isAvailable.value = true;
+    } else {
+      isAvailable.value = false;
+    }
     isCorrect.value = true;
-    isAvailable.value = result.isAvailable;
+  } catch (error) {
+    isCorrect.value = false;
   }
 }
 
 async function updateHandle() {
   isLoading.value = true;
-  const result = await blockchainClient.updateHandle(handle.value);
-  if (result.success) userStore.updateHandle(handle.value);
-  isLoading.value = false;
+  await writeContractAsync({
+    abi: abi,
+    address: contract,
+    functionName: "updateHandle",
+    args: [handle.value],
+  });
 }
+
+const { isSuccess } = useWaitForTransactionReceipt({
+  hash: data,
+});
+
+watch(isSuccess, async (newIsSuccess) => {
+  if (newIsSuccess) {
+    userStore.updateHandle(handle.value);
+    isLoading.value = false;
+  }
+});
 
 onBeforeMount(() => {
   if (userHandle.length > 0) {

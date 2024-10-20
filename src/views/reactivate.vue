@@ -1,42 +1,54 @@
 <script setup>
-import { useWeb3ModalAccount } from "@web3modal/ethers/vue";
-import { inject, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "@wagmi/vue";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
-import { Loading } from "../components";
-const blockchainClient = inject("blockchainClient");
+import { ButtonReactivate } from "../components";
+import { useProfile } from "../composables/useProfile.js";
+import { contract as contractSograph } from "../contracts/Sograph.js";
+import { abi, contract } from "../contracts/ProfileNFT.js";
+const { getProfile } = useProfile();
+const { writeContractAsync, data } = useWriteContract();
 const isLoading = ref(false);
 const reactivateProfileId = ref(null);
 const router = useRouter();
 const accountStore = useAccountStore();
 const userStore = useUserStore();
-const { address } = useWeb3ModalAccount();
-const form = ref({
-  name: "",
-  description: "",
-  avatar: null,
-});
+const { address } = useAccount();
 
 async function reactivateProfile() {
   if (!reactivateProfileId || !address.value) return;
   isLoading.value = true;
-  await blockchainClient.approve(reactivateProfileId.value);
-  const reactivateResult = await blockchainClient.reactivateProfile(
-    reactivateProfileId.value
-  );
-  if (!reactivateResult.success) return;
-  const profileResult = await blockchainClient.getProfile(address.value);
-  if (!profileResult.success) return;
+  await writeContractAsync({
+    abi: abi,
+    address: contract,
+    functionName: "approve",
+    args: [contractSograph, reactivateProfileId.value],
+  });
+}
+const { isSuccess } = useWaitForTransactionReceipt({
+  hash: data,
+});
+async function reactivate() {
+  console.log("chamou");
+  console.log(address.value);
+
+  const profile = await getProfile(address.value);
+  console.log(profile);
+
+  if (!profile.success) return;
   accountStore.setWallet(address.value);
   accountStore.setConnected();
-  userStore.setUser(profileResult.data);
+  userStore.setUser(profile.data);
   accountStore.setHasAccount();
   isLoading.value = false;
   router.push({
-    path: `/${
-      profileResult.data.handle ? profileResult.data.handle : address.value
-    }`,
+    path: `/${profile.data.handle ? profile.data.handle : address.value}`,
   });
 }
 </script>
@@ -52,10 +64,10 @@ async function reactivateProfile() {
         </div>
         <div class="c-form__footer">
           <span class="c-form__info"></span>
-          <button class="c-form__submit u-flex-line" :disabled="!reactivateProfileId" type="submit">
-            <loading v-if="isLoading" type="small"/>
-            <template v-else>Reactivate</template>
+          <button v-if="!isSuccess" class="c-form__submit u-flex-line" :disabled="!reactivateProfileId" type="submit">
+            Approve
           </button>
+          <button-reactivate v-else :id="reactivateProfileId" @reactivate="reactivate"/>
         </div>
       </form>
     </div>

@@ -1,8 +1,15 @@
 <script setup>
-const { type } = defineProps(["type"])
+const { type, theme } = defineProps(["type", "theme"]);
 </script>
 <template>
-  <div class="c-loader" :class="{'c-loader--small': type == 'small','c-loader--medium': type == 'medium'}"></div>
+  <div
+    class="c-loader"
+    :class="{
+      'c-loader--small': type == 'small',
+      'c-loader--medium': type == 'medium',
+      'c-loader--dark': theme == 'dark',
+    }"
+  ></div>
 </template>
 <style>
 .c-loader {
@@ -24,11 +31,19 @@ const { type } = defineProps(["type"])
   width: 24px;
   border-width: 3px;
 }
+.c-loader--dark {
+  border-color: rgba(40, 41, 43, 0.3);
+  border-top-color: #28292b;
+}
 
 @keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
 @-webkit-keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
 </style>

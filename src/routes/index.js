@@ -3,8 +3,8 @@ import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
 import { useHistoryStore } from "../store/history.js";
 import { Profile, Setting, Connect, Feed, Home, Reactivate } from "../views";
-import Blockchain from "../infra/blockchain.js";
-const blockchain = new Blockchain();
+import { useProfile } from "../composables/useProfile.js";
+const { getProfile } = useProfile();
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -24,7 +24,7 @@ router.beforeEach(async (to, from, next) => {
   const previousPath = from.fullPath.split("/")[1];
   const defaultRoute = ["feed", "settings", "explorer"];
   const addProfileHistory = async (path) => {
-    const result = await blockchain.getProfile(path);
+    const result = await getProfile(path);
     if (result.success) {
       historyStore.setHistory({
         avatar: result.data.avatar,

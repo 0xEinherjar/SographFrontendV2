@@ -1,14 +1,15 @@
 <script setup>
-import { inject, ref } from "vue";
+import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
 import { Icon } from "./";
-const reportClient = inject("reportClient");
+import { abi, contract } from "../contracts/Voting.js";
+import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
 const props = defineProps(["account"]);
 const accountStore = useAccountStore();
 const { account } = storeToRefs(accountStore);
 const active = ref(false);
-
+const { writeContractAsync, data } = useWriteContract();
 const reportType = ref([
   {
     code: 1,
@@ -50,9 +51,21 @@ const reportType = ref([
 
 async function report(reason) {
   if (!account.value.isConnected) return;
-  const { success } = await reportClient.report(props.account, reason);
-  active.value = false;
+  await writeContractAsync({
+    abi: abi,
+    address: contract,
+    functionName: "reportUser",
+    args: [props.account, reason],
+  });
 }
+const { isSuccess } = useWaitForTransactionReceipt({
+  hash: data,
+});
+watch(isSuccess, async (newIsSuccess) => {
+  if (newIsSuccess) {
+    active.value = false;
+  }
+});
 </script>
 <!-- prettier-ignore -->
 <template>

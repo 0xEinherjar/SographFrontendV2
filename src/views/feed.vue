@@ -1,6 +1,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { inject, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
 import {
@@ -10,7 +10,8 @@ import {
   Sidebar,
   Back,
 } from "../components";
-const blockchainClient = inject("blockchainClient");
+import { usePublicationFollowing } from "../composables/usePublicationFollowing.js";
+const { getPublicationFollowing } = usePublicationFollowing();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const accountStore = useAccountStore();
@@ -19,9 +20,7 @@ const publications = ref([]);
 const isLoadingPost = ref(true);
 
 onBeforeMount(async () => {
-  const { success, data } = await blockchainClient.getPostFollowings(
-    user.value.id
-  );
+  const { success, data } = await getPublicationFollowing(user.value.id);
   if (success) {
     publications.value = data;
   }

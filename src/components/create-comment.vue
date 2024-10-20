@@ -1,16 +1,22 @@
 <script setup>
-import { inject, ref } from "vue";
+import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
+import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
+import { abi, contract } from "../contracts/Sograph.js";
 import { Avatar, Icon } from "./";
 import { useUserStore } from "../store/user.js";
 import { pinCommentToIPFS } from "../infra/pinata.js";
-const postClient = inject("postClient");
+const { writeContractAsync, data } = useWriteContract();
 const props = defineProps(["id"]);
 const emit = defineEmits(["new-comment"]);
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const commentLength = ref(0);
 const text = ref("");
+const content = ref({
+  text: "",
+  createdAt: null,
+});
 
 function showPlaceholder(event) {
   commentLength.value = event.target.innerText.length;
@@ -29,24 +35,40 @@ function showPlaceholder(event) {
 
 async function create() {
   if (text.value.length == 0) return;
-  const data = {
-    text: text.value,
-    createdAt: new Date().toISOString(),
-  };
-  const metadata = await pinCommentToIPFS(data);
+  content.value.text = text.value;
+  content.value.createdAt = new Date().toISOString();
+  const metadata = await pinCommentToIPFS(content.value);
   if (metadata.success == false) return;
-  const { success } = await postClient.comment(props.id, metadata.data);
-  if (success) {
+  await writeContractAsync({
+    abi: abi,
+    address: contract,
+    functionName: "comment",
+    args: [props.id, metadata.data],
+  });
+}
+const { isSuccess } = useWaitForTransactionReceipt({
+  hash: data,
+});
+watch(isSuccess, async (newIsSuccess) => {
+  if (newIsSuccess) {
     emit(
       "new-comment",
-      Object.assign(data, {
-        authorName: user.value.name,
-        authorAvatar: user.value.avatar,
-      })
+      Object.assign(
+        {
+          text: content.value.text,
+          createdAt: content.value.createdAt,
+        },
+        {
+          authorName: user.value.name,
+          authorAvatar: user.value.avatar,
+        }
+      )
     );
     text.value = "";
+    content.value.createdAt = null;
+    content.value.text = "";
   }
-}
+});
 </script>
 <!-- prettier-ignore -->
 <template>

@@ -1,9 +1,12 @@
 <script setup>
-import { computed, inject } from "vue";
+import { computed, ref } from "vue";
+import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
+import { abi, contract } from "../contracts/Sograph";
 import { useUtils } from "../composables/utils.js";
 import { Avatar } from "./";
-const blockchainClient = inject("blockchainClient");
 const { truncateAddress } = useUtils();
+const { writeContractAsync, data } = useWriteContract();
+const isFollowing = ref(false);
 const props = defineProps([
   "avatar",
   "name",
@@ -17,16 +20,25 @@ const username = computed(() => {
   return Boolean(props.handle) ? props.handle : props.owner;
 });
 async function follow(address) {
-  const result = await blockchainClient.follow(address);
-  if (result.success) {
-  }
+  await writeContractAsync({
+    abi: abi,
+    address: contract,
+    functionName: "follow",
+    args: [address],
+  });
 }
 
-async function unfollow(address) {
-  const result = await blockchainClient.unfollow(address);
-  if (result.success) {
+const { isSuccess } = useWaitForTransactionReceipt({
+  hash: data,
+});
+watch(isSuccess, async (newIsSuccess) => {
+  if (newIsSuccess) {
+    isFollowing.value = !isFollowing.value;
   }
-}
+});
+onMounted(() => {
+  isFollowing.value = props.isFollowing;
+});
 </script>
 <!-- prettier-ignore -->
 <template>
@@ -38,8 +50,7 @@ async function unfollow(address) {
     <span class="c-user__username u-text-ellipsis">{{ username.length == 42 ? truncateAddress(username) : `@${username}` }}</span>
     <button v-if="!props.isConnected" class="c-user__action" type="button">Follow</button>
     <template v-else>
-      <button v-if="props.isFollowing" class="c-user__action" type="button" @click="unfollow(props.owner)">Following</button>
-      <button v-else class="c-user__action" type="button" @click="follow(props.owner)">Follow</button>
+      <button class="c-user__action" type="button" @click="follow(props.owner)">{{ isFollowing ? "Following" : "Follow"}}</button>
     </template>
   </div>
 </template>

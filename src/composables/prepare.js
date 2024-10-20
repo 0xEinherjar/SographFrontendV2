@@ -122,7 +122,6 @@ export const usePrepare = () => {
 };
 
 export const usePrepare2 = () => {
-  // Função auxiliar para buscar e validar metadata a partir de uma URL IPFS
   async function fetchAndValidateMetadata(url) {
     if (!url.startsWith("https://ipfs.io/ipfs/")) return null;
     const response = await fetch(url);
@@ -131,7 +130,6 @@ export const usePrepare2 = () => {
     return metadata;
   }
 
-  // Função auxiliar para processar dados de perfil
   function processProfileData(data, metadata) {
     return {
       avatar:
@@ -140,10 +138,10 @@ export const usePrepare2 = () => {
           : null,
       name: metadata.name,
       description: metadata.description,
-      handle: data[1],
-      hasSubscription: data[4],
-      following: formatToNumber(data[2]),
-      followers: formatToNumber(data[3]),
+      handle: data.handle,
+      hasSubscription: data.hasSubscription,
+      following: formatToNumber(data.following),
+      followers: formatToNumber(data.followers),
       biography: metadata.biography,
       location: metadata.location,
       createdAt: metadata.created_at,
@@ -151,48 +149,48 @@ export const usePrepare2 = () => {
     };
   }
 
-  // Função para preparar os dados do perfil
   async function profile(data) {
-    const metadata = await fetchAndValidateMetadata(data[0]);
+    const metadata = await fetchAndValidateMetadata(data.metadata);
     if (!metadata) return null;
     return processProfileData(data, metadata);
   }
 
-  // Função para preparar os dados do perfil para o chamador
   async function profileToCaller(data) {
-    const metadata = await fetchAndValidateMetadata(data[0]);
+    const metadata = await fetchAndValidateMetadata(data.metadata);
     if (!metadata) return null;
-    return processProfileData(data, metadata);
+    const profile = processProfileData(data, metadata);
+    return Object.assign(profile, {
+      isFollowing: data.isFollowing,
+      isFollower: data.isFollower,
+    });
   }
 
-  // Função auxiliar para processar dados de posts
   function processPostData(list, author, metadata) {
     return {
       authorName: author.name,
       authorAvatar: author.avatar,
-      id: formatToNumber(list[0]),
-      hasShared: list[1],
-      authorHasSubscription: list[2],
-      authorHandle: list[4],
-      owner: list[6],
-      totalLike: formatToNumber(list[7]),
-      totalShared: formatToNumber(list[8]),
-      totalComments: formatToNumber(list[9]),
+      id: formatToNumber(list.id),
+      hasShared: list.shared,
+      authorHasSubscription: list.authorHasSubscription,
+      authorHandle: list.authorHandle,
+      owner: list.owner,
+      totalLike: formatToNumber(list.totalLike),
+      totalShared: formatToNumber(list.totalShared),
+      totalComments: formatToNumber(list.totalComments),
       attachment: metadata.attachment,
       text: metadata.text,
       createdAt: metadata.created_at,
     };
   }
 
-  // Função para preparar os dados dos posts
   async function post(data) {
     const postInfo = [];
     for (const list of data) {
-      if (list[6] === "0x0000000000000000000000000000000000000000") continue;
+      if (list.owner === "0x0000000000000000000000000000000000000000") continue;
 
       const [author, metadata] = await Promise.all([
-        fetchAndValidateMetadata(list[3]),
-        fetchAndValidateMetadata(list[5]),
+        fetchAndValidateMetadata(list.authorMetadata),
+        fetchAndValidateMetadata(list.metadata),
       ]);
 
       if (author && metadata) {
@@ -202,10 +200,14 @@ export const usePrepare2 = () => {
     return postInfo.reverse();
   }
 
-  // Função para preparar os dados dos posts para o chamador
   async function postToCaller(data) {
     const postInfo = await post(data);
-    return postInfo;
+    return postInfo.map((item) => {
+      for (const element of data) {
+        if (item.id == element.id)
+          return Object.assign(item, { hasLiked: element.hasLiked });
+      }
+    });
   }
 
   return { profile, profileToCaller, post, postToCaller };

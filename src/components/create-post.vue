@@ -1,10 +1,12 @@
 <script setup>
 import { storeToRefs } from "pinia";
-import { computed, inject, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { Avatar, Loading, Icon } from "./";
 import { pinPostToIPFS } from "../infra/pinata.js";
 import { useUserStore } from "../store/user.js";
-const blockchainClient = inject("blockchainClient");
+import { abi, contract } from "../contracts/Sograph.js";
+import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
+const { data: hash, writeContractAsync } = useWriteContract();
 const modal = ref(null);
 const form = ref({
   attachment: null,
@@ -68,16 +70,28 @@ async function create() {
       isLoading.value = false;
       return;
     }
-    await blockchainClient.createPost(metadata.data);
+    await writeContractAsync({
+      abi: abi,
+      address: contract,
+      functionName: "createPost",
+      args: [metadata.data],
+    });
     form.value.attachment = null;
     form.value.text = "";
     attachmentURL.value = "";
-    modal.value.close();
   } catch (error) {
     console.log(error);
   }
-  isLoading.value = false;
 }
+const { isSuccess } = useWaitForTransactionReceipt({
+  hash,
+});
+watch(isSuccess, async (newIsSuccess) => {
+  if (newIsSuccess) {
+    isLoading.value = false;
+    modal.value.close();
+  }
+});
 </script>
 <!-- prettier-ignore -->
 <template>

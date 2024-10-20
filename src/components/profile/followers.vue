@@ -1,8 +1,9 @@
 <script setup>
-import { inject, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { User, UserPlaceholder } from "../";
-const blockchainClient = inject("blockchainClient");
-const props = defineProps(["id", "isConnected"]);
+import { useFollow } from "../../composables/useFollow.js";
+const { getFollow } = useFollow();
+const props = defineProps(["id", "isConnected", "length"]);
 const followers = ref([]);
 const isLoading = ref(true);
 const cursorPag = ref(0);
@@ -10,13 +11,14 @@ const lengthPag = ref(24);
 const observer = ref(null);
 
 async function fetchFollowers() {
-  const { success, data, cursor } = await blockchainClient.getFollowers(
+  const { success, data, cursor } = await getFollow(
+    "follower",
     props.id,
     cursorPag.value,
     lengthPag.value
   );
   if (success) {
-    followers.value.unshift(...data);
+    followers.value.push(...data);
     cursorPag.value = cursor;
     if (cursor == 0) {
       observer.value?.disconnect();
@@ -25,6 +27,7 @@ async function fetchFollowers() {
   }
 }
 onBeforeMount(async () => {
+  cursorPag.value = props.length;
   await fetchFollowers();
   isLoading.value = false;
   if (cursorPag.value != 0) {

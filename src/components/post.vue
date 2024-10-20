@@ -1,7 +1,14 @@
 <script setup>
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useUtils } from "../composables/utils.js";
-import { Avatar, Comments, Icon } from "./";
+import {
+  Avatar,
+  Comments,
+  Icon,
+  PostButtonRedeem,
+  PostButtonLike,
+  PostButtonShare,
+} from "./";
 const { dateFormat } = useUtils();
 const props = defineProps([
   "id",
@@ -22,7 +29,6 @@ const props = defineProps([
   "isMyProfile",
   "userRepost",
 ]);
-const blockchainClient = inject("blockchainClient");
 
 const isCommentActive = ref(false);
 const post = ref({
@@ -35,37 +41,7 @@ const post = ref({
 const textPost = computed(() => {
   return String(props.text).split("\n");
 });
-async function redeemPost(_id) {
-  const result = await blockchainClient.redeemPost(_id);
-}
-async function handleShare(_id) {
-  if (post.value.hasShared == false) {
-    const result = await blockchainClient.share(_id);
-    if (result.success) {
-      post.value.totalShared += 1;
-      post.value.hasShared = true;
-    }
-  } else {
-    const result = await blockchainClient.unshare(_id);
-    if (result.success) {
-      post.value.totalShared -= 1;
-      post.value.hasShared = false;
-    }
-  }
-}
 
-async function handleLike(_id) {
-  const result = await blockchainClient.like(_id);
-  if (result.success) {
-    if (post.value.hasLiked == false) {
-      post.value.totalLiked += 1;
-      post.value.hasLiked = true;
-    } else {
-      post.value.totalLiked -= 1;
-      post.value.hasLiked = false;
-    }
-  }
-}
 onMounted(() => {
   post.value.hasLiked = props.hasLiked;
   post.value.totalLiked = Number(props.like);
@@ -93,7 +69,7 @@ onMounted(() => {
       <button v-if="props.isMyProfile" class="post__dropdown">
         <icon iconClass="c-icon--small" name="more"/>
         <ul class="post__dropdown-menu">
-          <li><button @click="redeemPost(props.id)">Redeem</button></li>
+          <li><post-button-redeem :id="props.id"/></li>
         </ul>
       </button>
     </div>
@@ -113,14 +89,8 @@ onMounted(() => {
           <span class="c-post__action-count">{{ post.totalComment }}</span>
         </button>
         <template v-if="props.isConnected">
-          <button class="c-post__action u-flex-line" @click="handleLike(props.id)">
-            <icon :iconClass="{'c-icon--small': true, 'c-icon--fill-none': true, 'is-liked': post.hasLiked }" name="like"/>
-            <span class="c-post__action-count">{{ post.totalLiked }}</span>
-          </button>
-          <button class="c-post__action u-flex-line" @click="handleShare(props.id)">
-            <icon :iconClass="{'c-icon--small': true, 'is-shared': post.hasShared && props.isMyProfile }" name="share"/>
-            <span class="c-post__action-count">{{ post.totalShared }}</span>
-          </button>
+          <post-button-like :id="props.id" :hasLiked="props.hasLiked" :totalLiked="props.like"/>
+          <post-button-share :id="props.id" :hasShared="props.hasShared" :totalShared="props.shared" :isMyProfile="props.isMyProfile"/>
         </template>
         <template v-else>
           <button class="c-post__action u-flex-line">
@@ -239,6 +209,6 @@ onMounted(() => {
   fill: var(--color-red) !important;
 }
 .is-shared {
-  stroke: var(--color-green) !important;
+  color: var(--color-green) !important;
 }
 </style>

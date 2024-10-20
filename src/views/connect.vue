@@ -1,6 +1,5 @@
 <script setup>
-import { useWeb3ModalAccount } from "@web3modal/ethers/vue";
-import { inject, ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useUtils } from "../composables/utils.js";
 import { useAccountStore } from "../store/account.js";
@@ -8,9 +7,16 @@ import { useUserStore } from "../store/user.js";
 import { pinProfileToIPFS } from "../infra/pinata.js";
 import { Loading, Icon, Avatar } from "../components";
 import { useBasename } from "../composables/basename.js";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "@wagmi/vue";
+import { abi, contract } from "../contracts/Sograph.js";
+import { useProfile } from "../composables/useProfile.js";
 const { getBasename, getBasenameAvatar, getBasenameTextRecord } = useBasename();
-
-const blockchainClient = inject("blockchainClient");
+const { address } = useAccount();
+const { data: hash, writeContractAsync } = useWriteContract();
 const isLoading = ref(false);
 const avatarURL = ref("");
 const form = ref({
@@ -38,8 +44,6 @@ function onFileChange(event) {
   reader.readAsDataURL(file);
 }
 
-const { address } = useWeb3ModalAccount();
-
 function checkForm() {
   if (
     form.value.name.length >= 3 &&
@@ -65,13 +69,12 @@ async function create() {
       isLoading.value = false;
       return;
     }
-    const result = await blockchainClient.createProfile(metadata.data);
-    if (result.success) {
-      accountStore.setHasAccount();
-      const profile = await blockchainClient.getProfile(address.value);
-      if (profile.success) userStore.setUser(profile.data);
-      router.push({ path: `/${address.value}` });
-    }
+    await writeContractAsync({
+      abi: abi,
+      address: contract,
+      functionName: "createProfile",
+      args: [metadata.data],
+    });
   } catch (error) {}
   isLoading.value = false;
 }
@@ -93,6 +96,19 @@ async function enableFormCreate() {
   }
   enableForm.value = true;
 }
+
+const { isSuccess } = useWaitForTransactionReceipt({
+  hash,
+});
+const { getProfile } = useProfile();
+watch(isSuccess, async (newIsSuccess) => {
+  if (newIsSuccess) {
+    accountStore.setHasAccount();
+    const profile = await getProfile(address.value);
+    if (profile.success) userStore.setUser(profile.data);
+    router.push({ path: `/${address.value}` });
+  }
+});
 </script>
 <!-- prettier-ignore -->
 <template>

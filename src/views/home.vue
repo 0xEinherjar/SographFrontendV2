@@ -1,38 +1,35 @@
 <script setup>
-import { useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers/vue";
-import { inject, ref, watch } from "vue";
+import { useAccountEffect } from "@wagmi/vue";
 import { useRouter } from "vue-router";
-import { Logo } from "../components";
+import { Logo, ModalConnect } from "../components";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
-const blockchainClient = inject("blockchainClient");
-const wallet = ref("");
+import { useProfile } from "../composables/useProfile.js";
 const router = useRouter();
 const accountStore = useAccountStore();
 const userStore = useUserStore();
-const { open } = useWeb3Modal();
-const { address } = useWeb3ModalAccount();
+const { getProfile } = useProfile();
 
-async function connect() {
-  await open();
-}
-
-watch(address, async (newAddress, _) => {
-  accountStore.setWallet(newAddress);
-  accountStore.setConnected();
-  wallet.value = newAddress;
-  const result = await blockchainClient.getProfile(newAddress);
-  if (result.success == false) {
-    router.push({
-      path: "/create",
-    });
-  } else if (result.success) {
-    userStore.setUser(result.data);
-    accountStore.setHasAccount();
-    router.push({
-      path: `/${result.data.handle ? result.data.handle : newAddress}`,
-    });
-  }
+useAccountEffect({
+  async onConnect(data) {
+    accountStore.setWallet(data.address);
+    accountStore.setConnected();
+    const result = await getProfile(data.address);
+    if (result.success == false) {
+      router.push({
+        path: "/create",
+      });
+    } else if (result.success) {
+      userStore.setUser(result.data);
+      accountStore.setHasAccount();
+      router.push({
+        path: `/${result.data.handle ? result.data.handle : data.address}`,
+      });
+    }
+  },
+  onDisconnect() {
+    accountStore.resetAccount();
+  },
 });
 </script>
 <!-- prettier-ignore -->
@@ -46,12 +43,11 @@ watch(address, async (newAddress, _) => {
         <a class="header__nav-item" target="_blank" href="https://faucet.sograph.app/">Faucet</a>
         <a class="header__nav-item" target="_blank" href="https://vote.sograph.app/">Vote</a>
         <a class="header__nav-item" target="_blank" href="https://docs.sograph.app/">Docs</a>
-        <div class="header__nav-item">Docs</div>
       </nav>
-      <button type="button" class="button-info-chain"><span class=""></span>BNBChain Testnet</button>
+      <button type="button" class="button-info-chain"><span class=""></span>Base Sepolia</button>
     </header>
     <div class="u-flex-line-center">
-      <button class="home__button u-flex-line-center" type="button" @click="connect">Connect</button>
+      <modal-connect/>
     </div>
     <footer class="footer">
       <div class="footer__column">

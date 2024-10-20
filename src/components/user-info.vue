@@ -4,8 +4,8 @@ import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
 import { useRouter } from "vue-router";
 import { computed } from "vue";
-import { useDisconnect } from "@web3modal/ethers/vue";
 import { Avatar, Icon } from "./";
+import { useDisconnect } from "@wagmi/vue";
 
 const { disconnect } = useDisconnect();
 const router = useRouter();
@@ -32,7 +32,7 @@ function logout() {
   <header class="c-user-info u-flex-line-between">
     <div class="c-user-info__left u-flex-line">
       <h3 class="c-user-info__name u-text-ellipsis">{{ user.name }}</h3>
-      <icon iconClass="c-icon c-user-info__icon" name="arrow"/>
+      <icon iconClass="c-icon" name="arrow"/>
       <ul class="c-user-info__dropdown">
         <li><button class="c-user-info__dropdown-item" @click="logout" type="button">Logout</button></li>
       </ul>
@@ -55,15 +55,13 @@ function logout() {
 .c-user-info__left svg {
   margin-top: 2px;
   stroke: var(--color-icon-primary);
+  height: 1.4rem;
+  width: 1.4rem;
 }
 .c-user-info__name {
   font-size: 2.1rem;
   font-weight: 500;
   max-width: 150px;
-}
-.c-user-info__icon {
-  height: 1.4rem;
-  width: 1.4rem;
 }
 .c-user-info__avatar-wrapper {
   position: relative;
