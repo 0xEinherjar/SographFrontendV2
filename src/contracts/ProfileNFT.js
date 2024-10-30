@@ -1,4 +1,4 @@
-export const contract = "0xa9F6f50ce4c1B806e81F80F5edd00C68a255448b";
+export const contract = "0xb493B7e0fC212bb255395c1ab299a7d7cDdb5339";
 export const abi = [
   {
     inputs: [
@@ -10,6 +10,11 @@ export const abi = [
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "DaoWalletNotInformed",
+    type: "error",
   },
   {
     inputs: [
@@ -131,6 +136,11 @@ export const abi = [
     type: "error",
   },
   {
+    inputs: [],
+    name: "InvalidFeesValue",
+    type: "error",
+  },
+  {
     inputs: [
       {
         internalType: "string",
@@ -144,6 +154,11 @@ export const abi = [
   {
     inputs: [],
     name: "NotFound",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "TreasuryWalletNotInformed",
     type: "error",
   },
   {

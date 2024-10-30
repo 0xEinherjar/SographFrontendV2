@@ -159,8 +159,8 @@ onMounted(() => {
       <label class="c-form__label" for="location">Location</label>
       <input class="c-form__input" type="text" name="location" id="location" v-model="form.location" placeholder="Location"/>
     </div>
-    <div @click="isAddLinkActive = !isAddLinkActive" :class="{ 'is-active': isAddLinkActive }" class="c-form__expand u-flex-line-center">
-      Add links social
+    <div @click="isAddLinkActive = !isAddLinkActive" :class="{ 'is-active': isAddLinkActive }" class="c-form__expand u-flex-line">
+      Show more option
       <icon iconClass="c-form__expand-icon" name="arrow"/>
     </div>
     <template v-if="isAddLinkActive">
@@ -188,7 +188,7 @@ onMounted(() => {
     <div class="c-form__footer">
       <button v-if="changeFormCounter > 0" @click="restore" type="button" class="c-form__restore u-flex-line">
         <span>Delete {{ changeFormCounter }} modifications</span>
-        <icon iconClass="c-icon--small" name="trash"/>
+        <icon iconClass="c-icon--small u-text-danger" name="trash"/>
       </button>
       <button class="c-form__submit u-flex-line" :disabled="changeFormCounter == 0" type="submit">
         <loading v-if="isLoading" type="small" />

@@ -1,7 +1,7 @@
 <script setup>
 import { useAccountEffect } from "@wagmi/vue";
 import { useRouter } from "vue-router";
-import { Logo, ModalConnect } from "../components";
+import { Logo, ModalConnect, Chain } from "../components";
 import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
 import { useProfile } from "../composables/useProfile.js";
@@ -44,7 +44,7 @@ useAccountEffect({
         <a class="header__nav-item" target="_blank" href="https://vote.sograph.app/">Vote</a>
         <a class="header__nav-item" target="_blank" href="https://docs.sograph.app/">Docs</a>
       </nav>
-      <button type="button" class="button-info-chain"><span class=""></span>Base Sepolia</button>
+      <chain/>
     </header>
     <div class="u-flex-line-center">
       <modal-connect/>
@@ -117,26 +117,6 @@ useAccountEffect({
 .footer__link svg {
   width: 18px;
   height: 18px;
-}
-.button-info-chain {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background-color: #28292b;
-  height: 48px;
-  border-radius: 12px;
-  color: #f4f4f4;
-  font-size: 1.5rem;
-  font-weight: 500;
-  padding-inline: 24px;
-  white-space: nowrap;
-}
-.button-info-chain span {
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  background-color: #2fc687;
 }
 .home {
   min-height: 100vh;

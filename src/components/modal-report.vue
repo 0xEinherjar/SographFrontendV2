@@ -77,7 +77,7 @@ watch(isSuccess, async (newIsSuccess) => {
     <div v-if="active" class="c-report--backdrop u-flex-line-center">
       <div class="c-report">
         <div class="c-report__header u-flex-line-between">
-          <h3 class="c-report__title c-soon">Report Profile</h3>
+          <h3 class="c-report__title">Report Profile</h3>
           <button @click="active = false" type="button">
             <icon iconClass="c-icon" name="close"/>
           </button>
@@ -140,10 +140,5 @@ watch(isSuccess, async (newIsSuccess) => {
 .c-report__item-description {
   font-size: 1.5rem;
   color: var(--text-color-secondary);
-}
-.c-report__title.c-soon::before {
-  right: -26%;
-  top: 50%;
-  transform: translateY(-50%);
 }
 </style>

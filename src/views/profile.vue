@@ -21,12 +21,10 @@ import {
   Icon,
   ProfilePlaceholder,
 } from "../components";
-import { useBasename } from "../composables/basename.js";
 import { useProfile } from "../composables/useProfile.js";
 import { usePublication } from "../composables/usePublication.js";
 const { getProfile: getProfile2 } = useProfile();
 const { getPublication } = usePublication();
-const { getBasenameAddress } = useBasename();
 const userStore = useUserStore();
 const favoriteStore = useFavoriteStore();
 const { user } = storeToRefs(userStore);
@@ -96,13 +94,6 @@ async function getProfile() {
   let routeParam;
   if (route.params.profile.startsWith("@")) {
     routeParam = route.params.profile.replace("@", "");
-  } else if (route.params.profile.endsWith(".base.eth")) {
-    const addressEns = await getBasenameAddress(route.params.profile);
-    if (addressEns) {
-      routeParam = addressEns;
-    } else {
-      routeParam = route.params.profile;
-    }
   } else {
     routeParam = route.params.profile;
   }
@@ -204,8 +195,8 @@ onBeforeMount(async () => {
                   :like="item.totalLike"
                   :shared="item.totalShared"
                   :comment="item.totalComments"
-                  :hasLiked="account.isConnected ? item.hasLiked : false"
-                  :hasShared="account.isConnected ? item.hasShared : false"
+                  :hasLiked="item.hasLiked"
+                  :hasShared="item.hasShared"
                   :isConnected="account.isConnected"
                   :isMyProfile="isMyProfile"
                 />

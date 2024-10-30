@@ -237,22 +237,20 @@ body {
   color: var(--color-input-placeholder-default);
 }
 .c-form__expand {
-  height: 5.6rem;
-  border-radius: var(--border-radius-default);
-  padding-inline: 16px;
-  background-color: var(--bg-color-secondary);
+  color: var(--text-color-secondary);
   font-weight: 500;
   font-size: 1.4rem;
   margin-top: 22px;
-  gap: 12px;
+  gap: 8px;
+  cursor: pointer;
 }
 .c-form__expand.is-active svg {
   transform: rotate(180deg);
 }
 .c-form__expand-icon {
-  color: var(--color-icon-primary);
-  height: 1.6rem;
-  width: 1.6rem;
+  margin-top: 1px;
+  height: 1.4rem;
+  width: 1.4rem;
   transition: all 300ms ease-in;
 }
 .c-form__connect {

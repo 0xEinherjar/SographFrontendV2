@@ -1,4 +1,4 @@
-export const contract = "0xd44660E7d42f407030006ACdbE47067d4D432ff8";
+export const contract = "0xDc0E72294c422cA5B6290043e3742007db44E265";
 export const abi = [
   {
     inputs: [],
@@ -490,149 +490,6 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-    ],
-    name: "getPostById",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "metadata",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "totalLike",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalComments",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "hasLiked",
-            type: "bool",
-          },
-        ],
-        internalType: "struct PostOutputCaller",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256[]",
-        name: "id",
-        type: "uint256[]",
-      },
-      {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-    ],
-    name: "getPostsById",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "metadata",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "totalLike",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalComments",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "hasLiked",
-            type: "bool",
-          },
-        ],
-        internalType: "struct PostOutputCaller[]",
-        name: "",
-        type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256[]",
-        name: "id",
-        type: "uint256[]",
-      },
-    ],
-    name: "getPostsById",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "metadata",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "totalLike",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalComments",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct PostOutput[]",
-        name: "",
-        type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "bytes32",
         name: "_role",
         type: "bytes32",
@@ -646,6 +503,30 @@ export const abi = [
     name: "grantRole",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "hasLiked",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {

@@ -1,4 +1,4 @@
-export const contract = "0x6d9b7ed210a48E5089C8656f8B5bC0Eb9e37faA9";
+export const contract = "0x465e6B4FC0cA817dF426F0C1215462b2F0E101E0";
 export const abi = [
   {
     inputs: [
@@ -15,6 +15,36 @@ export const abi = [
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "AddressAlreadyRegistered",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "Unauthorized",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserBanned",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserMustBeActive",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserMustBeUnderAssessment",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserNotFound",
+    type: "error",
   },
   {
     inputs: [
@@ -230,97 +260,6 @@ export const abi = [
         name: "user",
         type: "address",
       },
-      {
-        internalType: "uint256",
-        name: "cursor",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "size",
-        type: "uint256",
-      },
-    ],
-    name: "getPublicationsByUserToCaller",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "shared",
-            type: "bool",
-          },
-          {
-            internalType: "bool",
-            name: "authorHasSubscription",
-            type: "bool",
-          },
-          {
-            internalType: "string",
-            name: "authorMetadata",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "authorHandle",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "metadata",
-            type: "string",
-          },
-          {
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "totalLike",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalShared",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalComments",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "hasLiked",
-            type: "bool",
-          },
-        ],
-        internalType: "struct ResponseCaller[]",
-        name: "publications",
-        type: "tuple[]",
-      },
-      {
-        internalType: "uint256",
-        name: "newCursor",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
     ],
     name: "getUserByAddress",
     outputs: [
@@ -410,6 +349,13 @@ export const abi = [
       },
     ],
     name: "redeemPost",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "redeemProfile",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

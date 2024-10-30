@@ -1,5 +1,6 @@
 export { default as Avatar } from "./avatar.vue";
 export { default as Back } from "./back.vue";
+export { default as Chain } from "./chain.vue";
 export { default as CardPayment } from "./card-payment.vue";
 export { default as CommentPlaceholder } from "./comment-placeholder.vue";
 export { default as Comment } from "./comment.vue";

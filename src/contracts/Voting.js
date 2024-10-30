@@ -1,4 +1,4 @@
-export const contract = "0x9A0f8262337bef0AEF2E4B0d9F6337cFA505615c";
+export const contract = "0x5e41678b898F200a3A2d2B472181Cb3e8fbAA7dB";
 export const abi = [
   {
     inputs: [
@@ -15,6 +15,91 @@ export const abi = [
     ],
     stateMutability: "nonpayable",
     type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "AlreadyExecuted",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "AlreadyVoted",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "AmountBelowMinimumParticipation",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InactiveParticipant",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InsufficientParticipation",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InvalidAssessmentState",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InvalidQuorumValue",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotActiveParticipant",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UnknownState",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserAlreadyBanned",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserAlreadyReported",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserAlreadyUnderAssessment",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserMustBeReportedAtLeastOnce",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserRecentlyReestablished",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "VotingNotActive",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "WithdrawalCannotBeZero",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "WithdrawalNotAuthorizedYet",
+    type: "error",
   },
   {
     anonymous: false,

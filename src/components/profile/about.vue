@@ -45,17 +45,23 @@ const date = computed(() => {
           <icon iconClass="c-icon" name="link"/>
           <span>@{{ profile?.handle ? profile?.handle : truncateAddress(profile?.owner) }}</span>
         </li>
-        <li v-if="profile.links.twitter" class="about__list-item u-font-500 u-flex-line">
-          <icon iconClass="c-icon" name="x"/>
-          <span>{{ profile.links.twitter }}</span>
+        <li v-if="profile.links.twitter">
+          <a class="about__list-item u-font-500 u-flex-line" :href="`http://x.com/${profile.links.twitter}`" target="_blank" rel="noopener noreferrer">
+            <icon iconClass="c-icon" name="x"/>
+            <span>{{ profile.links.twitter }}</span>
+          </a>
         </li>
-        <li v-if="profile.links.twitch" class="about__list-item u-font-500 u-flex-line">
-          <icon iconClass="c-icon" name="twitch"/>
-          <span>{{ profile.links.twitch }}</span>
+        <li v-if="profile.links.twitch">
+          <a class="about__list-item u-font-500 u-flex-line" :href="`https://www.twitch.tv/${profile.links.twitch}`" target="_blank" rel="noopener noreferrer">
+            <icon iconClass="c-icon" name="twitch"/>
+            <span>{{ profile.links.twitch }}</span>
+          </a>
         </li>
-        <li v-if="profile.links.youtube" class="about__list-item u-font-500 u-flex-line">
-          <icon iconClass="c-icon" name="youtube"/>
-          <span>{{ profile.links.youtube }}</span>
+        <li v-if="profile.links.youtube">
+          <a class="about__list-item u-font-500 u-flex-line" :href="`https://www.youtube.com/@${profile.links.youtube}`" target="_blank" rel="noopener noreferrer">
+            <icon iconClass="c-icon" name="youtube"/>
+            <span>{{ profile.links.youtube }}</span>
+          </a>
         </li>
       </ul>
     </section>

@@ -6,7 +6,6 @@ import { useAccountStore } from "../store/account.js";
 import { useUserStore } from "../store/user.js";
 import { pinProfileToIPFS } from "../infra/pinata.js";
 import { Loading, Icon, Avatar } from "../components";
-import { useBasename } from "../composables/basename.js";
 import {
   useAccount,
   useWaitForTransactionReceipt,
@@ -14,7 +13,6 @@ import {
 } from "@wagmi/vue";
 import { abi, contract } from "../contracts/Sograph.js";
 import { useProfile } from "../composables/useProfile.js";
-const { getBasename, getBasenameAvatar, getBasenameTextRecord } = useBasename();
 const { address } = useAccount();
 const { data, writeContractAsync } = useWriteContract();
 const isLoading = ref(false);
@@ -80,20 +78,6 @@ async function create() {
 }
 
 async function enableFormCreate() {
-  const basename = await getBasename(address.value);
-  let avatar = null;
-  if (basename) {
-    form.value.name = basename;
-    avatar = await getBasenameAvatar(basename);
-    const description = await getBasenameTextRecord(basename, "description");
-    if (description) form.value.description = description;
-    const twitter = await getBasenameTextRecord(basename, "com.twitter");
-    if (twitter) form.value.links.twitter = twitter;
-  }
-  if (avatar) {
-    form.value.avatar = avatar;
-    avatarURL.value = avatar;
-  }
   enableForm.value = true;
 }
 

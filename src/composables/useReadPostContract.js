@@ -1,13 +1,8 @@
-import { createPublicClient, http } from "viem";
-import { baseSepolia } from "viem/chains";
 import { abi, contract } from "../contracts/PostNFT.js";
+import { usePublicClient } from "./usePublicClient.js";
+const { client } = usePublicClient();
 
 export const useReadPostContract = () => {
-  const client = createPublicClient({
-    chain: baseSepolia,
-    transport: http(),
-  });
-
   async function readPostContract(functionName, args = []) {
     return await client.readContract({
       abi: abi,
