@@ -35,3 +35,4 @@ export { default as ModalConnect } from "./modal-connect.vue";
 export { default as ButtonFollow } from "./button-follow.vue";
 export { default as ButtonSubscription } from "./button-subscription.vue";
 export { default as ButtonReactivate } from "./button-reactivate.vue";
+export { default as Toast } from "./toast.vue";

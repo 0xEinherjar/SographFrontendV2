@@ -110,12 +110,7 @@ async function getProfile() {
   } else {
     profile.value = null;
     publications.value = [];
-    if (result.message == "BANNED") {
-      profileErrorInfo.value.isBanned = true;
-      profileErrorInfo.value.username = routeParam;
-      return;
-    }
-    profileErrorInfo.value.isBanned = false;
+    profileErrorInfo.value.type = result.message;
     profileErrorInfo.value.username = routeParam;
   }
 }
@@ -226,7 +221,7 @@ onBeforeMount(async () => {
         </template>
       </template>
       <div v-else>
-        <profile-placeholder :isBanned="profileErrorInfo.isBanned" :username="profileErrorInfo.username"/>
+        <profile-placeholder :type="profileErrorInfo.type" :username="profileErrorInfo.username"/>
       </div>
     </template>
   </main>

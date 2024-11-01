@@ -43,26 +43,33 @@ watch(
         <div class="dropdown__group">
           <ul class="dropdown__menu">
             <li class="dropdown__item u-flex-line">
-              <span class="dropdown__item-text-grow">{{ truncateAddress(props.address) }}</span>
               <button type="button" @click="copyContent(props.address)">
-                <icon iconClass="c-icon--small" name="copy"/>
+                <icon iconClass="c-icon" name="copy"/>
               </button>
+              <span class="dropdown__item-text-grow">{{ truncateAddress(props.address) }}</span>
             </li>
-            <li v-if="props.links?.twitch" class="dropdown__item u-flex-line">
-              <icon iconClass="c-icon" name="twitch"/>
-              <span>{{ props.links.twitch }}</span>
+            <li v-if="props.links?.twitch">
+              <a class="dropdown__item u-flex-line" :href="`https://twitch.tv/${props.links.twitch}`">
+                <icon iconClass="c-icon" name="twitch"/>
+                <span>{{ props.links.twitch }}</span>
+              </a>
             </li>
-            <li v-if="props.links?.twitter" class="dropdown__item u-flex-line">
-              <icon iconClass="c-icon" name="x"/>
-              <span>{{ props.links.twitter }}</span>
+            <li v-if="props.links?.twitter">
+              <a class="dropdown__item u-flex-line" :href="`https://x.com/${props.links.twitter}`">
+                <icon iconClass="c-icon" name="x"/>
+                <span>{{ props.links.twitter }}</span>
+              </a>
             </li>
-            <li v-if="props.links?.youtube" class="dropdown__item u-flex-line">
+            <li v-if="props.links?.youtube">
+              <a class="dropdown__item u-flex-line" :href="`https://youtube.com/${props.links.youtube}`"></a>
               <icon iconClass="c-icon" name="youtube"/>
               <span>{{ props.links.youtube }}</span>
             </li>
-            <li v-if="props.links?.instagram" class="dropdown__item u-flex-line">
-              <icon iconClass="c-icon" name="instagram"/>
-              <span>{{ props.links.instagram }}</span>
+            <li v-if="props.links?.instagram">
+              <a class="dropdown__item u-flex-line" :href="`https://instagram.com/${props.links.instagram}`">
+                <icon iconClass="c-icon" name="instagram"/>
+                <span>{{ props.links.instagram }}</span>
+              </a>
             </li>
           </ul>
         </div>
@@ -89,8 +96,8 @@ watch(
   top: 100%;
   right: 0;
   background-color: var(--bg-color-secondary);
-  padding: 16px 24px;
-  border-radius: 8px;
+  padding: 20px 24px;
+  border-radius: 12px;
   min-width: 180px;
   width: max-content;
   display: none;

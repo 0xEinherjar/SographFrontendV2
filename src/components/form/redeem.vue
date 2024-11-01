@@ -2,21 +2,24 @@
 import { useUserStore } from "../../store/user.js";
 import { useAccountStore } from "../../store/account.js";
 import { useRouter } from "vue-router";
+import { Loading } from "../";
 import {
   useWaitForTransactionReceipt,
   useWriteContract,
   useDisconnect,
 } from "@wagmi/vue";
 import { abi, contract } from "../../contracts/Sograph.js";
-import { watch } from "vue";
+import { ref, watch } from "vue";
 
 const { writeContractAsync, data } = useWriteContract();
 const { disconnect } = useDisconnect();
 const router = useRouter();
 const { resetAccount } = useAccountStore();
 const { removeUser } = useUserStore();
+const isLoading = ref(false);
 
 async function redeem() {
+  isLoading.value = true;
   await writeContractAsync({
     abi: abi,
     address: contract,
@@ -33,13 +36,17 @@ watch(isSuccess, async (newIsSuccess) => {
     disconnect();
     router.push({ path: "/" });
   }
+  isLoading.value = false;
 });
 </script>
 <!-- prettier-ignore -->
 <template>
   <div class="c-redeem u-flex-line">
     <p class="c-redeem__text">Redeem your profile and publications to your wallet</p>
-    <button class="c-redeem__button u-flex-line" @click="redeem">Redeem</button>
+    <button class="c-redeem__button u-flex-line" @click="redeem">
+      <Loading v-if="isLoading" type="small"/>
+      <template v-else>Redeem</template>
+    </button>
   </div>
 </template>
 <style>

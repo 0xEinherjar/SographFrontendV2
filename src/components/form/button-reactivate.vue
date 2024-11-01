@@ -1,11 +1,24 @@
 <script setup>
 import { ref, watch } from "vue";
 import { Loading } from "../";
-import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "@wagmi/vue";
 import { abi, contract } from "../../contracts/Sograph.js";
+import { useProfile } from "../../composables/useProfile.js";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../../store/user.js";
+import { useAccountStore } from "../../store/account.js";
 const props = defineProps(["id"]);
 const { writeContractAsync, data } = useWriteContract();
 const isLoading = ref(false);
+const { getProfile } = useProfile();
+const router = useRouter();
+const userStore = useUserStore();
+const accountStore = useAccountStore();
+const { address } = useAccount();
 
 async function reactivate() {
   if (!Number(props.id)) return;
@@ -21,7 +34,18 @@ const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
 });
 watch(isSuccess, async (newIsSuccess) => {
-  if (newIsSuccess) isLoading.value = false;
+  isLoading.value = false;
+  if (newIsSuccess) {
+    const profile = await getProfile(address.value);
+    if (!profile.success) return;
+    accountStore.setWallet(address.value);
+    accountStore.setConnected();
+    userStore.setUser(profile.data);
+    accountStore.setHasAccount();
+    router.push({
+      path: `/${profile.data.handle ? profile.data.handle : address.value}`,
+    });
+  }
 });
 </script>
 <!-- prettier-ignore -->

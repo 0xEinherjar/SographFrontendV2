@@ -1,7 +1,7 @@
 <script setup>
 import { Avatar, Icon } from "../";
 import { useUtils } from "../../composables/utils";
-const props = defineProps(["isBanned", "username"]);
+const props = defineProps(["type", "username"]);
 const { isAddress, truncateAddress } = useUtils();
 </script>
 <!-- prettier-ignore -->
@@ -9,11 +9,11 @@ const { isAddress, truncateAddress } = useUtils();
   <div class="c-profile-placeholder u-flex-line">
     <avatar length="180px"/>
     <div>
-      <div class="c-profile-placeholder__title">Profile {{ props.isBanned ? "Banned" : "Not Found" }}</div>
+      <div class="c-profile-placeholder__title">Profile {{ props.type == 'UserBanned' ? "Banned" : props.type == 'UserDisabled' ? "Disabled" : "Not Found" }}</div>
       <strong class="c-profile-placeholder__name u-font-500">{{ isAddress(props.username) ? truncateAddress(props.username) : `@${username}` }}</strong>
     </div>
   </div>
-  <div v-if="props.isBanned" class="c-profile-placeholder__info u-flex-line-center">
+  <div v-if="props.type == 'UserBanned'" class="c-profile-placeholder__info u-flex-line-center">
     <icon iconClass="c-icon" name="info1"/>
     Banned profile. For more information, please visit the <a class="c-profile-placeholder__info-link u-font-500" href="https://vote.sograph.app/#/">voting</a> page.
   </div>

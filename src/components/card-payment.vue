@@ -3,27 +3,26 @@ import { onBeforeMount, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { Icon, ButtonSubscription, Loading } from "./";
 import { useUserStore } from "../store/user.js";
-import { useReadProfileContract } from "../composables/useReadProfileContract.js";
-import { useReadTokenContract } from "../composables/useReadTokenContract.js";
-import { useUtils } from "../composables/utils.js";
 import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
 import { abi, contract } from "../contracts/Token.js";
 import { contract as contractProfile } from "../contracts/ProfileNFT.js";
+import { useSubscriptionInfo } from "../composables/useSubscriptionInfo.js";
+const { writeContractAsync, data } = useWriteContract();
+const { getSubscriptionInfo } = useSubscriptionInfo();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const modal = ref(null);
-const minPrice = ref(0);
-const price = ref(0);
 const duration = ref(1);
-const decimals = ref(0);
-const { readProfileContract } = useReadProfileContract();
-const { readTokenContract } = useReadTokenContract();
-const { formatToNumber } = useUtils();
-const { writeContractAsync, data } = useWriteContract();
+const subscriptionInfo = ref({
+  price: 0,
+  decimals: 0,
+  currency: "",
+  priceFormated: 0,
+});
 const { isSuccess, isLoading } = useWaitForTransactionReceipt({ hash: data });
 
 async function approve() {
-  const amount = price.value * 10 ** decimals.value;
+  const amount = subscriptionInfo.value.price * duration.value;
   await writeContractAsync({
     abi: abi,
     address: contract,
@@ -41,18 +40,19 @@ function counterDuration(operator) {
   if (operator == "-") {
     if (duration.value == 1) return;
     duration.value -= 1;
-    price.value = duration.value * minPrice.value;
+    subscriptionInfo.value.priceFormated =
+      duration.value * subscriptionInfo.value.priceFormated;
   } else {
     duration.value += 1;
-    price.value = duration.value * minPrice.value;
+    subscriptionInfo.value.priceFormated =
+      duration.value * subscriptionInfo.value.priceFormated;
   }
 }
 
 onBeforeMount(async () => {
-  const [, , priceSubscription] = await readProfileContract("fees");
-  decimals.value = await readTokenContract("decimals");
-  minPrice.value = formatToNumber(priceSubscription) / 10 ** decimals.value;
-  price.value = minPrice.value;
+  const result = await getSubscriptionInfo();
+  if (!result) return;
+  Object.assign(subscriptionInfo.value, result);
 });
 </script>
 <!-- prettier-ignore -->
@@ -106,7 +106,7 @@ onBeforeMount(async () => {
               <path fill-rule="evenodd" d="M0 12a1.5 1.5 0 0 1 1.5-1.5h21a1.5 1.5 0 0 1 0 3h-21A1.5 1.5 0 0 1 0 12" clip-rule="evenodd"></path>
             </svg>
           </button>
-          <span class="c-card-payment__count-text">{{ price }} Graph per {{ duration }} year{{ duration == 1 ? "" : "s" }}</span>
+          <span class="c-card-payment__count-text">{{ subscriptionInfo.priceFormated }} {{ subscriptionInfo.currency }} per {{ duration }} year{{ duration == 1 ? "" : "s" }}</span>
           <button class="c-card-payment__count-button" @click="counterDuration('+')">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
               <path fill-rule="evenodd" d="M13.5 1.5a1.5 1.5 0 0 0-3 0v9h-9a1.5 1.5 0 0 0 0 3h9v9a1.5 1.5 0 0 0 3 0v-9h9a1.5 1.5 0 0 0 0-3h-9z" clip-rule="evenodd"></path>
@@ -117,7 +117,7 @@ onBeforeMount(async () => {
           <template v-if="!isLoading">Approve</template>
           <loading v-else type="small" theme="dark"/>
         </button>
-        <button-subscription v-else @subscriptionSuccess="subscriptionSuccess" :id="user.id" :duration="duration" :price="price"/>
+        <button-subscription v-else @subscriptionSuccess="subscriptionSuccess" :id="user.id" :duration="duration" :price="subscriptionInfo.priceFormated"/>
       </div>
     </div>
   </dialog>

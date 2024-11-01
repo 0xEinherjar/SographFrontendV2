@@ -53,20 +53,10 @@ export const useProfile = () => {
           (err) => err instanceof ContractFunctionRevertedError
         );
         if (revertError instanceof ContractFunctionRevertedError) {
-          const errorName = revertError.data?.args[0] ?? "";
-
-          if (errorName == "user banned") {
-            return {
-              success: false,
-              message: "BANNED",
-            };
-          }
-          if (errorName == "user not found") {
-            return {
-              success: false,
-              message: "NOT_FOUND",
-            };
-          }
+          return {
+            success: false,
+            message: revertError.data?.errorName ?? "",
+          };
         }
       }
       return {

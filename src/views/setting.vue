@@ -87,11 +87,11 @@ onMounted(() => {
           <h3 class="setting__title u-font-500">Reactivate Publication</h3>
           <form-reactivate-post/>
         </section>
-        <!-- <div class="c-line"></div>
+        <div class="c-line"></div>
         <section class="setting__section" id="redeem">
           <h3 class="setting__title u-font-500">Redeem Zone</h3>
           <form-redeem/>
-        </section> -->
+        </section>
       </div>
       <aside class="setting__nav">
         <h5 class="setting__nav-caption u-flex-line">On this page</h5>
@@ -104,8 +104,8 @@ onMounted(() => {
           </template>
           <span class="setting__nav-pointer"></span>
           <a @click="scrollMeTo('add-post')" :class="{'is-active' : sectionActive == 'add-post'}" class="setting__nav-text">Reactivate Publication</a>
-          <!-- <span class="setting__nav-pointer"></span>
-          <a @click="scrollMeTo('redeem')" :class="{'is-active' : sectionActive == 'redeem'}" class="setting__nav-text">Redeem Zone</a> -->
+          <span class="setting__nav-pointer"></span>
+          <a @click="scrollMeTo('redeem')" :class="{'is-active' : sectionActive == 'redeem'}" class="setting__nav-text">Redeem Zone</a>
         </div>
       </aside>
     </div>

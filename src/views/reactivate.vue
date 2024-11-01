@@ -1,24 +1,16 @@
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, watch } from "vue";
 import {
   useAccount,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "@wagmi/vue";
-import { useAccountStore } from "../store/account.js";
-import { useUserStore } from "../store/user.js";
-import { ButtonReactivate } from "../components";
-import { useProfile } from "../composables/useProfile.js";
+import { ButtonReactivate, Loading } from "../components";
 import { contract as contractSograph } from "../contracts/Sograph.js";
 import { abi, contract } from "../contracts/ProfileNFT.js";
-const { getProfile } = useProfile();
 const { writeContractAsync, data } = useWriteContract();
 const isLoading = ref(false);
 const reactivateProfileId = ref(null);
-const router = useRouter();
-const accountStore = useAccountStore();
-const userStore = useUserStore();
 const { address } = useAccount();
 
 async function reactivateProfile() {
@@ -34,23 +26,11 @@ async function reactivateProfile() {
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
 });
-async function reactivate() {
-  console.log("chamou");
-  console.log(address.value);
-
-  const profile = await getProfile(address.value);
-  console.log(profile);
-
-  if (!profile.success) return;
-  accountStore.setWallet(address.value);
-  accountStore.setConnected();
-  userStore.setUser(profile.data);
-  accountStore.setHasAccount();
-  isLoading.value = false;
-  router.push({
-    path: `/${profile.data.handle ? profile.data.handle : address.value}`,
-  });
-}
+watch(isSuccess, async (newIsSuccess) => {
+  if (newIsSuccess) {
+    isLoading.value = false;
+  }
+});
 </script>
 <!-- prettier-ignore -->
 <template>
@@ -65,9 +45,10 @@ async function reactivate() {
         <div class="c-form__footer">
           <span class="c-form__info"></span>
           <button v-if="!isSuccess" class="c-form__submit u-flex-line" :disabled="!reactivateProfileId" type="submit">
-            Approve
+            <loading v-if="isLoading" type="small"/>
+            <template v-else>Approve</template>
           </button>
-          <button-reactivate v-else :id="reactivateProfileId" @reactivate="reactivate"/>
+          <button-reactivate v-else :id="reactivateProfileId"/>
         </div>
       </form>
     </div>
