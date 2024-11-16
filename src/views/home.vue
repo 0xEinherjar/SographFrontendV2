@@ -12,8 +12,6 @@ const { getProfile } = useProfile();
 
 useAccountEffect({
   async onConnect(data) {
-    console.log("Chamou", data);
-
     accountStore.setWallet(data.address);
     accountStore.setConnected();
     const result = await getProfile(data.address);
