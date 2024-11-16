@@ -2,9 +2,11 @@
 import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
 import { abi, contract } from "../contracts/Sograph";
 import { watch } from "vue";
+import { useErrorStore } from "../store/error";
 const props = defineProps(["id"]);
 const emit = defineEmits(["reactivate"]);
-const { writeContractAsync, data } = useWriteContract();
+const { writeContractAsync, data, error } = useWriteContract();
+const errorStore = useErrorStore();
 
 async function reactivate() {
   await writeContractAsync({
@@ -17,10 +19,13 @@ async function reactivate() {
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
 });
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+  }
+});
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {
-    console.log("reactivate event");
-
     emit("reactivate");
   }
 });

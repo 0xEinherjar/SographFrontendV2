@@ -13,6 +13,7 @@ export const usePublication = () => {
   async function getPublication(user, cursor, size) {
     try {
       const { account } = storeToRefs(useAccountStore());
+
       const [publications, newCursor] = await readSographContract(
         "getPublicationsByUser",
         [user, cursor, size]

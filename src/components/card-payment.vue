@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { Icon, ButtonSubscription, Loading } from "./";
 import { useUserStore } from "../store/user.js";
@@ -12,16 +12,24 @@ const { getSubscriptionInfo } = useSubscriptionInfo();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const modal = ref(null);
+const isLoading = ref(false);
 const duration = ref(1);
 const subscriptionInfo = ref({
   price: 0,
   decimals: 0,
   currency: "",
   priceFormated: 0,
+  hasEnoughBalance: false,
+  priceDisplay: 0,
 });
-const { isSuccess, isLoading } = useWaitForTransactionReceipt({ hash: data });
+const { isSuccess } = useWaitForTransactionReceipt({ hash: data });
+
+watch(isSuccess, async (newIsSuccess) => {
+  if (newIsSuccess) isLoading.value = false;
+});
 
 async function approve() {
+  isLoading.value = true;
   const amount = subscriptionInfo.value.price * duration.value;
   await writeContractAsync({
     abi: abi,
@@ -40,19 +48,20 @@ function counterDuration(operator) {
   if (operator == "-") {
     if (duration.value == 1) return;
     duration.value -= 1;
-    subscriptionInfo.value.priceFormated =
+    subscriptionInfo.value.priceDisplay =
       duration.value * subscriptionInfo.value.priceFormated;
   } else {
     duration.value += 1;
-    subscriptionInfo.value.priceFormated =
+    subscriptionInfo.value.priceDisplay =
       duration.value * subscriptionInfo.value.priceFormated;
   }
 }
 
 onBeforeMount(async () => {
-  const result = await getSubscriptionInfo();
+  const result = await getSubscriptionInfo(user.value.owner);
   if (!result) return;
   Object.assign(subscriptionInfo.value, result);
+  subscriptionInfo.value.priceDisplay = result.priceFormated;
 });
 </script>
 <!-- prettier-ignore -->
@@ -106,18 +115,21 @@ onBeforeMount(async () => {
               <path fill-rule="evenodd" d="M0 12a1.5 1.5 0 0 1 1.5-1.5h21a1.5 1.5 0 0 1 0 3h-21A1.5 1.5 0 0 1 0 12" clip-rule="evenodd"></path>
             </svg>
           </button>
-          <span class="c-card-payment__count-text">{{ subscriptionInfo.priceFormated }} {{ subscriptionInfo.currency }} per {{ duration }} year{{ duration == 1 ? "" : "s" }}</span>
+          <span class="c-card-payment__count-text">{{ subscriptionInfo.priceDisplay }} {{ subscriptionInfo.currency }} per {{ duration }} year{{ duration == 1 ? "" : "s" }}</span>
           <button class="c-card-payment__count-button" @click="counterDuration('+')">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
               <path fill-rule="evenodd" d="M13.5 1.5a1.5 1.5 0 0 0-3 0v9h-9a1.5 1.5 0 0 0 0 3h9v9a1.5 1.5 0 0 0 3 0v-9h9a1.5 1.5 0 0 0 0-3h-9z" clip-rule="evenodd"></path>
             </svg>
           </button>
         </div>
-        <button v-if="!isSuccess" class="c-card-payment__pay u-flex-line-center" @click="approve" type="button">
-          <template v-if="!isLoading">Approve</template>
-          <loading v-else type="small" theme="dark"/>
-        </button>
-        <button-subscription v-else @subscriptionSuccess="subscriptionSuccess" :id="user.id" :duration="duration" :price="subscriptionInfo.priceFormated"/>
+        <template v-if="subscriptionInfo.hasEnoughBalance">
+          <button v-if="!isSuccess" class="c-card-payment__pay u-flex-line-center" @click="approve" type="button">
+            <template v-if="!isLoading">Approve</template>
+            <loading v-else type="small" theme="dark"/>
+          </button>
+          <button-subscription v-else @subscriptionSuccess="subscriptionSuccess" :id="user.id" :duration="duration" :price="subscriptionInfo.priceDisplay"/>
+        </template>
+        <button v-else class="c-card-payment__pay  u-flex-line-center" type="button">Not enough balance</button>
       </div>
     </div>
   </dialog>

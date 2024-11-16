@@ -10,8 +10,9 @@ import {
 } from "@wagmi/vue";
 import { abi, contract } from "../../contracts/Sograph.js";
 import { ref, watch } from "vue";
-
-const { writeContractAsync, data } = useWriteContract();
+import { useErrorStore } from "../../store/error.js";
+const errorStore = useErrorStore();
+const { writeContractAsync, data, error } = useWriteContract();
 const { disconnect } = useDisconnect();
 const router = useRouter();
 const { resetAccount } = useAccountStore();
@@ -28,6 +29,12 @@ async function redeem() {
 }
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+    isLoading.value = false;
+  }
 });
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {

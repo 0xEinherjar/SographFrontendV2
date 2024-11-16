@@ -11,8 +11,10 @@ import { useProfile } from "../../composables/useProfile.js";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../../store/user.js";
 import { useAccountStore } from "../../store/account.js";
+import { useErrorStore } from "../../store/error.js";
+const errorStore = useErrorStore();
 const props = defineProps(["id"]);
-const { writeContractAsync, data } = useWriteContract();
+const { writeContractAsync, data, error } = useWriteContract();
 const isLoading = ref(false);
 const { getProfile } = useProfile();
 const router = useRouter();
@@ -32,6 +34,12 @@ async function reactivate() {
 }
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+    isLoading.value = false;
+  }
 });
 watch(isSuccess, async (newIsSuccess) => {
   isLoading.value = false;

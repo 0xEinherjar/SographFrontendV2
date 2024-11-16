@@ -10,7 +10,7 @@ import {
   Sidebar,
   Back,
 } from "../components";
-import { usePublicationFollowing } from "../composables/usePublicationFollowing.js";
+import { usePublicationFollowing } from "../composables/usePublicationFollowingV2.js";
 const { getPublicationFollowing } = usePublicationFollowing();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
@@ -18,13 +18,41 @@ const accountStore = useAccountStore();
 const { account } = storeToRefs(accountStore);
 const publications = ref([]);
 const isLoadingPost = ref(true);
+const isLoadingPostScroll = ref(false);
+const hasContentFetch = ref(true);
+const observer = ref(null);
+const cursorFollow = ref(0);
+
+async function fetchPost() {
+  isLoadingPostScroll.value = true;
+  const { data, success, hasContent, newCursor } =
+    await getPublicationFollowing(user.value.id, cursorFollow.value);
+  cursorFollow.value = newCursor;
+  if (success) {
+    publications.value.push(...data);
+    hasContentFetch.value = hasContent;
+    if (!hasContent) {
+      observer.value?.disconnect();
+    }
+  } else {
+    observer.value?.disconnect();
+  }
+  isLoadingPostScroll.value = false;
+  isLoadingPost.value = false;
+}
 
 onBeforeMount(async () => {
-  const { success, data } = await getPublicationFollowing(user.value.id);
-  if (success) {
-    publications.value = data;
+  cursorFollow.value = user.value.following;
+  await fetchPost();
+  if (hasContentFetch.value) {
+    observer.value = new IntersectionObserver(async (entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        const cursor = await fetchPost();
+        if (cursor == 0) observer.value.disconnect();
+      }
+    });
+    observer.value.observe(document.getElementById("sentinel-feed"));
   }
-  isLoadingPost.value = false;
 });
 </script>
 <!-- prettier-ignore -->
@@ -39,7 +67,8 @@ onBeforeMount(async () => {
       <section v-if="publications.length > 0" class="l-post">
         <template v-for="item of publications">
           <post
-            :userRepost="user.name"
+            :userRepost="item.userRepostName"
+            :userRepostPath="item.userRepostPath"
             :id="item.id"
             :name="item.authorName"
             :avatar="item.authorAvatar"
@@ -58,6 +87,9 @@ onBeforeMount(async () => {
             :isMyProfile="false"
           />
         </template>
+        <div class="sentinel-feed" id="sentinel-feed">
+          <post-placeholder v-if="isLoadingPostScroll"/>
+        </div>
       </section>
       <div v-else style="text-align: center; margin-top: 80px">
         You don't have any publications in your feed yet.
@@ -68,3 +100,8 @@ onBeforeMount(async () => {
     </section>
   </main>
 </template>
+<style scoped>
+.l-post {
+  padding-top: 32px !important;
+}
+</style>

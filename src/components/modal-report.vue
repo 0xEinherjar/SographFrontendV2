@@ -5,11 +5,13 @@ import { useAccountStore } from "../store/account.js";
 import { Icon } from "./";
 import { abi, contract } from "../contracts/Voting.js";
 import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
+import { useErrorStore } from "../store/error.js";
 const props = defineProps(["account"]);
 const accountStore = useAccountStore();
 const { account } = storeToRefs(accountStore);
 const active = ref(false);
-const { writeContractAsync, data } = useWriteContract();
+const { writeContractAsync, data, error } = useWriteContract();
+const errorStore = useErrorStore();
 const reportType = ref([
   {
     code: 1,
@@ -60,6 +62,11 @@ async function report(reason) {
 }
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+  }
 });
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {

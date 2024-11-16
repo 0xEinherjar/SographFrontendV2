@@ -8,13 +8,17 @@ import { pinProfileToIPFS } from "../infra/pinata.js";
 import { Loading, Icon, Avatar } from "../components";
 import {
   useAccount,
+  useDisconnect,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "@wagmi/vue";
 import { abi, contract } from "../contracts/Sograph.js";
 import { useProfile } from "../composables/useProfile.js";
+import { useErrorStore } from "../store/error.js";
+const { disconnect } = useDisconnect();
+const errorStore = useErrorStore();
 const { address } = useAccount();
-const { data, writeContractAsync } = useWriteContract();
+const { data, writeContractAsync, error } = useWriteContract();
 const isLoading = ref(false);
 const avatarURL = ref("");
 const form = ref({
@@ -87,15 +91,36 @@ const { isSuccess } = useWaitForTransactionReceipt({
 const { getProfile } = useProfile();
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {
-    accountStore.setWallet(address.value);
-    accountStore.setConnected();
-    accountStore.setHasAccount();
-    const profile = await getProfile(address.value);
+    try {
+      accountStore.setWallet(address.value);
+      accountStore.setConnected();
+      accountStore.setHasAccount();
+      const profile = await getProfile(address.value);
 
-    if (profile.success) {
-      userStore.setUser(profile.data);
-      router.push({ path: `/${address.value}` });
+      if (profile.success) {
+        userStore.setUser(profile.data);
+        router.push({ path: `/${address.value}` });
+      } else {
+        disconnect();
+        accountStore.setDisconnected();
+        router.push({ path: `/` });
+      }
+    } catch (error) {
+      disconnect();
+      accountStore.setDisconnected();
+      router.push({ path: `/` });
     }
+  }
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+    isLoading.value = false;
+    setTimeout(() => {
+      disconnect();
+      accountStore.setDisconnected();
+      router.push({ path: `/` });
+    }, 5000);
   }
 });
 </script>

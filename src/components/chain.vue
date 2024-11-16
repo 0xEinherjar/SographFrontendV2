@@ -1,7 +1,7 @@
 <script setup></script>
 <!-- prettier-ignore -->
 <template>
-  <button type="button" class="c-chain"><span class=""></span>Base Sepolia</button>
+  <button type="button" class="c-chain"><span class=""></span>BSC Testnet</button>
 </template>
 <style>
 .c-chain {
@@ -12,11 +12,14 @@
   background-color: #28292b;
   height: 48px;
   border-radius: 12px;
-  color: #f4f4f4;
+  color: var(--text-color-primary);
   font-size: 1.5rem;
   font-weight: 500;
   padding-inline: 24px;
   white-space: nowrap;
+}
+.light-mode .c-chain {
+  background-color: #f3f8fd;
 }
 .c-chain span {
   height: 10px;

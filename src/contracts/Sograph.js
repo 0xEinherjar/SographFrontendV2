@@ -1,4 +1,4 @@
-export const contract = "0x58D1E5f5C51D616B8Edafe5137D88351075db826";
+export const contract = "0x4F9053707AaFC54F3452354603964AA4300ac80b";
 export const abi = [
   {
     inputs: [
@@ -29,6 +29,11 @@ export const abi = [
   {
     inputs: [],
     name: "UserBanned",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "UserDisabled",
     type: "error",
   },
   {

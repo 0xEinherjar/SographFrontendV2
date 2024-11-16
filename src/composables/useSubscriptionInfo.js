@@ -12,7 +12,7 @@ const { client } = usePublicClient();
 const { formatToNumber } = useUtils();
 
 export const useSubscriptionInfo = () => {
-  async function getSubscriptionInfo() {
+  async function getSubscriptionInfo(owner) {
     const results = await client.multicall({
       contracts: [
         {
@@ -30,6 +30,12 @@ export const useSubscriptionInfo = () => {
           address: profileContract,
           functionName: "fees",
         },
+        {
+          abi: tokenAbi,
+          address: tokenContract,
+          functionName: "balanceOf",
+          args: [owner],
+        },
       ],
     });
     for (const result of results) {
@@ -41,6 +47,7 @@ export const useSubscriptionInfo = () => {
       price: formatToNumber(results[2].result[2]),
       priceFormated:
         formatToNumber(results[2].result[2]) / 10 ** results[0].result,
+      hasEnoughBalance: results[3].result >= results[2].result[2],
     };
   }
   return { getSubscriptionInfo };

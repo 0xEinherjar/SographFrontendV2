@@ -3,7 +3,9 @@ import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
 import { abi, contract } from "../contracts/Sograph.js";
 import { onMounted, ref, watch } from "vue";
 import { Icon } from "./";
-const { writeContractAsync, data } = useWriteContract();
+import { useErrorStore } from "../store/error.js";
+const errorStore = useErrorStore();
+const { writeContractAsync, data, error } = useWriteContract();
 const props = defineProps(["id", "hasLiked", "totalLiked"]);
 const emit = defineEmits(["redeem"]);
 const totalLiked = ref(0);
@@ -18,6 +20,11 @@ async function like(id) {
 }
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+  }
 });
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {

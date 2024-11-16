@@ -5,7 +5,9 @@ import { Loading } from "../";
 import { useReadSographContract } from "../../composables/useReadSographContract.js";
 import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
 import { abi, contract } from "../../contracts/Sograph.js";
-const { writeContractAsync, data } = useWriteContract();
+import { useErrorStore } from "../../store/error.js";
+const errorStore = useErrorStore();
+const { writeContractAsync, data, error } = useWriteContract();
 const { readSographContract } = useReadSographContract();
 const { userHandle } = defineProps(["userHandle"]);
 const userStore = useUserStore();
@@ -57,7 +59,12 @@ async function updateHandle() {
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
 });
-
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+    isLoading.value = false;
+  }
+});
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {
     userStore.updateHandle(handle.value);

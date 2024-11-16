@@ -105,6 +105,7 @@ async function getProfile() {
     profile.value = result.data;
     cursorPag.value = result.data.postLength;
     result.data.isFollowing;
+    isFavorite.value = favoriteStore.isFavorite(result.data.id);
     await fetchPost(cursorPag.value);
     isLoadingPost.value = false;
   } else {
@@ -123,9 +124,6 @@ watch(
 );
 onBeforeMount(async () => {
   await getProfile();
-  if (profile.value) {
-    isFavorite.value = favoriteStore.isFavorite(profile.value.id);
-  }
   if (cursorPag.value != 0) {
     observer.value = new IntersectionObserver(async (entries) => {
       if (entries.some((entry) => entry.isIntersecting)) {

@@ -7,12 +7,15 @@ import { Avatar, Loading, Icon } from "../";
 import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
 import { abi, contract } from "../../contracts/Sograph.js";
 import { useProfile } from "../../composables/useProfile.js";
-const { writeContractAsync, data } = useWriteContract();
+import { useErrorStore } from "../../store/error.js";
+const errorStore = useErrorStore();
+const { writeContractAsync, data, error } = useWriteContract();
 const { getProfile } = useProfile();
 const userStore = useUserStore();
 const { setUser } = userStore;
 const { user } = storeToRefs(userStore);
 const isAddLinkActive = ref(false);
+const isLoading = ref(false);
 const avatarURL = ref("");
 const description = ref("");
 const biography = ref("");
@@ -41,7 +44,7 @@ function onFileChange(event) {
 }
 
 function removeAvatar() {
-  form.value.avatar = null;
+  form.value.avatar = user.value.avatar;
   avatarURL.value = "";
 }
 
@@ -55,9 +58,11 @@ const setFormValues = (source) => {
 
 function restore() {
   setFormValues(user.value);
+  avatarURL.value = "";
 }
 
 async function update() {
+  isLoading.value = true;
   const metadata = await pinProfileToIPFS(
     Object.assign({}, form.value, {
       description: description.value,
@@ -74,13 +79,20 @@ async function update() {
   }
 }
 
-const { isSuccess, isLoading } = useWaitForTransactionReceipt({
+const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+    isLoading.value = false;
+  }
 });
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {
     const profile = await getProfile(user.value.owner);
     if (profile.success) setUser(profile.data);
+    isLoading.value = false;
   }
 });
 

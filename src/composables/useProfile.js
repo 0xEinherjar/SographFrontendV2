@@ -37,13 +37,13 @@ export const useProfile = () => {
         const [ownerId] = await readSographContract("getUserByAddress", [
           account.value.wallet,
         ]);
-        const profileInfo = await readProfileContract(
-          "getProfileByIdToCaller",
-          [formatToNumber(ownerId), formatToNumber(profileId)]
-        );
+        const followInfo = await readProfileContract("getFollowInfo", [
+          formatToNumber(ownerId),
+          formatToNumber(profileId),
+        ]);
         Object.assign(data, {
-          isFollowing: profileInfo.isFollowing,
-          isFollower: profileInfo.isFollower,
+          isFollowing: followInfo[1],
+          isFollower: followInfo[0],
         });
       }
       return { success: true, data };

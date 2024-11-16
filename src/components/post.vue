@@ -28,7 +28,12 @@ const props = defineProps([
   "isConnected",
   "isMyProfile",
   "userRepost",
+  "userRepostPath",
 ]);
+
+const path = computed(() => {
+  return props.handle ? props.handle : props.owner;
+});
 
 const isCommentActive = ref(false);
 const post = ref({
@@ -53,16 +58,22 @@ onMounted(() => {
 <!-- prettier-ignore -->
 <template>
   <article class="c-post">
-    <div v-if="props.hasShared" class="c-post__reposted u-flex-line">
-      <icon iconClass="c-icon--small" name="share"/>
-      <span>{{ props.userRepost }} reposted</span>
-    </div>
+    <template v-if="props.hasShared">
+      <router-link v-if="props.userRepostPath" :to="`/${props.userRepostPath}`" class="c-post__reposted u-flex-line">
+        <icon iconClass="c-icon--small" name="share"/>
+        <span>{{ props.userRepost }} reposted</span>
+      </router-link>
+      <div v-else class="c-post__reposted u-flex-line">
+        <icon iconClass="c-icon--small" name="share"/>
+        <span>{{ props.userRepost }} reposted</span>
+      </div>
+    </template>
     <div class="u-flex-line-between">
       <div class="c-post__info u-flex-line">
-        <div class="c-post__author u-flex-line">
+        <router-link :to="`/${path}`" class="c-post__author u-flex-line">
           <avatar :avatar="props.avatar" length="28px"/>
           <h3 class="c-post__author-name">{{ props.name }}</h3>
-        </div>
+        </router-link>
         <span class="c-post__dot"></span>
         <time class="c-post__time" :datetime="props.date">{{ dateFormat(props.date) }}</time>
       </div>

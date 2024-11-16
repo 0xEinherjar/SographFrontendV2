@@ -25,6 +25,7 @@
   --color-input-placeholder-default: #e8eaed99;
 
   --border-radius-default: 12px;
+  --color-logo: #f4f4f4;
 }
 .light-mode:root {
   --bg-color-primary: #ffffff;
@@ -43,6 +44,7 @@
   --color-icon-primary: #292d32;
   --color-border-primary: #292d324d;
   --color-input-placeholder-default: #292d32cc;
+  --color-logo: #292d32;
 }
 *,
 *::before,
@@ -170,6 +172,9 @@ body {
   font-size: 0.8rem;
   line-height: 1;
 }
+.c-logo {
+  color: var(--color-logo);
+}
 .main {
   grid-column: main;
   padding: 32px;
@@ -288,10 +293,16 @@ body {
   margin-left: auto;
   background-color: var(--color-blue);
 }
+.light-mode .c-form__footer .c-form__submit {
+  color: #f4f4f4;
+}
 .c-form__submit:disabled {
   cursor: default;
   pointer-events: none;
   background-color: var(--bg-color-tertiary);
+}
+.light-mode .c-form__footer .c-form__submit:disabled {
+  background-color: #bdc1c6;
 }
 .c-form__input--name {
   height: 56px;

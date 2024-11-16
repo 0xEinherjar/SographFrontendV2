@@ -2,8 +2,10 @@
 import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
 import { abi, contract } from "../contracts/Sograph";
 import { onMounted, watch, ref } from "vue";
+import { useErrorStore } from "../store/error";
 const props = defineProps(["isFollowing", "name", "profile"]);
-const { writeContractAsync, data } = useWriteContract();
+const errorStore = useErrorStore();
+const { writeContractAsync, data, error } = useWriteContract();
 const isFollowing = ref(false);
 async function handleFollow() {
   await writeContractAsync({
@@ -15,6 +17,12 @@ async function handleFollow() {
 }
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+    isLoading.value = false;
+  }
 });
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {

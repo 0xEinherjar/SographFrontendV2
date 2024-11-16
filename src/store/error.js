@@ -8,7 +8,7 @@ export const useErrorStore = defineStore("error", () => {
     error.value = _error;
     setTimeout(() => {
       error.value = "";
-    }, 4000);
+    }, 8000);
   }
   function removeError() {
     error.value = "";

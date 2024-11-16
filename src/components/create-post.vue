@@ -6,17 +6,19 @@ import { pinPostToIPFS } from "../infra/pinata.js";
 import { useUserStore } from "../store/user.js";
 import { abi, contract } from "../contracts/Sograph.js";
 import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
-const { data: hash, writeContractAsync } = useWriteContract();
+import { useErrorStore } from "../store/error.js";
+const { data: hash, writeContractAsync, error } = useWriteContract();
+const errorStore = useErrorStore();
 const modal = ref(null);
-const form = ref({
-  attachment: null,
-  text: "",
-});
 const isLoading = ref(false);
 const textarea = ref(null);
 const attachmentURL = ref("");
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
+const form = ref({
+  attachment: null,
+  text: "",
+});
 
 function clear() {
   attachmentURL.value = "";
@@ -85,6 +87,12 @@ async function create() {
 }
 const { isSuccess } = useWaitForTransactionReceipt({
   hash,
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+    isLoading.value = false;
+  }
 });
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {

@@ -5,7 +5,9 @@ import { Loading } from "../";
 import ButtonReactivate from "./button-reactivate.vue";
 import { abi, contract } from "../../contracts/PostNFT.js";
 import { contract as contractSograph } from "../../contracts/Sograph.js";
-const { writeContractAsync, data } = useWriteContract();
+import { useErrorStore } from "../../store/error.js";
+const errorStore = useErrorStore();
+const { writeContractAsync, data, error } = useWriteContract();
 const postId = ref("");
 const isLoading = ref(false);
 
@@ -21,6 +23,12 @@ async function reactivate() {
 }
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+    isLoading.value = false;
+  }
 });
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {

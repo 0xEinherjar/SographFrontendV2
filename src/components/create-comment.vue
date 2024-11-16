@@ -6,7 +6,9 @@ import { abi, contract } from "../contracts/Sograph.js";
 import { Avatar, Icon } from "./";
 import { useUserStore } from "../store/user.js";
 import { pinCommentToIPFS } from "../infra/pinata.js";
-const { writeContractAsync, data } = useWriteContract();
+import { useErrorStore } from "../store/error.js";
+const { writeContractAsync, data, error } = useWriteContract();
+const errorStore = useErrorStore();
 const props = defineProps(["id"]);
 const emit = defineEmits(["new-comment"]);
 const userStore = useUserStore();
@@ -48,6 +50,11 @@ async function create() {
 }
 const { isSuccess } = useWaitForTransactionReceipt({
   hash: data,
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+  }
 });
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {

@@ -1,4 +1,4 @@
-export const contract = "0xcA93998516f9d5545eA63Da01FAea848B93A1413";
+export const contract = "0xDFdb8d11f952a7698E6904e12314DF457243b0a2";
 export const abi = [
   {
     inputs: [
@@ -448,6 +448,35 @@ export const abi = [
     inputs: [
       {
         internalType: "uint256",
+        name: "callerId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "profileId",
+        type: "uint256",
+      },
+    ],
+    name: "getFollowInfo",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "id",
         type: "uint256",
       },
@@ -551,67 +580,6 @@ export const abi = [
           },
         ],
         internalType: "struct ProfileOutput",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "callerId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "profileId",
-        type: "uint256",
-      },
-    ],
-    name: "getProfileByIdToCaller",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "string",
-            name: "metadata",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "handle",
-            type: "string",
-          },
-          {
-            internalType: "uint256",
-            name: "following",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "followers",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "hasSubscription",
-            type: "bool",
-          },
-          {
-            internalType: "bool",
-            name: "isFollowing",
-            type: "bool",
-          },
-          {
-            internalType: "bool",
-            name: "isFollower",
-            type: "bool",
-          },
-        ],
-        internalType: "struct ProfileOutputCaller",
         name: "",
         type: "tuple",
       },
