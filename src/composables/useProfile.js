@@ -42,8 +42,8 @@ export const useProfile = () => {
           formatToNumber(profileId),
         ]);
         Object.assign(data, {
-          isFollowing: followInfo[1],
-          isFollower: followInfo[0],
+          isFollowing: followInfo[0],
+          isFollower: followInfo[1],
         });
       }
       return { success: true, data };

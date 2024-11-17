@@ -209,10 +209,10 @@ onBeforeMount(async () => {
           </template>
         </template>
         <template v-else-if="navActive == 'Followers'">
-          <followers :id="profile.id" :length="profile.postLength" :isConnected="account.isConnected"/>
+          <followers :id="profile.id" :length="profile.followers" :isConnected="account.isConnected"/>
         </template>
         <template v-else-if="navActive == 'Following'">
-          <following :id="profile.id" :length="profile.postLength" :isConnected="account.isConnected"/>
+          <following :id="profile.id" :length="profile.following" :isConnected="account.isConnected"/>
         </template>
         <template v-else-if="navActive == 'About'">
           <profile-about :profile="profile"/>
