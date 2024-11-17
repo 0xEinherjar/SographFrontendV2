@@ -1,4 +1,3 @@
-import { useUtils } from "./utils";
 import { BaseError, ContractFunctionRevertedError } from "viem";
 
 export const useError = () => {
