@@ -21,7 +21,6 @@ const { isSuccess } = useWaitForTransactionReceipt({
 watch(error, (newError) => {
   if (newError) {
     errorStore.setError(newError);
-    isLoading.value = false;
   }
 });
 watch(isSuccess, async (newIsSuccess) => {
