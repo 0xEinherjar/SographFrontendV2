@@ -3,10 +3,16 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
 import { abi, contract } from "../contracts/Sograph";
 import { useUtils } from "../composables/utils.js";
-import { Avatar } from "./";
+import { Avatar, Loading } from "./";
+import { useErrorStore } from "../store/error.js";
+import { useUserStore } from "../store/user.js";
+import { storeToRefs } from "pinia";
+const { user } = storeToRefs(useUserStore());
+const errorStore = useErrorStore();
 const { truncateAddress } = useUtils();
-const { writeContractAsync, data } = useWriteContract();
+const { writeContractAsync, data, error } = useWriteContract();
 const isFollowing = ref(false);
+const isLoading = ref(false);
 const props = defineProps([
   "avatar",
   "name",
@@ -19,7 +25,11 @@ const props = defineProps([
 const username = computed(() => {
   return Boolean(props.handle) ? props.handle : props.owner;
 });
+const isMyProfile = computed(() => {
+  return user.value?.owner == props.owner;
+});
 async function follow(address) {
+  isLoading.value = true;
   await writeContractAsync({
     abi: abi,
     address: contract,
@@ -34,6 +44,13 @@ const { isSuccess } = useWaitForTransactionReceipt({
 watch(isSuccess, async (newIsSuccess) => {
   if (newIsSuccess) {
     isFollowing.value = !isFollowing.value;
+    isLoading.value = false;
+  }
+});
+watch(error, (newError) => {
+  if (newError) {
+    errorStore.setError(newError);
+    isLoading.value = false;
   }
 });
 onMounted(() => {
@@ -50,7 +67,11 @@ onMounted(() => {
     <span class="c-user__username u-text-ellipsis">{{ username.length == 42 ? truncateAddress(username) : `@${username}` }}</span>
     <button v-if="!props.isConnected" class="c-user__action" type="button">Follow</button>
     <template v-else>
-      <button class="c-user__action" type="button" @click="follow(props.owner)">{{ isFollowing ? "Following" : "Follow"}}</button>
+      <button v-if="!isMyProfile" class="c-user__action u-flex-line-center" type="button" @click="follow(props.owner)">
+        <template v-if="!isLoading">{{ isFollowing ? "Following" : "Follow"}}</template>
+        <loading v-else type="small" theme="dark"/>
+      </button>
+      <button v-else class="c-user__action c-user__action--none" type="button">You</button>
     </template>
   </div>
 </template>
@@ -89,5 +110,9 @@ onMounted(() => {
   color: var(--bg-color-primary);
   margin-top: 12px;
   display: block;
+}
+.c-user__action--none {
+  color: var(--text-color-primary);
+  background-color: var(--bg-color-tertiary);
 }
 </style>
