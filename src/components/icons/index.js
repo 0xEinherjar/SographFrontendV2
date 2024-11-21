@@ -29,3 +29,4 @@ export { default as Verify } from "./verify.vue";
 export { default as Wallet } from "./wallet.vue";
 export { default as X } from "./x.vue";
 export { default as Youtube } from "./youtube.vue";
+export { default as Website } from "./website.vue";

@@ -114,6 +114,9 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.u-text-secondary {
+  color: var(--text-color-secondary);
+}
 .u-flex-line,
 .u-flex-line-center,
 .u-flex-line-between {

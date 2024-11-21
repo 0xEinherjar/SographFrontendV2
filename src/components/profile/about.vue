@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { useUtils } from "../../composables/utils.js";
 import { Icon } from "../";
 const { profile } = defineProps(["profile"]);
-const { truncateAddress } = useUtils();
+const { truncateAddress, formatLinkDisplay } = useUtils();
 
 const biography = computed(() => {
   return String(profile.biography).split("\n");
@@ -44,6 +44,12 @@ const date = computed(() => {
         <li v-if="profile" class="about__list-item u-font-500 u-flex-line">
           <icon iconClass="c-icon" name="link"/>
           <span>@{{ profile?.handle ? profile?.handle : truncateAddress(profile?.owner) }}</span>
+        </li>
+        <li v-if="profile.links.website">
+          <a class="about__list-item u-font-500 u-flex-line" :href="profile.links.website" target="_blank" rel="noopener noreferrer">
+            <icon iconClass="c-icon" name="website"/>
+            <span>{{ formatLinkDisplay(profile.links.website) }}</span>
+          </a>
         </li>
         <li v-if="profile.links.twitter">
           <a class="about__list-item u-font-500 u-flex-line" :href="`http://x.com/${profile.links.twitter}`" target="_blank" rel="noopener noreferrer">

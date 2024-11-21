@@ -30,7 +30,7 @@ const form = ref({
     twitter: "",
     youtube: "",
     twitch: "",
-    instagram: "",
+    website: "",
   },
 });
 
@@ -104,7 +104,7 @@ const changeFormCounter = computed(() => {
   if (form.value.avatar != user.value.avatar) counter += 1;
   if (form.value.createdAt != user.value.createdAt) counter += 1;
   if (form.value.location != user.value.location) counter += 1;
-  if (form.value.links.instagram != user.value.links.instagram) counter += 1;
+  if (form.value.links.website != user.value.links.website) counter += 1;
   if (form.value.links.twitch != user.value.links.twitch) counter += 1;
   if (form.value.links.twitter != user.value.links.twitter) counter += 1;
   if (form.value.links.youtube != user.value.links.youtube) counter += 1;
@@ -178,22 +178,22 @@ onMounted(() => {
     <template v-if="isAddLinkActive">
       <div class="c-form__group">
         <div class="c-form__field">
-          <label class="c-form__label" for="twitter">Twitter</label>
-          <input class="c-form__input" type="text" name="twitter" id="twitter" v-model="form.links.twitter" placeholder="@username"/>
+          <label class="c-form__label" for="twitch">Website</label>
+          <input class="c-form__input" type="text" name="twitch" id="twitch" v-model="form.links.website" placeholder="www.website.com"/>
         </div>
         <div class="c-form__field">
-          <label class="c-form__label" for="twitch">Twitch</label>
-          <input class="c-form__input" type="text" name="twitch" id="twitch" v-model="form.links.twitch" placeholder="@username"/>
+          <label class="c-form__label" for="twitter">Twitter</label>
+          <input class="c-form__input" type="text" name="twitter" id="twitter" v-model="form.links.twitter" placeholder="@username"/>
         </div>
       </div>
       <div class="c-form__group">
         <div class="c-form__field">
-          <label class="c-form__label" for="twitter">Youtube</label>
-          <input class="c-form__input" type="text" name="twitter" id="twitter" v-model="form.links.youtube" placeholder="@username"/>
+          <label class="c-form__label" for="twitch">Twitch</label>
+          <input class="c-form__input" type="text" name="twitch" id="twitch" v-model="form.links.twitch" placeholder="@username"/>
         </div>
         <div class="c-form__field">
-          <label class="c-form__label" for="twitch">Instagram</label>
-          <input class="c-form__input" type="text" name="twitch" id="twitch" v-model="form.links.instagram" placeholder="@username"/>
+          <label class="c-form__label" for="twitter">Youtube</label>
+          <input class="c-form__input" type="text" name="twitter" id="twitter" v-model="form.links.youtube" placeholder="@username"/>
         </div>
       </div>
     </template>

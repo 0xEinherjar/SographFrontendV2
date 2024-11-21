@@ -25,9 +25,6 @@ const form = ref({
   name: "",
   description: "",
   avatar: null,
-  links: {
-    twitter: "",
-  },
 });
 const router = useRouter();
 const enableForm = ref(false);
@@ -64,7 +61,6 @@ async function create() {
       avatar: form.value.avatar,
       name: form.value.name,
       description: form.value.description,
-      links: form.value.links,
       createdAt: new Date().toISOString(),
     });
     if (metadata.success == false) {

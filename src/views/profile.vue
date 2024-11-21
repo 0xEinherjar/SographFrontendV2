@@ -162,6 +162,11 @@ onBeforeMount(async () => {
               </svg>
             </div>
             <strong class="profile__address u-font-500">{{ isAddress(username) ? truncateAddress(username) : `@${username}` }}</strong>
+            <p class="profile__infos u-flex-line-center">
+              <span>{{ profile.followers }} <span class="u-text-secondary">{{ profile.followers == 1 ? 'follower' : 'followers' }}</span></span>
+              <span>{{ profile.following }} <span class="u-text-secondary">{{ profile.following == 1 ? 'following' : 'followings' }}</span></span>
+              <span>{{ profile.postLength }} <span class="u-text-secondary">{{ profile.postLength == 1 ? 'post' : 'posts' }}</span></span>
+            </p>
             <p class="profile__description" v-html="makerLink(hashtagDecorator(profile.description))"></p>
           </div>
         </div>
@@ -274,10 +279,14 @@ onBeforeMount(async () => {
   color: var(--text-color-secondary);
   margin-top: 4px;
 }
+.profile__infos,
 .profile__description {
   margin-top: 11px;
   width: 100%;
   max-width: 650px;
+}
+.profile__infos {
+  gap: 12px;
 }
 .profile__button {
   height: 48px;

@@ -9,6 +9,13 @@ export const useUtils = () => {
     return true;
   }
 
+  function formatLinkDisplay(link) {
+    if (!link) return "";
+    return String(link)
+      .replace(/^(http:\/\/|https:\/\/)/, "")
+      .replace(/\/$/, "");
+  }
+
   function makerLink(text) {
     return text.replace(
       /(@\w{0,15})/gm,
@@ -86,6 +93,7 @@ export const useUtils = () => {
 
   return {
     isAddress,
+    formatLinkDisplay,
     truncateAddress,
     imgURLtoFile,
     makerLink,

@@ -48,7 +48,7 @@ export async function pinProfileToIPFS(params) {
         twitter: params.links?.twitter ?? "",
         youtube: params.links?.youtube ?? "",
         twitch: params.links?.twitch ?? "",
-        instagram: params.links?.instagram ?? "",
+        website: params.links?.website ?? "",
       },
     };
     return await pinJsonToIPFS(profileData);

@@ -27,7 +27,7 @@ const compRef = shallowRef({
   arrow: Icon.Arrow,
   copy: Icon.Copy,
   youtube: Icon.Youtube,
-  instagram: Icon.Instagram,
+  website: Icon.Website,
   twitch: Icon.Twitch,
   x: Icon.X,
   profile1: Icon.Profile1,

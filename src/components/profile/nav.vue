@@ -3,8 +3,7 @@ import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { useUtils } from "../../composables/utils.js";
 import { ModalReport, Icon } from "../";
-
-const { truncateAddress, copyContent } = useUtils();
+const { truncateAddress, copyContent, formatLinkDisplay } = useUtils();
 const route = useRoute();
 const props = defineProps(["links", "address"]);
 const emit = defineEmits(["profile-nav"]);
@@ -48,10 +47,10 @@ watch(
               </button>
               <span class="dropdown__item-text-grow">{{ truncateAddress(props.address) }}</span>
             </li>
-            <li v-if="props.links?.twitch">
-              <a class="dropdown__item u-flex-line" :href="`https://twitch.tv/${props.links.twitch}`">
-                <icon iconClass="c-icon" name="twitch"/>
-                <span>{{ props.links.twitch }}</span>
+            <li v-if="props.links?.website">
+              <a class="dropdown__item u-flex-line" :href="props.links.website">
+                <icon iconClass="c-icon" name="website"/>
+                <span>{{ formatLinkDisplay(props.links.website) }}</span>
               </a>
             </li>
             <li v-if="props.links?.twitter">
@@ -60,16 +59,16 @@ watch(
                 <span>{{ props.links.twitter }}</span>
               </a>
             </li>
+            <li v-if="props.links?.twitch">
+              <a class="dropdown__item u-flex-line" :href="`https://twitch.tv/${props.links.twitch}`">
+                <icon iconClass="c-icon" name="twitch"/>
+                <span>{{ props.links.twitch }}</span>
+              </a>
+            </li>
             <li v-if="props.links?.youtube">
               <a class="dropdown__item u-flex-line" :href="`https://youtube.com/${props.links.youtube}`"></a>
               <icon iconClass="c-icon" name="youtube"/>
               <span>{{ props.links.youtube }}</span>
-            </li>
-            <li v-if="props.links?.instagram">
-              <a class="dropdown__item u-flex-line" :href="`https://instagram.com/${props.links.instagram}`">
-                <icon iconClass="c-icon" name="instagram"/>
-                <span>{{ props.links.instagram }}</span>
-              </a>
             </li>
           </ul>
         </div>
