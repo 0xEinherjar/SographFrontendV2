@@ -53,7 +53,7 @@ const pathProfile = computed(() => {
               </router-link>
             </li>
             <li>
-              <a class="sidebar__item" target="_blank" href="https://faucet.sograph.app/">
+              <a class="sidebar__item" target="_blank" href="https://www.bnbchain.org/en/testnet-faucet">
                 <icon iconClass="c-icon" name="wallet"/>
                 <span class="sidebar__text">Faucet</span>
               </a>

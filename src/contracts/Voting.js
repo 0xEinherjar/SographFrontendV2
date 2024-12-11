@@ -1,4 +1,4 @@
-export const contract = "0x67864E3C2553bC2a198d1Ce1770a1634839DA258";
+export const contract = "0xb77e348278C10745B693548ca2d40F6C9741890C";
 export const abi = [
   {
     inputs: [
@@ -58,6 +58,11 @@ export const abi = [
   },
   {
     inputs: [],
+    name: "NotEnoughReports",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "UnknownState",
     type: "error",
   },
@@ -74,11 +79,6 @@ export const abi = [
   {
     inputs: [],
     name: "UserAlreadyUnderAssessment",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "UserMustBeReportedAtLeastOnce",
     type: "error",
   },
   {
@@ -562,6 +562,19 @@ export const abi = [
   },
   {
     inputs: [],
+    name: "minReports",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "owner",
     outputs: [
       {
@@ -737,24 +750,21 @@ export const abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "value",
+        name: "_quorum",
         type: "uint256",
       },
-    ],
-    name: "setMinParticipation",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
       {
         internalType: "uint256",
-        name: "value",
+        name: "_minParticipation",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_minReports",
         type: "uint256",
       },
     ],
-    name: "setQuorum",
+    name: "setInfos",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

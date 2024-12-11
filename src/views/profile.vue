@@ -103,6 +103,9 @@ async function getProfile() {
   publications.value = [];
   if (result.success) {
     profile.value = result.data;
+    document.title = `${profile.value.name}'s profile (@${
+      profile.value.handle || truncateAddress(profile.value.owner)
+    }) | Sograph`;
     cursorPag.value = result.data.postLength;
     result.data.isFollowing;
     isFavorite.value = favoriteStore.isFavorite(result.data.id);

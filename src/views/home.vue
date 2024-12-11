@@ -40,7 +40,7 @@ useAccountEffect({
         <logo/>
       </router-link>
       <nav class="header__nav u-flex-line">
-        <a class="header__nav-item" target="_blank" href="https://faucet.sograph.app/">Faucet</a>
+        <a class="header__nav-item" target="_blank" href="https://www.bnbchain.org/en/testnet-faucet">Faucet</a>
         <a class="header__nav-item" target="_blank" href="https://vote.sograph.app/">Vote</a>
         <a class="header__nav-item" target="_blank" href="https://docs.sograph.app/">Docs</a>
       </nav>
@@ -63,11 +63,11 @@ useAccountEffect({
         </div>
       </div>
       <div class="footer__column">
-        <div class="footer__column-head">Use Graph</div>
+        <div class="footer__column-head">Use BTC.B</div>
         <div class="footer__column-content">
-          <a href="https://faucet.sograph.app/" target="_blank" class="footer__link u-flex-line">Faucet</a>
+          <a href="https://www.bnbchain.org/en/testnet-faucet" target="_blank" class="footer__link u-flex-line">Faucet</a>
           <a href="#" class="footer__link u-flex-line">Add to Metamask</a>
-          <a href="https://testnet.bscscan.com/token/0xEA9810d6deF262Ba30a7F96a8B3b7B6C724bE532" target="_blank" class="footer__link u-flex-line">BNBChain Testnet</a>
+          <a href="https://testnet.bscscan.com/token/0x6ce8dA28E2f864420840cF74474eFf5fD80E65B8" target="_blank" class="footer__link u-flex-line">BNBChain Testnet</a>
         </div>
       </div>
       <div class="footer__column">

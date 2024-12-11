@@ -9,9 +9,17 @@ const { getProfile } = useProfile();
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
-    { path: "/", component: Home, meta: { auth: false } },
-    { path: "/feed", component: Feed, meta: { auth: true } },
-    { path: "/settings", component: Setting, meta: { auth: true } },
+    { path: "/", component: Home, meta: { auth: false, title: "Sograph" } },
+    {
+      path: "/feed",
+      component: Feed,
+      meta: { auth: true, title: "Your feed" },
+    },
+    {
+      path: "/settings",
+      component: Setting,
+      meta: { auth: true, title: "Your settings" },
+    },
     { path: "/create", component: Connect, meta: { auth: true } },
     { path: "/reactivate", component: Reactivate, meta: { auth: true } },
     { path: "/:profile", component: Profile, meta: { auth: false } },
@@ -19,6 +27,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  document.title = to.meta?.title || "Sograph";
   const historyStore = useHistoryStore();
   const { isBack } = storeToRefs(historyStore);
   const previousPath = from.fullPath.split("/")[1];
