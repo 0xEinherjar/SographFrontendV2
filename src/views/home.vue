@@ -41,7 +41,7 @@ useAccountEffect({
       </router-link>
       <nav class="header__nav u-flex-line">
         <a class="header__nav-item" target="_blank" href="https://www.bnbchain.org/en/testnet-faucet">Faucet</a>
-        <a class="header__nav-item" target="_blank" href="https://vote.sograph.app/">Vote</a>
+        <a class="header__nav-item" target="_blank" href="https://voting.sograph.app/">Vote</a>
         <a class="header__nav-item" target="_blank" href="https://docs.sograph.app/">Docs</a>
       </nav>
       <chain/>
@@ -57,7 +57,7 @@ useAccountEffect({
       <div class="footer__column">
         <div class="footer__column-head">Get Involved</div>
         <div class="footer__column-content">
-          <a href="https://vote.sograph.app/" target="_blank" class="footer__link u-flex-line">Vote</a>
+          <a href="https://voting.sograph.app/" target="_blank" class="footer__link u-flex-line">Vote</a>
           <a href="#" class="footer__link u-flex-line">User Guide</a>
           <a href="https://docs.sograph.app/" target="_blank" class="footer__link u-flex-line">Docs</a>
         </div>

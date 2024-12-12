@@ -15,7 +15,7 @@ const { isAddress, truncateAddress } = useUtils();
   </div>
   <div v-if="props.type == 'UserBanned'" class="c-profile-placeholder__info u-flex-line-center">
     <icon iconClass="c-icon" name="info1"/>
-    Banned profile. For more information, please visit the <a class="c-profile-placeholder__info-link u-font-500" href="https://vote.sograph.app/#/">voting</a> page.
+    Banned profile. For more information, please visit the <a class="c-profile-placeholder__info-link u-font-500" href="https://voting.sograph.app/#/">voting</a> page.
   </div>
 </template>
 <style>

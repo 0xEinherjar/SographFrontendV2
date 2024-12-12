@@ -176,7 +176,7 @@ onBeforeMount(async () => {
         <profile-nav :address="profile.owner" :links="profile.links" @profile-nav="profileNavActive"/>
         <div v-if="profile.role == 2" class="profile__info u-flex-line-center">
           <icon iconClass="c-icon" name="info1"/>
-          Profile under evaluation. Check the <a class="profile__info-link u-font-500" href="https://vote.sograph.app/#/">voting</a> page to learn more.
+          Profile under evaluation. Check the <a class="profile__info-link u-font-500" href="https://voting.sograph.app/#/">voting</a> page to learn more.
         </div>
         <template v-if="navActive == 'Publications'">
           <template v-if="!isLoadingPost">
