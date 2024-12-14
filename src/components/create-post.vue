@@ -35,7 +35,7 @@ const isFormDisabled = computed(() => {
 });
 
 function showPlaceholder(event) {
-  if (event.target.innerText.length > 0) {
+  if (String(event.target.innerText).trim().length > 0) {
     form.value.text = event.target.innerText;
     event.target.parentNode
       .querySelector(".c-create__textarea-placeholder")

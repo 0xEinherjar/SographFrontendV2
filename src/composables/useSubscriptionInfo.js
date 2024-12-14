@@ -21,11 +21,6 @@ export const useSubscriptionInfo = () => {
           functionName: "decimals",
         },
         {
-          abi: tokenAbi,
-          address: tokenContract,
-          functionName: "name",
-        },
-        {
           abi: profileAbi,
           address: profileContract,
           functionName: "fees",
@@ -36,6 +31,11 @@ export const useSubscriptionInfo = () => {
           functionName: "balanceOf",
           args: [owner],
         },
+        // {
+        //   abi: tokenAbi,
+        //   address: tokenContract,
+        //   functionName: "name",
+        // },
       ],
     });
     for (const result of results) {
@@ -43,11 +43,11 @@ export const useSubscriptionInfo = () => {
     }
     return {
       decimals: results[0].result,
-      currency: results[1].result,
-      price: formatToNumber(results[2].result[2]),
+      currency: "Bitcoin BEP20",
+      price: formatToNumber(results[1].result[1]),
       priceFormated:
-        formatToNumber(results[2].result[2]) / 10 ** results[0].result,
-      hasEnoughBalance: results[3].result >= results[2].result[2],
+        formatToNumber(results[1].result[2]) / 10 ** results[0].result,
+      hasEnoughBalance: results[2].result >= results[1].result[2],
     };
   }
   return { getSubscriptionInfo };
