@@ -42,6 +42,8 @@ const isFavorite = ref(false);
 const observer = ref(null);
 const cursorPag = ref(0);
 const lengthPag = ref(15);
+const isDescriptionShort = ref(false);
+const activeDescriptionShort = ref(false);
 const profileErrorInfo = ref({ isBanned: null, username: "" });
 
 function toggleFavorite() {
@@ -103,6 +105,7 @@ async function getProfile() {
   publications.value = [];
   if (result.success) {
     profile.value = result.data;
+    isDescriptionShort.value = profile.value.description.length > 53;
     document.title = `${profile.value.name}'s profile (@${
       profile.value.handle || truncateAddress(profile.value.owner)
     }) | Sograph`;
@@ -165,12 +168,15 @@ onBeforeMount(async () => {
               </svg>
             </div>
             <strong class="profile__address u-font-500">{{ isAddress(username) ? truncateAddress(username) : `@${username}` }}</strong>
-            <p class="profile__infos u-flex-line-center">
+            <div class="profile__description">
+              <p :class="{ 'is-short': !activeDescriptionShort }" v-html="makerLink(hashtagDecorator(profile.description))"></p>
+              <span v-if="isDescriptionShort" @click="activeDescriptionShort = !activeDescriptionShort" class="profile__description-btn">show more</span>
+            </div>
+            <p class="profile__infos u-flex-line">
               <span>{{ profile.followers }} <span class="u-text-secondary">{{ profile.followers == 1 ? 'follower' : 'followers' }}</span></span>
               <span>{{ profile.following }} <span class="u-text-secondary">{{ profile.following == 1 ? 'following' : 'followings' }}</span></span>
               <span>{{ profile.postLength }} <span class="u-text-secondary">{{ profile.postLength == 1 ? 'post' : 'posts' }}</span></span>
             </p>
-            <p class="profile__description" v-html="makerLink(hashtagDecorator(profile.description))"></p>
           </div>
         </div>
         <profile-nav :address="profile.owner" :links="profile.links" @profile-nav="profileNavActive"/>
@@ -286,7 +292,28 @@ onBeforeMount(async () => {
 .profile__description {
   margin-top: 11px;
   width: 100%;
-  max-width: 650px;
+  max-width: 610px;
+}
+.profile__description p {
+  display: inline;
+  text-overflow: ellipsis;
+  white-space: normal;
+  overflow: visible;
+  vertical-align: top;
+  max-width: 520px;
+  word-break: break-all;
+}
+.profile__description p.is-short {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.profile__description .profile__description-btn {
+  white-space: nowrap;
+  vertical-align: top;
+  color: rgb(155, 155, 155);
+  cursor: pointer;
+  margin-left: 4px;
 }
 .profile__infos {
   gap: 12px;
