@@ -170,7 +170,7 @@ onBeforeMount(async () => {
             <strong class="profile__address u-font-500">{{ isAddress(username) ? truncateAddress(username) : `@${username}` }}</strong>
             <div class="profile__description">
               <p :class="{ 'is-short': !activeDescriptionShort }" v-html="makerLink(hashtagDecorator(profile.description))"></p>
-              <span v-if="isDescriptionShort" @click="activeDescriptionShort = !activeDescriptionShort" class="profile__description-btn">show more</span>
+              <span v-if="isDescriptionShort" @click="activeDescriptionShort = !activeDescriptionShort" class="profile__description-btn">show {{ activeDescriptionShort ? "less" : "more" }}</span>
             </div>
             <p class="profile__infos u-flex-line">
               <span>{{ profile.followers }} <span class="u-text-secondary">{{ profile.followers == 1 ? 'follower' : 'followers' }}</span></span>

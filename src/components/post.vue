@@ -30,6 +30,8 @@ const props = defineProps([
   "userRepost",
   "userRepostPath",
 ]);
+const isParagraphShort = ref(false);
+const activeParagraphShort = ref(false);
 
 const path = computed(() => {
   return props.handle ? props.handle : props.owner;
@@ -48,6 +50,7 @@ const textPost = computed(() => {
 });
 
 onMounted(() => {
+  isParagraphShort.value = props.text.length > 668;
   post.value.hasLiked = props.hasLiked;
   post.value.totalLiked = Number(props.like);
   post.value.hasShared = props.hasShared;
@@ -87,12 +90,15 @@ onMounted(() => {
     <div v-if="props.attachment" class="c-post__attachment">
       <img class="c-post__image" :src="props.attachment" alt="" />
     </div>
-    <p v-if="props.text.length" class="c-post__paragraph">
-      <template v-for="item in textPost">
-        <template v-if="item.length > 0">{{ item }}</template>
-        <template v-else><br /></template>
-      </template>
-    </p>
+    <div>
+      <p v-if="props.text.length" :class="{ 'c-post__paragraph--show': !activeParagraphShort }" class="c-post__paragraph">
+        <template v-for="item in textPost">
+          <template v-if="item.length > 0">{{ item }}</template>
+          <template v-else><br /></template>
+        </template>
+      </p>
+      <span v-if="isParagraphShort" @click="activeParagraphShort = !activeParagraphShort" class="c-post__paragraph-btn">show {{ activeParagraphShort ? "more" : "less" }}</span>
+    </div>
     <div class="u-flex-line-between">
       <div class="c-post__actions u-flex-line">
         <button class="c-post__action u-flex-line" @click="isCommentActive = true">
@@ -179,6 +185,20 @@ onMounted(() => {
 }
 .c-post__paragraph {
   opacity: 0.8;
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+.c-post__paragraph--show {
+  overflow: visible;
+  -webkit-line-clamp: none;
+}
+.c-post__paragraph-btn {
+  white-space: nowrap;
+  cursor: pointer;
 }
 .c-post__author-name {
   font-size: 1.5rem;
