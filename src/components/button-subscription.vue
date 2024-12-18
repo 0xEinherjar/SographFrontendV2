@@ -44,7 +44,7 @@ watch(isSuccess, async (newIsSuccess) => {
 <!-- prettier-ignore -->
 <template>
   <button class="c-card-payment__pay u-flex-line-center" @click="subscription" type="button">
-    <template v-if="!isLoading">Subscribe for {{ props.price }} Graph per {{ props.duration }} year{{ props.duration == 1 ? "" : "s" }}</template>
+    <template v-if="!isLoading">Subscribe for {{ props.price }} Bitcoin BEP20 per {{ props.duration }} year{{ props.duration == 1 ? "" : "s" }}</template>
     <loading v-else type="small" theme="dark"/>
   </button>
 </template>

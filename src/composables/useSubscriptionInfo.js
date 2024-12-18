@@ -44,7 +44,7 @@ export const useSubscriptionInfo = () => {
     return {
       decimals: results[0].result,
       currency: "Bitcoin BEP20",
-      price: formatToNumber(results[1].result[1]),
+      price: formatToNumber(results[1].result[2]),
       priceFormated:
         formatToNumber(results[1].result[2]) / 10 ** results[0].result,
       hasEnoughBalance: results[2].result >= results[1].result[2],
