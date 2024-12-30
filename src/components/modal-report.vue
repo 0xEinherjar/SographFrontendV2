@@ -3,7 +3,7 @@ import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useAccountStore } from "../store/account.js";
 import { Icon } from "./";
-import { abi, contract } from "../contracts/Voting.js";
+import { abi, contract } from "../contracts/UserReportManager.js";
 import { useWaitForTransactionReceipt, useWriteContract } from "@wagmi/vue";
 import { useErrorStore } from "../store/error.js";
 const props = defineProps(["account"]);

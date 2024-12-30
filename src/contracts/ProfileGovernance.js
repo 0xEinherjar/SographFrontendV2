@@ -1,15 +1,10 @@
-export const contract = "0xb77e348278C10745B693548ca2d40F6C9741890C";
+export const contract = "0xac5C60439eADe6c60407F362866a6EEc9F0f17E0";
 export const abi = [
   {
     inputs: [
       {
         internalType: "address",
-        name: "_sograph",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_token",
+        name: "_profileNFT",
         type: "address",
       },
     ],
@@ -63,22 +58,12 @@ export const abi = [
   },
   {
     inputs: [],
+    name: "Unauthorized",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "UnknownState",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "UserAlreadyBanned",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "UserAlreadyReported",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "UserAlreadyUnderAssessment",
     type: "error",
   },
   {
@@ -113,14 +98,14 @@ export const abi = [
       {
         indexed: true,
         internalType: "address",
-        name: "user",
+        name: "profile",
         type: "address",
       },
       {
         indexed: false,
-        internalType: "enum AssessmentState",
+        internalType: "uint256",
         name: "status",
-        type: "uint8",
+        type: "uint256",
       },
     ],
     name: "AssessmentExecuted",
@@ -174,37 +159,6 @@ export const abi = [
     inputs: [
       {
         indexed: true,
-        internalType: "address",
-        name: "reportedUser",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "reporter",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "enum Reasons",
-        name: "reason",
-        type: "uint8",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "reportsCount",
-        type: "uint256",
-      },
-    ],
-    name: "UserReported",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
         internalType: "uint256",
         name: "assessmentId",
         type: "uint256",
@@ -217,13 +171,26 @@ export const abi = [
       },
       {
         indexed: false,
-        internalType: "enum Vote",
+        internalType: "uint256",
         name: "vote",
-        type: "uint8",
+        type: "uint256",
       },
     ],
     name: "VoteCast",
     type: "event",
+  },
+  {
+    inputs: [],
+    name: "assessmentIdCounter",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
@@ -282,7 +249,44 @@ export const abi = [
         type: "address",
       },
     ],
-    name: "banned",
+    name: "bannedProfiles",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "enum Vote",
+        name: "_vote",
+        type: "uint8",
+      },
+    ],
+    name: "castVote",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "checkIfBanned",
     outputs: [
       {
         internalType: "bool",
@@ -295,7 +299,7 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "counter",
+    name: "claim",
     outputs: [
       {
         internalType: "uint256",
@@ -303,20 +307,25 @@ export const abi = [
         type: "uint256",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [],
-    name: "counterReport",
-    outputs: [
+    inputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "_votingQuorum",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_minimumStakeAmount",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
+    name: "configureVotingParameters",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -345,14 +354,14 @@ export const abi = [
         type: "uint256",
       },
     ],
-    name: "executeAssessment",
+    name: "finalizeAssessment",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "fetchAllAssessment",
+    name: "getAllAssessments",
     outputs: [
       {
         components: [
@@ -409,91 +418,30 @@ export const abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "cursor",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "size",
+        name: "id",
         type: "uint256",
       },
     ],
-    name: "getReports",
+    name: "getAssessmentState",
     outputs: [
       {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "reported",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "counter",
-            type: "uint256",
-          },
-          {
-            internalType: "bool",
-            name: "executed",
-            type: "bool",
-          },
-          {
-            internalType: "bool",
-            name: "isAssessment",
-            type: "bool",
-          },
-          {
-            internalType: "uint256",
-            name: "totalSpam",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalViolenceSpeech",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalChildAbuse",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalIllegalDrugs",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalTerrorism",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "totalOther",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct ReportsResponse[]",
-        name: "reportsResponse",
-        type: "tuple[]",
-      },
-      {
-        internalType: "uint256",
-        name: "newCursor",
-        type: "uint256",
+        internalType: "enum AssessmentState",
+        name: "",
+        type: "uint8",
       },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [],
-    name: "gracePeriod",
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "getRestorationCount",
     outputs: [
       {
         internalType: "uint256",
@@ -508,35 +456,11 @@ export const abi = [
     inputs: [
       {
         internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
-    name: "hasReported",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
+        name: "account",
         type: "address",
       },
     ],
-    name: "idByReported",
+    name: "getTotalEarnedRewards",
     outputs: [
       {
         internalType: "uint256",
@@ -549,38 +473,12 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "minParticipation",
+    name: "minimumStakeAmount",
     outputs: [
       {
         internalType: "uint256",
         name: "",
         type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "minReports",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",
@@ -603,7 +501,17 @@ export const abi = [
       },
       {
         internalType: "uint256",
-        name: "participation",
+        name: "earned",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "rewardIndexOf",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "balanceOf",
         type: "uint256",
       },
       {
@@ -626,21 +534,46 @@ export const abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "profileRestorationCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "profileRestorationDate",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
-    name: "postVotePeriodWithdraw",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "quorum",
+    name: "restorationGracePeriod",
     outputs: [
       {
         internalType: "uint256",
@@ -654,145 +587,27 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
+        internalType: "uint256",
+        name: "delay",
+        type: "uint256",
       },
-    ],
-    name: "reestablishedCounter",
-    outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "duration",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "withdraw",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "grace",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "reestablishedDate",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        internalType: "enum Reasons",
-        name: "reason",
-        type: "uint8",
-      },
-    ],
-    name: "reportUser",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "reports",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "reported",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "counter",
-        type: "uint256",
-      },
-      {
-        internalType: "bool",
-        name: "executed",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "isAssessment",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_quorum",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_minParticipation",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_minReports",
-        type: "uint256",
-      },
-    ],
-    name: "setInfos",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_delay",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_duration",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_withdraw",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_grace",
-        type: "uint256",
-      },
-    ],
-    name: "setTime",
+    name: "setVotingTimings",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -811,71 +626,8 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
-    name: "state",
-    outputs: [
-      {
-        internalType: "enum AssessmentState",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
-    name: "totalParticipation",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "enum Vote",
-        name: "_vote",
-        type: "uint8",
-      },
-    ],
-    name: "vote",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "voteDelay",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "voteDuration",
+    name: "totalStakedTokens",
     outputs: [
       {
         internalType: "uint256",
@@ -894,9 +646,97 @@ export const abi = [
         type: "uint256",
       },
     ],
-    name: "withdraw",
+    name: "unstake",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_sographContract",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_reportManager",
+        type: "address",
+      },
+    ],
+    name: "updateExternalContracts",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "reward",
+        type: "uint256",
+      },
+    ],
+    name: "updateRewardIndex",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "votingPeriodDuration",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "votingQuorum",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "votingStartDelay",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdrawalCooldownPeriod",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
 ];

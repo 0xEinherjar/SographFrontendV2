@@ -1,4 +1,4 @@
-export const contract = "0xE09f2Db3de4415f401D3d16C5ebf473a8fCec7B5";
+export const contract = "0x86C00f816451b3AA6a2911f362f4Ce28F3A5739c";
 export const abi = [
   {
     inputs: [
@@ -78,19 +78,6 @@ export const abi = [
         type: "address",
       },
     ],
-    name: "assessment",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-    ],
     name: "ban",
     outputs: [],
     stateMutability: "nonpayable",
@@ -155,6 +142,13 @@ export const abi = [
       },
     ],
     name: "createProfile",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "disableProfile",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -322,52 +316,6 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "uint256[]",
-        name: "id",
-        type: "uint256[]",
-      },
-    ],
-    name: "reactivatePost",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
-    name: "reactivateProfile",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
-    name: "redeemPost",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "redeemProfile",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "user",
         type: "address",
@@ -381,12 +329,38 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: "uint256[]",
+        name: "id",
+        type: "uint256[]",
+      },
+    ],
+    name: "restorePostOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+    ],
+    name: "restoreProfile",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
-        name: "addr",
+        name: "user",
         type: "address",
       },
     ],
-    name: "setVoting",
+    name: "setUserUnderAssessment",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -439,6 +413,19 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "_profileGovernance",
+        type: "address",
+      },
+    ],
+    name: "updateExternalContracts",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "string",
         name: "handle",
         type: "string",
@@ -458,6 +445,19 @@ export const abi = [
       },
     ],
     name: "updateProfile",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawPost",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

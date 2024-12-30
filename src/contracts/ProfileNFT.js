@@ -1,4 +1,4 @@
-export const contract = "0xAc7eE80B37C7cF2EeA1F139bf443d3FDbD069727";
+export const contract = "0x67F189F31B2Ccd73e7a05eB82A9D0297Ccb7B88e";
 export const abi = [
   {
     inputs: [
@@ -10,11 +10,6 @@ export const abi = [
     ],
     stateMutability: "nonpayable",
     type: "constructor",
-  },
-  {
-    inputs: [],
-    name: "DaoWalletNotInformed",
-    type: "error",
   },
   {
     inputs: [
@@ -117,6 +112,11 @@ export const abi = [
       },
     ],
     name: "ERC721NonexistentToken",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "GovernanceWalletNotInformed",
     type: "error",
   },
   {
@@ -395,7 +395,7 @@ export const abi = [
       },
       {
         internalType: "uint8",
-        name: "dao",
+        name: "governance",
         type: "uint8",
       },
       {
@@ -766,47 +766,6 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "uint8",
-        name: "burn",
-        type: "uint8",
-      },
-      {
-        internalType: "uint8",
-        name: "dao",
-        type: "uint8",
-      },
-      {
-        internalType: "uint256",
-        name: "_subscription",
-        type: "uint256",
-      },
-    ],
-    name: "setFees",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "treasury",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "dao",
-        type: "address",
-      },
-    ],
-    name: "setWallets",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256",
         name: "id",
         type: "uint256",
@@ -917,6 +876,47 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: "uint8",
+        name: "burn",
+        type: "uint8",
+      },
+      {
+        internalType: "uint8",
+        name: "governance",
+        type: "uint8",
+      },
+      {
+        internalType: "uint256",
+        name: "_subscription",
+        type: "uint256",
+      },
+    ],
+    name: "updateFeeRates",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "treasury",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "governance",
+        type: "address",
+      },
+    ],
+    name: "updateFeeWallets",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "id",
         type: "uint256",
@@ -944,7 +944,7 @@ export const abi = [
     outputs: [
       {
         internalType: "address",
-        name: "dao",
+        name: "governance",
         type: "address",
       },
       {

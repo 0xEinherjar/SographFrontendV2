@@ -8,11 +8,11 @@ const { writeContractAsync, error } = useWriteContract();
 const props = defineProps(["id"]);
 const emit = defineEmits(["redeem"]);
 
-async function redeemPost(id) {
+async function withdrawPost(id) {
   await writeContractAsync({
     abi: abi,
     address: contract,
-    functionName: "redeemPost",
+    functionName: "withdrawPost",
     args: [id],
   });
 }
@@ -24,5 +24,5 @@ watch(error, (newError) => {
 </script>
 <!-- prettier-ignore -->
 <template>
-  <button @click="redeemPost(props.id)">Redeem</button>
+  <button @click="withdrawPost(props.id)">Redeem</button>
 </template>

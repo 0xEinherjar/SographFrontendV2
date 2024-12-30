@@ -22,13 +22,13 @@ const userStore = useUserStore();
 const accountStore = useAccountStore();
 const { address } = useAccount();
 
-async function reactivate() {
+async function restorePostOwnership() {
   if (!Number(props.id)) return;
   isLoading.value = true;
   await writeContractAsync({
     abi: abi,
     address: contract,
-    functionName: "reactivatePost",
+    functionName: "restorePostOwnership",
     args: [[props.id]],
   });
 }
@@ -58,7 +58,7 @@ watch(isSuccess, async (newIsSuccess) => {
 </script>
 <!-- prettier-ignore -->
 <template>
-  <button @click="reactivate" class="c-form__submit u-flex-line" type="submit">
+  <button @click="restorePostOwnership" class="c-form__submit u-flex-line" type="submit">
     <loading v-if="isLoading" type="small"/>
     <template v-else>Add</template>
   </button>

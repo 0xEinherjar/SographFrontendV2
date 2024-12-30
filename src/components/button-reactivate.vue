@@ -8,11 +8,11 @@ const emit = defineEmits(["reactivate"]);
 const { writeContractAsync, data, error } = useWriteContract();
 const errorStore = useErrorStore();
 
-async function reactivate() {
+async function restoreProfile() {
   await writeContractAsync({
     abi: abi,
     address: contract,
-    functionName: "reactivateProfile",
+    functionName: "restoreProfile",
     args: [props.id],
   });
 }
@@ -32,7 +32,7 @@ watch(isSuccess, async (newIsSuccess) => {
 </script>
 <!-- prettier-ignore -->
 <template>
-  <button class="c-form__submit u-flex-line" @click="reactivate">
+  <button class="c-form__submit u-flex-line" @click="restoreProfile">
     Reactivate
   </button>
 </template>

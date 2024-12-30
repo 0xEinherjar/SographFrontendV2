@@ -24,7 +24,7 @@ async function redeem() {
   await writeContractAsync({
     abi: abi,
     address: contract,
-    functionName: "redeemProfile",
+    functionName: "disableProfile",
   });
 }
 const { isSuccess } = useWaitForTransactionReceipt({
