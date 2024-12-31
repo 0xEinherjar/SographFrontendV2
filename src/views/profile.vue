@@ -168,7 +168,7 @@ onBeforeMount(async () => {
               </svg>
             </div>
             <strong class="profile__address u-font-500">{{ isAddress(username) ? truncateAddress(username) : `@${username}` }}</strong>
-            <div class="profile__description">
+            <div v-if="profile.description" class="profile__description">
               <p :class="{ 'is-short': !activeDescriptionShort }" v-html="makerLink(hashtagDecorator(profile.description))"></p>
               <span v-if="isDescriptionShort" @click="activeDescriptionShort = !activeDescriptionShort" class="profile__description-btn">show {{ activeDescriptionShort ? "less" : "more" }}</span>
             </div>
